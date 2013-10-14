@@ -10,12 +10,14 @@
 #include <drivers/hitechnic-irseeker-v2.h>
 void initializeRobot ()
 {
+
 }
 
 void allStop ()
 {
 	motor [leftDrive] = 0;
 	motor [rightDrive] = 0;
+	//return;
 }
 
 void timedDrive (int leftSpeed, int rightSpeed, int driveTime)
@@ -58,39 +60,72 @@ void rightPointTurn (int turnSpeed)
 {
 	motor [rightDrive] = -1 * turnSpeed;
 	motor [leftDrive] = turnSpeed;
+	//return;
 }
 
 void leftPointTurn (int turnSpeed)
 {
 	motor [rightDrive] = turnSpeed;
 	motor [leftDrive] = -1 * turnSpeed;
+	//return;
+}
+
+void alignWithBeacon ()
+{
+	while (SensorValue [irSeeker] == 5)
+	{
+		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSeeker]);
+		if (SensorValue [irSeeker] > 5) {
+			leftPointTurn(50);
+		}
+		if (SensorValue [irSeeker] < 5) {
+			rightPointTurn(50);
+		}
+		if (SensorValue [irSeeker] == 5) {
+			allStop();
+		}
+	}
 }
 
 task main()
 {
 	initializeRobot();
-
+	while (true)
+	{
 #if 0
-	waitForStart();
-	drive(100, 100, 2500);
-	timedRightPointTurn (50, 1100);
-	drive(100, 100, 3000);
+		waitForStart();
+		timedDrive(100, 100, 2500);
+		timedRightPointTurn (50, 1100);
+		timedDrive(100, 100, 3000);
 #endif
 
-	while (1)
-	{
+		//alignWithBeacon();
+
+#if 1
+		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSeeker]);
 		if (SensorValue [irSeeker] > 5) {
 			leftPointTurn(50);
 		}
-		else if (SensorValue [irSeeker] < 5) {
+		if (SensorValue [irSeeker] < 5) {
 			rightPointTurn(50);
-			} else {
+		}
+		if (SensorValue [irSeeker] == 5) {
 			allStop();
 		}
-		while(SensorValue [sonarSensor] >= 30)
-		{
-			drive(75, 75);
+#elif 0
+		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSeeker]);
+		if (SensorValue [irSeeker] > 5) {
+			motor [rightDrive] = 50;
+			motor [leftDrive] = -50;
 		}
-		allStop();
+		if (SensorValue [irSeeker] < 5) {
+			motor [rightDrive] = -50;
+			motor [leftDrive] = 50;
+		}
+		if (SensorValue [irSeeker] == 5) {
+			motor [leftDrive] = 0;
+			motor [rightDrive] = 0;
+		}
+#endif
 	}
 }
