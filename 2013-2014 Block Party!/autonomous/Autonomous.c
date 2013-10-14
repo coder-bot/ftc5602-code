@@ -1,10 +1,9 @@
 #pragma config(Hubs,  S1, HTMotor,  none,     none,     none)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     sonarSensor,    sensorSONAR)
-#pragma config(Sensor, S3,     irSeeker,       sensorHiTechnicIRSeeker1200)
+#pragma config(Sensor, S3,     irSensor,       sensorHiTechnicIRSeeker1200)
 #pragma config(Sensor, S4,     lineFollower,   sensorCOLORFULL)
-#pragma config(Motor,  mtr_S1_C1_1,     leftDrive,     tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_2,     rightDrive,    tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C1_2,     leftDrive,     tmotorTetrix, openLoop)
 
 #include <JoystickDriver.c>
 #include <drivers/hitechnic-irseeker-v2.h>
@@ -14,35 +13,35 @@ void initializeRobot ()
 
 void allStop ()
 {
-	motor [leftDrive] = 0;
 	motor [rightDrive] = 0;
+	motor [leftDrive] = 0;
 	//return;
 }
 
-void timedDrive (int leftSpeed, int rightSpeed, int driveTime)
+void timedDrive (int rightSpeed, int leftSpeed, int driveTime)
 {
 	ClearTimer(T2);
 	while (time1 [T2] < driveTime) {
-		motor [leftDrive] = leftSpeed;
 		motor [rightDrive] = rightSpeed;
+		motor [leftDrive] = leftSpeed;
 	}
 	allStop();
 }
 
-void drive (int leftSpeed, int rightSpeed)
+void drive (int rightSpeed, int leftSpeed)
 {
-	motor [leftDrive] = -1 * leftSpeed;
-	motor [rightDrive] = -1 * rightSpeed;
+	motor [rightDrive] = rightSpeed;
+	motor [leftDrive] = leftSpeed;
 }
 
 void timedRightPointTurn (int turnSpeed, int turnTime)
 {
 	ClearTimer(T3);
 	while (time1 [T3] < turnTime) {
-		//motor [rightDrive] = -1 * turnSpeed;
-		//motor [leftDrive] = turnSpeed;
+		//motor [leftDrive] = -1 * turnSpeed;
+		//motor [rightDrive] = turnSpeed;
 	//simplified code below
-		drive(turnSpeed, -1 * turnSpeed);
+		drive(-1 * turnSpeed, turnSpeed);
 	}
 	allStop();
 }
@@ -51,42 +50,42 @@ void timedLeftPointTurn (int turnSpeed, int turnTime)
 {
 	ClearTimer(T4);
 	while (time1 [T4] < turnTime) {
-		//motor [rightDrive] = turnSpeed;
-		//motor [leftDrive] = -1 * turnSpeed;
+		//motor [leftDrive] = turnSpeed;
+		//motor [rightDrive] = -1 * turnSpeed;
 		//simplified code below
-		drive(-1 * turnSpeed, turnSpeed);
+		drive(turnSpeed, -1 * turnSpeed);
 	}
 	allStop();
 }
 
 void rightPointTurn (int turnSpeed)
 {
-	//motor [rightDrive] = -1 * turnSpeed;
-	//motor [leftDrive] = turnSpeed;
+	//motor [leftDrive] = -1 * turnSpeed;
+	//motor [rightDrive] = turnSpeed;
 	//simplified code below
 	drive(turnSpeed, -1 * turnSpeed);
 }
 
 void leftPointTurn (int turnSpeed)
 {
-	//motor [rightDrive] = turnSpeed;
-	//motor [leftDrive] = -1 * turnSpeed;
+	//motor [leftDrive] = turnSpeed;
+	//motor [rightDrive] = -1 * turnSpeed;
 //simplified code below
 		drive(-1 * turnSpeed, turnSpeed);
 }
 
 void alignWithBeacon ()
 {
-		while (SensorValue [irSeeker] !=5)
+		while (SensorValue [irSensor] !=5)
 	{
-		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSeeker]);
-		if (SensorValue [irSeeker] > 5) {
+		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSensor]);
+		if (SensorValue [irSensor] > 5) {
 			rightPointTurn(50);
 		}
-		if (SensorValue [irSeeker] < 5) {
+		if (SensorValue [irSensor] < 5) {
 			leftPointTurn(50);
 		}
-		if (SensorValue [irSeeker] == 5) {
+		if (SensorValue [irSensor] == 5) {
 			allStop();
 		}
 	}
@@ -110,33 +109,33 @@ task main()
 	driveToBeacon(45);
 
 #if 0
-	while (SensorValue [irSeeker] !=5)
+	while (SensorValue [irSensor] !=5)
 	{
-		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSeeker]);
-		if (SensorValue [irSeeker] > 5) {
+		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSensor]);
+		if (SensorValue [irSensor] > 5) {
 			rightPointTurn(50);
 		}
-		if (SensorValue [irSeeker] < 5) {
+		if (SensorValue [irSensor] < 5) {
 			leftPointTurn(50);
 		}
-		if (SensorValue [irSeeker] == 5) {
+		if (SensorValue [irSensor] == 5) {
 			allStop();
 		}
 	}
 	allStop();
 #elif 0
-	nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSeeker]);
-	if (SensorValue [irSeeker] > 5) {
-		motor [rightDrive] = 50;
+	nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSensor]);
+	if (SensorValue [irSensor] > 5) {
 		motor [leftDrive] = -50;
+		motor [rightDrive] = 50;
 	}
-	if (SensorValue [irSeeker] < 5) {
-		motor [rightDrive] = -50;
+	if (SensorValue [irSensor] < 5) {
 		motor [leftDrive] = 50;
+		motor [rightDrive] = -50;
 	}
-	if (SensorValue [irSeeker] == 5) {
-		motor [leftDrive] = 0;
+	if (SensorValue [irSensor] == 5) {
 		motor [rightDrive] = 0;
+		motor [leftDrive] = 0;
 	}
 #endif
 
