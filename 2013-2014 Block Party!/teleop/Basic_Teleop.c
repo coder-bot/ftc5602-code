@@ -15,8 +15,8 @@ task main()
 	while (1)
 	{
 		getJoystickSettings(joystick);
-	motor [leftDrive] = abs(joystick.joy1_y1) > threshold ? joystick.joy1_y2 : 0;
-	motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y1 : 0;
+	motor [leftDrive] = abs(joystick.joy1_y1) > threshold ? joystick.joy1_y1 : 0;
+	motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y2 : 0;
 #if 0
 	if (joy1Btn(7) == 1) {
 			motor [harvesterMover] = (joy1Btn(5) == 1 || joy1Btn(6) == 1) ? 50 : 25;
