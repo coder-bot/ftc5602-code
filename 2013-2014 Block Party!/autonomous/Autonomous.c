@@ -82,10 +82,10 @@ void alignWithBeacon ()
 		if (SensorValue [irSensor] > 5) {
 			rightPointTurn(50);
 		}
-		if (SensorValue [irSensor] < 5) {
+		/*added else*/ else if (SensorValue [irSensor] < 5) {
 			leftPointTurn(50);
-		}
-		if (SensorValue [irSensor] == 5) {
+		} else {
+		/*removed if replaced with else*/ /*if (SensorValue [irSensor] == 5) {*/
 			allStop();
 		}
 	}
@@ -103,10 +103,19 @@ void driveToBeacon (int distanceFromBeacon)
 
 task main()
 {
+
 	initializeRobot();
 
 	alignWithBeacon();
 	driveToBeacon(45);
+
+	wait1Msec(2500);
+
+	timedDrive(-75, -75, 1000);
+	timedRightPointTurn(100, 450);
+	//timedLeftPointTurn(100, 450);
+	timedDrive(100, 100, 1500);
+	allStop();
 
 #if 0
 	while (SensorValue [irSensor] !=5)
