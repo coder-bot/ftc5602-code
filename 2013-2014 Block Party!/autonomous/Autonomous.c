@@ -16,7 +16,6 @@ void allStop ()
 {
 	motor [rightDrive] = 0;
 	motor [leftDrive] = 0;
-	//return;
 }
 
 void timedDrive (int rightSpeed, int leftSpeed, int driveTime)
