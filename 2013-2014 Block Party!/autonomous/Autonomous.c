@@ -65,19 +65,39 @@ void leftPointTurn (int turnSpeed)
 	drive(-1 * turnSpeed, turnSpeed);
 }
 
+void rightScanForBeacon ()
+{
+	//right side version
+	while (SensorValue [irSensor] != 9)
+	{
+		drive(35, 35);
+	}
+	allStop();
+}
+
+void leftScanForBeacon ()
+{
+	//left side version
+	while (SensorValue [irSensor] != 0)
+	{
+		drive(35, 35);
+	}
+	allStop();
+}
+
 void alignWithBeacon ()
 {
 	while (SensorValue [irSensor] !=5)
 	{
 		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSensor]);
 		if (SensorValue [irSensor] > 5) {
-			rightPointTurn(25);
+			rightPointTurn(15);
 		}
 		else if (SensorValue [irSensor] < 5) {
-			leftPointTurn(25);
+			leftPointTurn(15);
 			} else {
 			allStop();
-			return;
+			/*try commenting and uncommenting this line*/ return;
 		}
 	}
 }
@@ -91,10 +111,13 @@ void driveToBeacon (int distanceFromBeacon)
 	allStop();
 }
 
+
+
 task main()
 {
 	initializeRobot();
-
+	//change next line to either right or left depending on side
+	leftScanForBeacon();
 	alignWithBeacon();
 	driveToBeacon(45);
 }
