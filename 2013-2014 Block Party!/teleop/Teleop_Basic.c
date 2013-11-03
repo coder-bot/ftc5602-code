@@ -28,8 +28,8 @@ task main ()
 			motor [leftHarvester] = -100;
 			motor [rightHarvester] = -100;
 			} else {
-			motor [rightHarvester] = 0;
 			motor [leftHarvester] = 0;
+			motor [rightHarvester] = 0;
 		}
 	}
 }
