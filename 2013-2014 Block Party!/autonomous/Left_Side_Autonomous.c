@@ -8,6 +8,11 @@
 #include <JoystickDriver.c>
 #include <drivers/hitechnic-irseeker-v2.h>
 
+#define LEFT_SIDE 0
+#define RIGHT_SIDE 1
+
+int startingSide = LEFT_SIDE;
+
 void initializeRobot ()
 {
 }
@@ -58,7 +63,6 @@ void alignWithBeacon ()
 {
 	while (SensorValue [irSensor] !=5)
 	{
-		nxtDisplayCenteredBigTextLine(4 ,"%d", SensorValue [irSensor]);
 		if (SensorValue [irSensor] > 5) {
 			rightPointTurn(15);
 		}
@@ -66,7 +70,6 @@ void alignWithBeacon ()
 			leftPointTurn(15);
 			} else {
 			allStop();
-			/*try commenting and uncommenting this line*/ return;
 		}
 	}
 }
@@ -83,8 +86,14 @@ void driveToBeacon (int distanceFromBeacon)
 task main()
 {
 	initializeRobot();
-	//change next line to either right or left depending on side
-	leftScanForBeacon();
+
+	if (startingSide == LEFT_SIDE) {
+		leftScanForBeacon();
+	}
+	else if (startingSide == RIGHT_SIDE) {
+		rightScanForBeacon();
+	}
+
 	alignWithBeacon();
-	driveToBeacon(45);
+	driveToBeacon(30);
 }
