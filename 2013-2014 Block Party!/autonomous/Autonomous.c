@@ -18,41 +18,10 @@ void allStop ()
 	motor [leftDrive] = 0;
 }
 
-void timedDrive (int rightSpeed, int leftSpeed, int driveTime)
-{
-	ClearTimer(T2);
-	while (time1 [T2] < driveTime)
-	{
-		motor [rightDrive] = rightSpeed;
-		motor [leftDrive] = leftSpeed;
-	}
-	allStop();
-}
-
 void drive (int rightSpeed, int leftSpeed)
 {
 	motor [rightDrive] = rightSpeed;
 	motor [leftDrive] = leftSpeed;
-}
-
-void timedRightPointTurn (int turnSpeed, int turnTime)
-{
-	ClearTimer(T3);
-	while (time1 [T3] < turnTime)
-	{
-		drive(-1 * turnSpeed, turnSpeed);
-	}
-	allStop();
-}
-
-void timedLeftPointTurn (int turnSpeed, int turnTime)
-{
-	ClearTimer(T4);
-	while (time1 [T4] < turnTime)
-	{
-		drive(turnSpeed, -1 * turnSpeed);
-	}
-	allStop();
 }
 
 void rightPointTurn (int turnSpeed)
@@ -78,7 +47,7 @@ void rightScanForBeacon ()
 void leftScanForBeacon ()
 {
 	//left side version
-	while (SensorValue [irSensor] != 0)
+	while (SensorValue [irSensor] != 1)
 	{
 		drive(35, 35);
 	}
@@ -110,8 +79,6 @@ void driveToBeacon (int distanceFromBeacon)
 	}
 	allStop();
 }
-
-
 
 task main()
 {
