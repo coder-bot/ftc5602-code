@@ -11,7 +11,7 @@
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
 
-int startingSide = LEFT_SIDE;
+int startingSide = RIGHT_SIDE;
 
 void initializeRobot ()
 {
