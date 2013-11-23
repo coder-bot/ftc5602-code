@@ -42,134 +42,125 @@ const tMUXSensor lineFollower = msensor_S3_3;
 
 void setWrist (float wristSetting)
 {
-	servo [wrist] = wristHighTarget + ((wristLowTarget - wristHighTarget) * wristSetting);
-	servo [wrist] = wristHighTarget + ((wristHighTarget - wristLowTarget) * wristSetting);
+	//servo [wrist] = wristHighTarget + ((wristLowTarget - wristHighTarget) * wristSetting);
+	servo [wrist] = wristLowTarget + ((wristHighTarget - wristLowTarget) * wristSetting);
 }
 
 void setGrabber (float grabberSetting)
 {
-	servo [grabber] = grabberHighTarget + ((grabberLowTarget - grabberHighTarget) * grabberSetting);
-	servo [grabber] = grabberHighTarget + ((grabberHighTarget - grabberLowTarget) * grabberSetting);
+	//servo [grabber] = grabberHighTarget + ((grabberLowTarget - grabberHighTarget) * grabberSetting);
+	servo [grabber] = grabberLowTarget + ((grabberHighTarget - grabberLowTarget) * grabberSetting);
 }
 
 void initializeRobot()
 {
-	servo [wrist] = 100;
-	servo [grabber] = 100;
+	servo [leftLatch] = 255;
+	servo [rightLatch] = 0;
+#if 1
+	wristTarget = 900;
+	setWrist(wristTarget/1000.);
+	grabberTarget = 1000;
+	setGrabber(grabberTarget/1000.);
+#else
+	servo [wrist] = 127;
+	servo [grabber] = 127;
+#endif
 }
 
 task main ()
 {
-	int grabberTarget = 0;
-	int wristTarget = 0;
 	initializeRobot();
+
 	while (1)
 	{
+#if 1
 		getJoystickSettings(joystick);
 	motor [leftDrive] = abs(joystick.joy1_y1) > threshold ? joystick.joy1_y1 : 0;
 	motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y2 : 0;
-		if (joy2Btn(5) == 1) {
-			motor [grabberArm] = 80;
+		if (joy2Btn(6) == 1) {
+			motor [grabberArm] = 50;
 		}
-		else if (joy2Btn(7) == 1) {
-			motor [grabberArm] = -80;
+		else if (joy2Btn(8) == 1) {
+			motor [grabberArm] = -50;
 			} else {
 			motor [grabberArm] = 0;
 		}
-
-		if (joy2Btn(6) == 1) {
+		if (joy2Btn(5) == 1) {
 			motor [lift] = 100;
-			servo [leftLatch] = 255;
-			servo [rightLatch] = 255;
 		}
-#if 0
-		else if (joy2Btn(8) == 1) {
+		else if (joy2Btn(7) == 1) {
 			motor [lift] = -100;
 			} else {
 			motor [lift] = 0;
 		}
-#endif
-		if (joystick.joy2_y1 > 110) {
+
+		if (joy2Btn(3) == 1) {
+			servo [leftLatch] = 0;
+			servo [rightLatch] = 255;
+		}
+		else if (joy2Btn(1) == 1) {
+			servo [leftLatch] = 255;
+			servo [rightLatch] = 0;
+		}
+
+		if (joystick.joy2_y1 < -110) {
 			/*(joy2Btn (2) == 1)*/
 			if (wristTarget > 0)
 			{
 				wristTarget -= wristIncrement;
+				if (wristTarget < 0)
+					wristTarget = 0;
 				setWrist (wristTarget/1000.0);
 			}
 		}
-		if (joystick.joy2_y1 <-110) {
+		if (joystick.joy2_y1 > 110) {
 			/*(joy2Btn (4) == 1)*/
 			if (wristTarget <1000)
 			{
 				wristTarget += wristIncrement;
+				if (wristTarget > 1000)
+					wristTarget = 1000;
 				setWrist (wristTarget/1000.0);
 			}
 		}
 
-		if (joystick.joy2_y2 >110) {
+		if (joystick.joy2_x2 > 110) {
 			/*(joy2Btn (2) == 1)*/
-			if (grabberTarget >0)
+			if (grabberTarget > 0)
 			{
 				grabberTarget -= grabberIncrement;
+				if (grabberTarget < 0)
+					grabberTarget = 0;
 				setGrabber(grabberTarget/1000.0);
 			}
 		}
-		if (joystick.joy2_y2 <-110) {
+		if (joystick.joy2_x2 < -110) {
 			/*(joy2Btn (4) == 1)*/
-			if (grabberTarget <1000)
+			if (grabberTarget < 1000)
 			{
 				grabberTarget += grabberIncrement;
-				setGrabber(grabberTarget/1000.0);
-			}
-		}
-#if 0
-		if (joy2Btn(6) == 1) {
-			servo [wrist] = 100;
-		}
-		else if (joy2Btn(8) == 1) {
-			servo [wrist] = 25;
-		}
-		if (joy2Btn(5) == 1) {
-			servo [grabber] = 150;
-		}
-		else if (joy2Btn(7) == 1) {
-			servo [grabber] = 0;
-		}
-#endif
-#if 0
-		if (joy2Btn(5) == 1) {
-			if (wristTarget < 1000) {
-				wristTarget += wristIncrement;
-				servo [wrist] = wristTarget;
-			}
-		}
-		else if (joy2Btn(7) == 1) {
-			if (wristTarget > 0) {
-				wristTarget -= wristIncrement;
-				servo [wrist] = wristTarget;
-			}
-		}
-		if (joy2Btn(6) == 1) {
-			if (grabberTarget > 0) {
-				grabberTarget -= grabberIncrement;
-				setGrabber(grabberTarget/1000.0);
-			}
-		}
-		else if (joy2Btn(8) == 1) {
-			if (grabberTarget < 1000)	{
-				grabberTarget += grabberIncrement;
+				if (grabberTarget > 1000)
+					grabberTarget = 1000;
 				setGrabber(grabberTarget/1000.0);
 			}
 		}
 #endif
-#if 0
-		if (joy2Btn(2) == 1) {
-			motor [flagArm] = 50;
+#if 1
+		if (joystick.joy2_TopHat == 0) {
+			motor [spinnerArm] = 100;
 		}
-		else if (joy2Btn(3) == 1) {
-			motor [flagArm] = -50;
+		else if (joystick.joy2_TopHat == 4) {
+			motor [spinnerArm] = -100;
 			} else {
-			motor [flagArm] = 0;
+			motor [spinnerArm] = 0;
+		}
+		if (joystick.joy2_TopHat == 2) {
+			motor [flagSpinner] = 100;
+		}
+		else if (joystick.joy2_TopHat == 6) {
+			motor [flagSpinner] = -100;
+			} else {
+			motor [flagSpinner] = 0;
 		}
 #endif
 	}
