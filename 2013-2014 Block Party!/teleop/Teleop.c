@@ -1,19 +1,20 @@
-#pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTMotor,  HTServo)
+#pragma config(Hubs,  S1, HTMotor,  HTServo,  HTMotor,  HTMotor)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     HTSPB,          sensorCustom9V)
 #pragma config(Sensor, S3,     HTSMUX,         sensorI2CCustom)
 #pragma config(Sensor, S4,     irSensor,       sensorHiTechnicIRSeeker1200)
-#pragma config(Motor,  mtr_S1_C1_1,     lift,          tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C1_2,     flagArm,       tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C2_1,     rightDrive,    tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C2_2,     leftDrive,     tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_1,     grabberArm,    tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C3_2,     motorI,        tmotorTetrix, openLoop)
-#pragma config(Servo,  srvo_S1_C4_1,    wrist,                tServoStandard)
-#pragma config(Servo,  srvo_S1_C4_2,    grabber,              tServoStandard)
-#pragma config(Servo,  srvo_S1_C4_3,    latchOne,             tServoStandard)
-#pragma config(Servo,  srvo_S1_C4_4,    latchTwo,             tServoStandard)
-#pragma config(Servo,  srvo_S1_C4_5,    servo5,               tServoNone)
-#pragma config(Servo,  srvo_S1_C4_6,    servo6,               tServoNone)
+#pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C1_2,     grabberArm,    tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C3_1,     leftDrive,     tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C3_2,     spinnerArm,    tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C4_1,     lift,          tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C4_2,     flagSpinner,   tmotorTetrix, openLoop)
+#pragma config(Servo,  srvo_S1_C2_1,    wrist,                tServoStandard)
+#pragma config(Servo,  srvo_S1_C2_2,    grabber,              tServoStandard)
+#pragma config(Servo,  srvo_S1_C2_3,    leftLatch,            tServoStandard)
+#pragma config(Servo,  srvo_S1_C2_4,    rightLatch,           tServoStandard)
+#pragma config(Servo,  srvo_S1_C2_5,    servo5,               tServoNone)
+#pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
 
 #include <JoystickDriver.c>
 #include <drivers/hitechnic-sensormux.h>
@@ -37,9 +38,7 @@ const int grabberIncrement = 2;
 //void setWrist (float wristSetting);
 
 const tMUXSensor sonarSensor = msensor_S3_1;
-//const tMUXSensor irSensor = msensor_S3_2;
 const tMUXSensor lineFollower = msensor_S3_3;
-
 
 void setWrist (float wristSetting)
 {
@@ -47,10 +46,10 @@ void setWrist (float wristSetting)
 	servo [wrist] = wristHighTarget + ((wristHighTarget - wristLowTarget) * wristSetting);
 }
 
-void setGrabber (float wristSetting)
+void setGrabber (float grabberSetting)
 {
-	servo [grabber] = wristHighTarget + ((wristLowTarget - wristHighTarget) * wristSetting);
-	servo [grabber] = wristHighTarget + ((wristHighTarget - wristLowTarget) * wristSetting);
+	servo [grabber] = grabberHighTarget + ((grabberLowTarget - grabberHighTarget) * grabberSetting);
+	servo [grabber] = grabberHighTarget + ((grabberHighTarget - grabberLowTarget) * grabberSetting);
 }
 
 void initializeRobot()
@@ -80,8 +79,8 @@ task main ()
 
 		if (joy2Btn(6) == 1) {
 			motor [lift] = 100;
-			servo [latchOne] = 255;
-			servo [latchTwo] = 255;
+			servo [leftLatch] = 255;
+			servo [rightLatch] = 255;
 		}
 #if 0
 		else if (joy2Btn(8) == 1) {
