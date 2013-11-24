@@ -1,7 +1,6 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  HTMotor,  HTMotor)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S2,     HTSPB,          sensorCustom9V)
-#pragma config(Sensor, S3,     HTSMUX,         sensorI2CCustom)
+#pragma config(Sensor, S2,     sonarSensor,    sensorSONAR)
+#pragma config(Sensor, S3,     lineFollower,   sensorLightActive)
 #pragma config(Sensor, S4,     irSensor,       sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C1_2,     grabberArm,    tmotorTetrix, openLoop, reversed)
@@ -17,12 +16,12 @@
 #pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
 
 #include <JoystickDriver.c>
-#include <drivers/hitechnic-sensormux.h>
-#include <drivers/hitechnic-superpro.h>
-#include <drivers/lego-touch.h>
-#include <drivers/lego-ultrasound.h>
-#include <drivers/lego-light.h>
-#include <drivers/hitechnic-irseeker-v2.h>
+//#include <drivers/hitechnic-sensormux.h>
+//#include <drivers/hitechnic-superpro.h>
+//#include <drivers/lego-touch.h>
+//#include <drivers/lego-ultrasound.h>
+//#include <drivers/lego-light.h>
+//#include <drivers/hitechnic-irseeker-v2.h>
 
 const int threshold = 12;
 const int wristLowTarget = 0;
@@ -37,8 +36,8 @@ const int grabberIncrement = 2;
 //void setGrabber (float grabberSetting);
 //void setWrist (float wristSetting);
 
-const tMUXSensor sonarSensor = msensor_S3_1;
-const tMUXSensor lineFollower = msensor_S3_3;
+//const tMUXSensor sonarSensor = msensor_S3_1;
+//const tMUXSensor lineFollower = msensor_S3_3;
 
 void setWrist (float wristSetting)
 {
@@ -77,10 +76,10 @@ task main ()
 		getJoystickSettings(joystick);
 	motor [leftDrive] = abs(joystick.joy1_y1) > threshold ? joystick.joy1_y1 : 0;
 	motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y2 : 0;
-		if (joy2Btn(6) == 1) {
+		if (joy2Btn(8) == 1) {
 			motor [grabberArm] = 50;
 		}
-		else if (joy2Btn(8) == 1) {
+		else if (joy2Btn(6) == 1) {
 			motor [grabberArm] = -50;
 			} else {
 			motor [grabberArm] = 0;
@@ -147,10 +146,10 @@ task main ()
 #endif
 #if 1
 		if (joystick.joy2_TopHat == 0) {
-			motor [spinnerArm] = 100;
+			motor [spinnerArm] = 50;
 		}
 		else if (joystick.joy2_TopHat == 4) {
-			motor [spinnerArm] = -100;
+			motor [spinnerArm] = -50;
 			} else {
 			motor [spinnerArm] = 0;
 		}

@@ -261,20 +261,3 @@ void parkOnBridge ()
 		}
 	}
 }
-
-task main()
-{
-	initializeRobot();
-	ClearTimer(T1);
-	if (startingSide == LEFT_SIDE) {
-		leftScanForBeacon();
-	}
-	else if (startingSide == RIGHT_SIDE) {
-		rightScanForBeacon();
-	}
-	setCrate();
-	alignWithBeacon();
-	driveToBeacon(50);
-	wait1Msec(1000);
-	parkOnBridge();
-}
