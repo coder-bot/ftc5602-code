@@ -16,6 +16,7 @@
 #pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
 
 #define ACTIVE_WHITE 30
+#define STARTING_SIDE 1
 
 #include "Autonomous.h"
 
@@ -28,7 +29,13 @@ void driveOntoRamp ()
 	wait1Msec(275);
 	allStop();
 
-	timedLeftPointTurn(100, 1100);
+	if (STARTING_SIDE == LEFT_SIDE) {
+		timedRightPointTurn(100, 1100);
+	} else if (STARTING_SIDE == RIGHT_SIDE)
+	{
+		timedLeftPointTurn(100, 1000);
+	}
+
 	allStop();
 	timedDrive(100, 100, 2220);
 }

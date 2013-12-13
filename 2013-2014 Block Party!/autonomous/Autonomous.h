@@ -1,20 +1,3 @@
-#pragma config(Hubs,  S1, HTMotor,  HTServo,  HTMotor,  HTMotor)
-#pragma config(Sensor, S2,     sonarSensor,    sensorSONAR)
-#pragma config(Sensor, S3,     lineFollower,   sensorLightActive)
-#pragma config(Sensor, S4,     irSensor,       sensorHiTechnicIRSeeker1200)
-#pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C1_2,     grabberArm,    tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C3_1,     leftDrive,     tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C3_2,     spinnerArm,    tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C4_1,     lift,          tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C4_2,     flagSpinner,   tmotorTetrix, openLoop)
-#pragma config(Servo,  srvo_S1_C2_1,    wrist,                tServoStandard)
-#pragma config(Servo,  srvo_S1_C2_2,    grabber,              tServoStandard)
-#pragma config(Servo,  srvo_S1_C2_3,    leftLatch,            tServoStandard)
-#pragma config(Servo,  srvo_S1_C2_4,    rightLatch,           tServoStandard)
-#pragma config(Servo,  srvo_S1_C2_5,    servo5,               tServoNone)
-#pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
-
 //#include <JoystickDriver.c>
 //#include <drivers/hitechnic-sensormux.h>
 //#include <drivers/hitechnic-superpro.h>
@@ -29,23 +12,23 @@
 
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
-#define BLOCK_CRATE_UNDEFINED 0
-#define FIRST_CRATE_DIST  1167
-#define SECOND_CRATE_DIST 2333
-#define THIRD_CRATE_DIST 3500
-#define FOURTH_CRATE_DIST 4667
-#define WHITE 45
+//#define BLOCK_CRATE_UNDEFINED 0
+//#define FIRST_CRATE_DIST  1167
+//#define SECOND_CRATE_DIST 2333
+//#define THIRD_CRATE_DIST 3500
+//#define FOURTH_CRATE_DIST 4667
+//#define WHITE 45
 
-int startingSide = RIGHT_SIDE;
-int blockCrate;
-int crateDistance;
+//int startingSide = RIGHT_SIDE;
+//int blockCrate;
+//int crateDistance;
 
 void initializeRobot ()
 {
-	servo [leftLatch] = 255;
+	servo [leftLatch] = 225 /*255, 210 originally*/;
 	servo [rightLatch] = 0;
 	servo [wrist] = 230;
-	servo [grabber] = 255;
+	servo [grabber] = 210 /*255, 210 originally*/;
 }
 
 void allStop ()
@@ -99,6 +82,8 @@ void timedLeftPointTurn (int turnSpeed, int turnTime)
 	}
 	allStop();
 }
+
+#if 0
 
 void rightScanForBeacon ()
 {
@@ -261,3 +246,4 @@ void parkOnBridge ()
 		}
 	}
 }
+#endif
