@@ -1,5 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTServo,  HTMotor,  HTMotor)
-#pragma config(Sensor, S2,     HTSPB,   sensorI2CCustom9V)
+#pragma config(Sensor, S2,     sonarSensor,    sensorSONAR)
 #pragma config(Sensor, S3,     lineFollower,   sensorLightActive)
 #pragma config(Sensor, S4,     irSensor,       sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     rightDrive,    tmotorTetrix, openLoop, reversed)
@@ -15,7 +15,7 @@
 #pragma config(Servo,  srvo_S1_C2_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
 
-//#pragma config(Sensor, S2,     sonarSensor,    sensorSONAR)
+//#pragma config(Sensor, S2,     HTSPB,   sensorI2CCustom9V)
 
 #include <JoystickDriver.c>
 #include <drivers/hitechnic-superpro.h>
@@ -148,7 +148,7 @@ task main ()
 		}
 #endif
 		//potentiometer code follows
-#if 1
+#if 0
 		//max range of potentiometer
 		const int rMax = 1023;
 		//min range of potentiometer
@@ -169,10 +169,10 @@ task main ()
 #endif
 #if 1
 		if (joystick.joy2_TopHat == 4) {
-			motor [spinnerArm] = 50;
+			motor [spinnerArm] = 25;
 		}
 		else if (joystick.joy2_TopHat == 0) {
-			motor [spinnerArm] = -50;
+			motor [spinnerArm] = -25;
 			} else {
 			motor [spinnerArm] = 0;
 		}
