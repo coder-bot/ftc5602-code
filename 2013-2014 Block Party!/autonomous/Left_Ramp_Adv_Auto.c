@@ -15,14 +15,22 @@
 #pragma config(Servo,  srvo_S1_C2_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
 
-#define ACTIVE_WHITE 30
 #define STARTING_SIDE 0
 
 #include "Autonomous.h"
 
-task main()
+task main ()
 {
 	initializeRobot();
 	waitForStart();
-	basicDriveOntoRamp();
+	if (STARTING_SIDE == LEFT_SIDE) {
+		leftScanForBeacon();
+	}
+	else if (STARTING_SIDE == RIGHT_SIDE) {
+		rightScanForBeacon();
+	}
+	alignWithBeacon();
+	driveToBeacon(45);
+	placeBlock();
+	driveOntoRamp();
 }

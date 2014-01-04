@@ -1,4 +1,4 @@
-//#include <JoystickDriver.c>
+#include <JoystickDriver.c>
 //#include <drivers/hitechnic-sensormux.h>
 //#include <drivers/hitechnic-superpro.h>
 //#include <drivers/lego-touch.h>
@@ -12,6 +12,7 @@
 
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
+#define ACTIVE_WHITE 30
 //#define BLOCK_CRATE_UNDEFINED 0
 //#define FIRST_CRATE_DIST  1167
 //#define SECOND_CRATE_DIST 2333
@@ -83,7 +84,25 @@ void timedLeftPointTurn (int turnSpeed, int turnTime)
 	allStop();
 }
 
-#if 0
+void basicDriveOntoRamp ()
+{
+	while (SensorValue [lineFollower] < ACTIVE_WHITE)
+	{
+		drive(100, 100);
+	}
+	wait1Msec(275);
+	allStop();
+
+	if (STARTING_SIDE == LEFT_SIDE) {
+		timedRightPointTurn(100, 1100);
+	} else if (STARTING_SIDE == RIGHT_SIDE)
+	{
+		timedLeftPointTurn(100, 1000);
+	}
+
+	allStop();
+	timedDrive(100, 100, 2220);
+}
 
 void rightScanForBeacon ()
 {
@@ -129,10 +148,59 @@ void driveToBeacon (int distanceFromBeacon)
 	allStop();
 }
 
+void driveOntoRamp ()
+{
+	while (SensorValue [sonarSensor] < 70)
+	{
+		drive(-100, -100);
+	}
+	allStop();
+	if (STARTING_SIDE == RIGHT_SIDE) {
+		while (SensorValue [irSensor] != 1)
+		{
+			rightPointTurn(100);
+		}
+		allStop();
+	}
+	else if (STARTING_SIDE == LEFT_SIDE) {
+		while (SensorValue [irSensor] != 9)
+		{
+			leftPointTurn(100);
+		}
+		allStop();
+	}
+	while (SensorValue [sonarSensor] < 35)
+	{
+		drive (100, 100);
+	}
+	allStop();
+	if (STARTING_SIDE == RIGHT_SIDE) {
+		timedLeftPointTurn(100, 800);
+	}
+	else if (STARTING_SIDE == LEFT_SIDE)
+	{
+		timedRightPointTurn(100, 800);
+	}
+	while (SensorValue [lineFollower] > ACTIVE_WHITE)
+	{
+		drive (100, 100);
+	}
+	allStop();
+	if (STARTING_SIDE == RIGHT_SIDE) {
+		timedLeftPointTurn(100, 900);
+	}
+	else if (STARTING_SIDE == LEFT_SIDE) {
+		timedRightPointTurn(100, 900);
+	}
+	timedDrive(100, 100, 1500);
+}
+
+
 void placeBlock ()
 {
 }
 
+#if 0
 void driveOntoBridge()
 {
 	timedDrive(100, 100, 1750);

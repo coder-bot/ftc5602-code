@@ -34,6 +34,12 @@ int grabberLowTarget = 0;
 int grabberHighTarget = 255;
 int grabberTarget = 0;
 const int grabberIncrement = 2;
+const int grabberHighLimit = 835;
+
+const int rightClose = 15;
+const int leftClose = 218;
+const int rightOpen = 235;
+const int leftOpen = 0;
 //int lastOutput = 0x00;
 //void setGrabber (float grabberSetting);
 //void setWrist (float wristSetting);
@@ -55,16 +61,17 @@ void setGrabber (float grabberSetting)
 
 void initializeRobot()
 {
-	servo [leftLatch] = 255;
-	servo [rightLatch] = 0;
-#if 1
+	servo [leftLatch] = 218 /*255, 210 originally*/;
+	servo [rightLatch] = 15;
+#if 0
 	wristTarget = 900;
 	setWrist(wristTarget/1000.);
-	grabberTarget = 1000;
+	grabberTarget = 800;
 	setGrabber(grabberTarget/1000.);
+	servo [grabber] = 210 /*255, 210 originally*/;
 #else
-	servo [wrist] = 127;
-	servo [grabber] = 127;
+	servo [wrist] = 100;
+	servo [grabber] = 215;
 #endif
 }
 
@@ -80,13 +87,14 @@ task main ()
 	motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y2 : 0;
 #if 1
 		if (joy2Btn(7) == 1) {
-			motor [grabberArm] = 50;
+			motor [grabberArm] = 30;
 		}
 		else if (joy2Btn(5) == 1) {
-			motor [grabberArm] = -50;
+			motor [grabberArm] = -35;
 			} else {
 			motor [grabberArm] = 0;
 		}
+
 		if (joy2Btn(6) == 1) {
 			motor [lift] = 100;
 		}
@@ -98,14 +106,14 @@ task main ()
 
 		if (joy2Btn(3) == 1) {
 			servo [leftLatch] = 0;
-			servo [rightLatch] = 255;
+			servo [rightLatch] = 235;
 		}
 		else if (joy2Btn(1) == 1) {
-			servo [leftLatch] = 255;
-			servo [rightLatch] = 0;
+			servo [leftLatch] = 218;
+			servo [rightLatch] = 15;
 		}
 
-		if (joystick.joy2_y1 < -110) {
+		if (joystick.joy2_y1 > 110) {
 			/*(joy2Btn (2) == 1)*/
 			if (wristTarget > 0)
 			{
@@ -115,9 +123,9 @@ task main ()
 				setWrist (wristTarget/1000.0);
 			}
 		}
-		if (joystick.joy2_y1 > 110) {
+		if (joystick.joy2_y1 < -110) {
 			/*(joy2Btn (4) == 1)*/
-			if (wristTarget <1000)
+			if (wristTarget < 1000)
 			{
 				wristTarget += wristIncrement;
 				if (wristTarget > 1000)
@@ -141,8 +149,8 @@ task main ()
 			if (grabberTarget < 1000)
 			{
 				grabberTarget += grabberIncrement;
-				if (grabberTarget > 1000)
-					grabberTarget = 1000;
+				if (grabberTarget > grabberHighLimit)
+					grabberTarget = grabberHighLimit;
 				setGrabber(grabberTarget/1000.0);
 			}
 		}
@@ -169,10 +177,10 @@ task main ()
 #endif
 #if 1
 		if (joystick.joy2_TopHat == 4) {
-			motor [spinnerArm] = 25;
+			motor [spinnerArm] = -30;
 		}
 		else if (joystick.joy2_TopHat == 0) {
-			motor [spinnerArm] = -25;
+			motor [spinnerArm] = 30;
 			} else {
 			motor [spinnerArm] = 0;
 		}

@@ -20,29 +20,9 @@
 
 #include "Autonomous.h"
 
-void driveOntoRamp ()
-{
-	while (SensorValue [lineFollower] < ACTIVE_WHITE)
-	{
-		drive(100, 100);
-	}
-	wait1Msec(275);
-	allStop();
-
-	if (STARTING_SIDE == LEFT_SIDE) {
-		timedRightPointTurn(100, 1100);
-	} else if (STARTING_SIDE == RIGHT_SIDE)
-	{
-		timedLeftPointTurn(100, 1000);
-	}
-
-	allStop();
-	timedDrive(100, 100, 2220);
-}
-
-
 task main()
 {
 	initializeRobot();
-	driveOntoRamp();
+	waitForStart();
+	basicDriveOntoRamp();
 }
