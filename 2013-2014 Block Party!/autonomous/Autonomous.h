@@ -24,6 +24,7 @@
 //int blockCrate;
 //int crateDistance;
 
+//initialize routine
 void initializeRobot ()
 {
 	servo [leftLatch] = 225 /*255, 210 originally*/;
@@ -32,6 +33,7 @@ void initializeRobot ()
 	servo [grabber] = 210 /*255, 210 originally*/;
 }
 
+//drive functions
 void allStop ()
 {
 	motor [rightDrive] = 0;
@@ -84,6 +86,7 @@ void timedLeftPointTurn (int turnSpeed, int turnTime)
 	allStop();
 }
 
+//for use with programs solely driving onto the ramp
 void basicDriveOntoRamp ()
 {
 	while (SensorValue [lineFollower] < ACTIVE_WHITE)
@@ -195,123 +198,7 @@ void driveOntoRamp ()
 	timedDrive(100, 100, 1500);
 }
 
-
+//routine to place block in crate
 void placeBlock ()
 {
 }
-
-#if 0
-void driveOntoBridge()
-{
-	timedDrive(100, 100, 1750);
-}
-
-void setCrate ()
-{
-	if (time1 [T1] <= FIRST_CRATE_DIST) {
-		blockCrate = 1;
-		crateDistance = FIRST_CRATE_DIST;
-	}
-	else if (time1 [T1] <= SECOND_CRATE_DIST) {
-		blockCrate = 2;
-		crateDistance = SECOND_CRATE_DIST;
-	}
-	else if (time1 [T1] <= THIRD_CRATE_DIST) {
-		blockCrate = 3;
-		crateDistance = THIRD_CRATE_DIST;
-	}
-	else if (time1 [T1] >= FOURTH_CRATE_DIST) {
-		blockCrate = 4;
-		crateDistance = FOURTH_CRATE_DIST;
-		} else {
-		blockCrate = BLOCK_CRATE_UNDEFINED;
-		crateDistance = 0;
-	}
-}
-
-void parkOnBridge ()
-{
-	timedDrive(-50, -50, 280);
-	if (startingSide == RIGHT_SIDE)
-	{
-		if (blockCrate == 1 || blockCrate == 2) {
-			timedRightPointTurn(100, 1000);
-			while (SensorValue [sonarSensor] < 10)
-			{
-				drive(75, 75);
-			}
-			allStop();
-			timedLeftPointTurn(100, 625);
-			while (SensorValue [lineFollower] < WHITE)
-			{
-				drive (75, 80);
-			}
-			wait1Msec(150);
-			allStop();
-			timedLeftPointTurn(100, 600);
-			driveOntoBridge();
-		}
-		else if (blockCrate == 3 || blockCrate == 4) {
-			timedLeftPointTurn(100, 1000);
-			while (SensorValue [sonarSensor] < 10)
-			{
-				drive(80, 80);
-			}
-			allStop();
-			timedRightPointTurn(60, 625);
-			while (SensorValue [lineFollower] < WHITE)
-			{
-				drive (75, 80);
-			}
-			wait1Msec(150);
-			allStop();
-			timedRightPointTurn(100, 600);
-			//drives onto bridge and stops
-			timedDrive(100, 100, 1750);
-		}
-	}
-	else if (blockCrate == BLOCK_CRATE_UNDEFINED) {
-		return;
-	}
-	if (startingSide == LEFT_SIDE)
-	{
-		if (blockCrate == 1 || blockCrate == 2) {
-			timedRightPointTurn(100, 1000);
-			while (SensorValue [sonarSensor] < 10)
-			{
-				drive(80, 80);
-			}
-			allStop();
-			timedLeftPointTurn(100, 625);
-			while (SensorValue [lineFollower] < WHITE)
-			{
-				drive (75, 80);
-			}
-			wait1Msec(150);
-			allStop();
-			timedLeftPointTurn(100, 600);
-			driveOntoBridge();
-		}
-		else if (blockCrate == 3 || blockCrate == 4) {
-			timedLeftPointTurn(50, 1000);
-			while (SensorValue [sonarSensor] < 10)
-			{
-				drive(80, 80);
-			}
-			allStop();
-			timedRightPointTurn(60, 625);
-			while (SensorValue [lineFollower] < WHITE)
-			{
-				drive (75, 80);
-			}
-			wait1Msec(150);
-			allStop();
-			timedRightPointTurn(100, 600);
-			driveOntoBridge();
-		}
-		else if (blockCrate == BLOCK_CRATE_UNDEFINED) {
-			return;
-		}
-	}
-}
-#endif

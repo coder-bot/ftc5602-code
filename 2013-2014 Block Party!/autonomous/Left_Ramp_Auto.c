@@ -15,7 +15,6 @@
 #pragma config(Servo,  srvo_S1_C2_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C2_6,    servo6,               tServoNone)
 
-#define ACTIVE_WHITE 30
 #define STARTING_SIDE 0
 
 #include "Autonomous.h"
