@@ -189,10 +189,10 @@ task main ()
 			} else {
 			motor [spinnerArm] = 0;
 		}
-		if (joystick.joy2_TopHat == 2) {
+		if (joystick.joy2_TopHat == 6) {
 			motor [flagSpinner] = 100;
 		}
-		else if (joystick.joy2_TopHat == 6) {
+		else if (joystick.joy2_TopHat == 2) {
 			motor [flagSpinner] = -100;
 			} else {
 			motor [flagSpinner] = 0;
