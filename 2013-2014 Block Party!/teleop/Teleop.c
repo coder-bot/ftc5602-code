@@ -34,7 +34,7 @@ int grabberLowTarget = 0;
 int grabberHighTarget = 255;
 int grabberTarget = 0;
 const int grabberIncrement = 2;
-const int grabberHighLimit = 835;
+const int grabberHighLimit = 815;
 const int idealWristSetting = 65;
 
 const int rightClose = 15;
