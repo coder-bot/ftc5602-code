@@ -35,6 +35,7 @@ int grabberHighTarget = 255;
 int grabberTarget = 0;
 const int grabberIncrement = 2;
 const int grabberHighLimit = 835;
+const int idealWristSetting = 65;
 
 const int rightClose = 15;
 const int leftClose = 218;
@@ -71,7 +72,7 @@ void initializeRobot()
 	servo [grabber] = 210 /*255, 210 originally*/;
 #else
 	servo [wrist] = 100;
-	servo [grabber] = 215;
+	servo [grabber] = 200;
 #endif
 }
 
@@ -113,7 +114,7 @@ task main ()
 			servo [rightLatch] = 15;
 		}
 
-		if (joystick.joy2_y1 > 110) {
+		if (joystick.joy2_y1 < -110) {
 			/*(joy2Btn (2) == 1)*/
 			if (wristTarget > 0)
 			{
@@ -123,7 +124,7 @@ task main ()
 				setWrist (wristTarget/1000.0);
 			}
 		}
-		if (joystick.joy2_y1 < -110) {
+		if (joystick.joy2_y1 > 110) {
 			/*(joy2Btn (4) == 1)*/
 			if (wristTarget < 1000)
 			{
@@ -134,7 +135,7 @@ task main ()
 			}
 		}
 
-		if (joystick.joy2_x2 > 110) {
+		if (joystick.joy2_x2 < -110) {
 			/*(joy2Btn (2) == 1)*/
 			if (grabberTarget > 0)
 			{
@@ -144,7 +145,7 @@ task main ()
 				setGrabber(grabberTarget/1000.0);
 			}
 		}
-		if (joystick.joy2_x2 < -110) {
+		if (joystick.joy2_x2 > 110) {
 			/*(joy2Btn (4) == 1)*/
 			if (grabberTarget < 1000)
 			{
@@ -155,6 +156,10 @@ task main ()
 			}
 		}
 #endif
+		//code for setting wrist servo to "ideal" position
+		if (joy2Btn(2) == 1) {
+			servo [wrist] = idealWristSetting;
+		}
 		//potentiometer code follows
 #if 0
 		//max range of potentiometer

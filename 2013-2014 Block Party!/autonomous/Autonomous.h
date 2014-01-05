@@ -27,10 +27,10 @@
 //initialize routine
 void initializeRobot ()
 {
-	servo [leftLatch] = 225 /*255, 210 originally*/;
-	servo [rightLatch] = 0;
-	servo [wrist] = 230;
-	servo [grabber] = 210 /*255, 210 originally*/;
+	servo [leftLatch] = 218 /*255, 210 originally*/;
+	servo [rightLatch] = 15;
+	servo [wrist] = 100;
+	servo [grabber] = 200;
 }
 
 //drive functions
@@ -107,6 +107,7 @@ void basicDriveOntoRamp ()
 	timedDrive(100, 100, 2220);
 }
 
+//ir scanning, aligning and driving code
 void rightScanForBeacon ()
 {
 	//right side version
@@ -151,9 +152,15 @@ void driveToBeacon (int distanceFromBeacon)
 	allStop();
 }
 
+//routine to place block in crate
+void placeBlock ()
+{
+}
+
+//function for driving onto ramp after placing the block
 void driveOntoRamp ()
 {
-	while (SensorValue [sonarSensor] < 70)
+	while (SensorValue [sonarSensor] < 60)
 	{
 		drive(-100, -100);
 	}
@@ -172,7 +179,7 @@ void driveOntoRamp ()
 		}
 		allStop();
 	}
-	while (SensorValue [sonarSensor] < 35)
+	while (SensorValue [sonarSensor] > 35)
 	{
 		drive (100, 100);
 	}
@@ -196,9 +203,4 @@ void driveOntoRamp ()
 		timedRightPointTurn(100, 900);
 	}
 	timedDrive(100, 100, 1500);
-}
-
-//routine to place block in crate
-void placeBlock ()
-{
 }
