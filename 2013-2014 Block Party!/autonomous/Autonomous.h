@@ -28,8 +28,8 @@
 void initializeRobot ()
 {
 	servo [leftLatch] = 218 /*255, 210 originally*/;
-	servo [rightLatch] = 15;
-	servo [wrist] = 100;
+	servo [rightLatch] = 30;
+	servo [wrist] = 190;
 	servo [grabber] = 200;
 }
 
@@ -111,21 +111,39 @@ void basicDriveOntoRamp ()
 void rightScanForBeacon ()
 {
 	//right side version
-	while (SensorValue [irSensor] != 9)
+	if (SensorValue [irSensor] == 9)
 	{
-		drive(100, 100);
+		while (SensorValue [irSensor] > 6)
+		{
+			leftPointTurn(70);
+		}
+		allStop();
+		} else {
+		while (SensorValue [irSensor] != 9)
+		{
+			drive(100, 100);
+		}
+		allStop();
 	}
-	allStop();
 }
 
 void leftScanForBeacon ()
 {
 	//left side version
-	while (SensorValue [irSensor] != 1)
+	if (SensorValue [irSensor] == 1)
 	{
-		drive(100, 100);
+		while (SensorValue [irSensor] < 4)
+		{
+			leftPointTurn(70);
+		}
+		allStop();
+		} else {
+		while (SensorValue [irSensor] != 1)
+		{
+			drive(100, 100);
+		}
+		allStop();
 	}
-	allStop();
 }
 
 void alignWithBeacon ()
@@ -133,10 +151,10 @@ void alignWithBeacon ()
 	while (SensorValue [irSensor] !=5)
 	{
 		if (SensorValue [irSensor] > 5) {
-			rightPointTurn(100);
+			rightPointTurn(70);
 		}
 		else if (SensorValue [irSensor] < 5) {
-			leftPointTurn(100);
+			leftPointTurn(70);
 			} else {
 			allStop();
 		}
@@ -155,47 +173,69 @@ void driveToBeacon (int distanceFromBeacon)
 //routine to place block in crate
 void placeBlock ()
 {
+	ClearTimer(T1);
+	while (time1 [T1] < 1400)
+	{
+		motor [grabberArm] = 100;
+	}
+	motor [grabberArm] = 0;
+	servo [grabber] = 10;
+	ClearTimer(T1);
+	while (time1 [T1] < 1250)
+	{
+		motor [grabberArm] = -100;
+	}
+	motor [grabberArm] = 0;
+	//drives away from block crates
+	while (SensorValue [sonarSensor] < 75)
+	{
+		drive(-100, -100);
+	}
+	drive(0, 0);
 }
 
 //function for driving onto ramp after placing the block
 void driveOntoRamp ()
 {
-	while (SensorValue [sonarSensor] < 60)
+	while (SensorValue [sonarSensor] < 35)
 	{
 		drive(-100, -100);
 	}
 	allStop();
 	if (STARTING_SIDE == RIGHT_SIDE) {
-		while (SensorValue [irSensor] != 1)
+		while (SensorValue [irSensor] != 2)
 		{
 			rightPointTurn(100);
 		}
 		allStop();
 	}
 	else if (STARTING_SIDE == LEFT_SIDE) {
-		while (SensorValue [irSensor] != 9)
+		while (SensorValue [irSensor] != 8)
 		{
 			leftPointTurn(100);
 		}
 		allStop();
 	}
-	while (SensorValue [sonarSensor] > 35)
+
+	while (SensorValue [sonarSensor] > 55)
 	{
-		drive (100, 100);
+		drive (80, 80);
 	}
 	allStop();
 	if (STARTING_SIDE == RIGHT_SIDE) {
-		timedLeftPointTurn(100, 800);
+		timedLeftPointTurn(100, 850);
 	}
 	else if (STARTING_SIDE == LEFT_SIDE)
 	{
-		timedRightPointTurn(100, 800);
+		timedRightPointTurn(100, 850);
 	}
+
 	while (SensorValue [lineFollower] > ACTIVE_WHITE)
 	{
-		drive (100, 100);
+		drive (75, 75);
 	}
 	allStop();
+
 	if (STARTING_SIDE == RIGHT_SIDE) {
 		timedLeftPointTurn(100, 900);
 	}

@@ -63,7 +63,7 @@ void setGrabber (float grabberSetting)
 void initializeRobot()
 {
 	servo [leftLatch] = 218 /*255, 210 originally*/;
-	servo [rightLatch] = 15;
+	servo [rightLatch] = 30;
 #if 0
 	wristTarget = 900;
 	setWrist(wristTarget/1000.);
@@ -82,7 +82,6 @@ task main ()
 	waitForStart();
 	while (1)
 	{
-
 		getJoystickSettings(joystick);
 	motor [leftDrive] = abs(joystick.joy1_y1) > threshold ? joystick.joy1_y1 : 0;
 	motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y2 : 0;
@@ -111,7 +110,7 @@ task main ()
 		}
 		else if (joy2Btn(1) == 1) {
 			servo [leftLatch] = 218;
-			servo [rightLatch] = 15;
+			servo [rightLatch] = 30;
 		}
 
 		if (joystick.joy2_y1 < -110) {
