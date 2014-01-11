@@ -111,11 +111,12 @@ void basicDriveOntoRamp ()
 void rightScanForBeacon ()
 {
 	//right side version
+
 	if (SensorValue [irSensor] == 9)
 	{
 		while (SensorValue [irSensor] > 6)
 		{
-			leftPointTurn(70);
+			rightPointTurn(70);
 		}
 		allStop();
 		} else {
@@ -130,6 +131,7 @@ void rightScanForBeacon ()
 void leftScanForBeacon ()
 {
 	//left side version
+
 	if (SensorValue [irSensor] == 1)
 	{
 		while (SensorValue [irSensor] < 4)

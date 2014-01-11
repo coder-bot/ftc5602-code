@@ -30,7 +30,10 @@ task main ()
 	else if (STARTING_SIDE == RIGHT_SIDE) {
 		rightScanForBeacon();
 	}
-	alignWithBeacon();
+	if (SensorValue [irSensor] != 4)
+	{
+		alignWithBeacon();
+	}
 	driveToBeacon(36);
 	placeBlock();
 #if 0
