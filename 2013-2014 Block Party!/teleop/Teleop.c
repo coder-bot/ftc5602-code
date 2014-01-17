@@ -34,7 +34,7 @@ int grabberLowTarget = 0;
 int grabberHighTarget = 255;
 int grabberTarget = 0;
 const int grabberIncrement = 2;
-const int grabberHighLimit = 815;
+const int grabberHighLimit = 950;
 const int idealWristSetting = 65;
 
 const int rightClose = 15;
@@ -71,8 +71,8 @@ void initializeRobot()
 	setGrabber(grabberTarget/1000.);
 	servo [grabber] = 210 /*255, 210 originally*/;
 #else
-	servo [wrist] = 100;
-	servo [grabber] = 200;
+	servo [wrist] = 190;
+	servo [grabber] = 235;
 #endif
 }
 
