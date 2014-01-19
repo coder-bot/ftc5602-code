@@ -34,7 +34,7 @@ task main ()
 	{
 		alignWithBeacon();
 	}
-	driveToBeacon(36);
+	driveToBeacon(38);
 	placeBlock();
 #if 0
 	driveOntoRamp();

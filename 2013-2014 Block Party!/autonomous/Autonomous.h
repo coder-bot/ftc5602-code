@@ -24,7 +24,7 @@
 //int blockCrate;
 //int crateDistance;
 
-const int firstAndSecondCrateMaxTime = 1650;
+//const int firstAndSecondCrateMaxTime = 1650;
 
 //initialize routine
 void initializeRobot ()
@@ -126,15 +126,16 @@ void rightScanForBeacon ()
 		{
 			drive(100, 100);
 		}
+		wait1Msec(500);
 		allStop();
 	}
-		/* if (time1[T1] < firstAndSecondCrateMaxTime) {
-			wait1Msec(650);
-			allStop();
-			} else {
-			allStop();
-		} */
-	}
+	/* if (time1[T1] < firstAndSecondCrateMaxTime) {
+	wait1Msec(650);
+	allStop();
+	} else {
+	allStop();
+	} */
+}
 
 void leftScanForBeacon ()
 {
@@ -153,14 +154,15 @@ void leftScanForBeacon ()
 		{
 			drive(100, 100);
 		}
+		wait1Msec(500);
 		allStop();
 	}
-		/* if (time1[T2] < firstAndSecondCrateMaxTime) {
-			wait1Msec(650);
-			allStop();
-			} else {
-			allStop();
-		} */
+	/* if (time1[T2] < firstAndSecondCrateMaxTime) {
+	wait1Msec(650);
+	allStop();
+	} else {
+	allStop();
+	} */
 }
 
 void alignWithBeacon ()
@@ -173,9 +175,11 @@ void alignWithBeacon ()
 		else if (SensorValue [irSensor] < 5) {
 			leftPointTurn(70);
 			} else {
+			//comment next line out
 			allStop();
 		}
 	}
+	//allStop();
 }
 
 void driveToBeacon (int distanceFromBeacon)
@@ -196,7 +200,9 @@ void placeBlock ()
 		motor [grabberArm] = 60;
 	}
 	motor [grabberArm] = 0;
+	wait1Msec(800);
 	servo [grabber] = 10;
+	wait1Msec(800);
 	ClearTimer(T1);
 	while (time1 [T1] < 1250)
 	{
