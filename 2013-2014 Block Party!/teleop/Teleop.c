@@ -25,22 +25,41 @@
 //#include <drivers/lego-light.h>
 //#include <drivers/hitechnic-irseeker-v2.h>
 
-const int threshold = 12;
+const int threshold = 10;
+
+//Holonomic Drive Variables
+int x1;
+int y1;
+int x2;
+const int t = 8;
+const float standardDriveScale = 0.95;
+const float precisionDriveScale = 0.28;
+int frontLeftMotorSetting = (x1 + y1 + x2);
+int frontRightMotorSetting = (- x1 + y1 - x2);
+int rearLeftMotorSetting = (- x1 + y1 + x2);
+int rearRightMotorSetting = (x1 + y1 - x2);
+
+//wrist and grabber targets/limits
+int wristTarget = 0;
 const int wristLowTarget = 0;
 const int wristHighTarget = 255;
-int wristTarget = 0;
 const int wristIncrement = 1;
-int grabberLowTarget = 0;
-int grabberHighTarget = 255;
+
 int grabberTarget = 0;
+const int grabberLowTarget = 0;
+const int grabberHighTarget = 255;
 const int grabberIncrement = 2;
 const int grabberHighLimit = 950;
+
+//makes wrist parallel to ground
 const int idealWristSetting = 65;
 
+//for lifting hook servos
 const int rightClose = 15;
 const int leftClose = 218;
 const int rightOpen = 235;
 const int leftOpen = 0;
+
 //int lastOutput = 0x00;
 //void setGrabber (float grabberSetting);
 //void setWrist (float wristSetting);
@@ -83,8 +102,21 @@ task main ()
 	while (1)
 	{
 		getJoystickSettings(joystick);
-	motor [leftDrive] = abs(joystick.joy1_y1) > threshold ? joystick.joy1_y1 : 0;
-	motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y2 : 0;
+		/*tank drive
+		motor [leftDrive] = abs(joystick.joy1_y1) > threshold ? joystick.joy1_y1 : 0;
+		motor [rightDrive] = abs(joystick.joy1_y2) > threshold ? joystick.joy1_y2 : 0;
+		*/
+
+		//Holonomic Drive
+	x1 = ( abs( joystick.joy1_x1 ) > t ) ? joystick.joy1_x1 : 0;
+	y1 = ( abs( joystick.joy1_y1 ) > t ) ? joystick.joy1_y1 : 0;
+	x2 = ( abs( joystick.joy1_x2 ) > t ) ? joystick.joy1_x2 : 0;
+
+	motor [frontLeft] = ((joy1Btn (1) == 1) || (joy1Btn (2) == 1) || (joy1Btn (3) == 1) || (joy1Btn (4) == 1)) ? frontLeftMotorSetting * precisionDriveScale : frontLeftMotorSetting * standardDriveScale;
+	motor [frontRight] = ((joy1Btn (1) == 1) || (joy1Btn (2) == 1) || (joy1Btn (3) == 1) || (joy1Btn (4) == 1)) ? frontRightMotorSetting * precisionDriveScale : frontRightMotorSetting * standardDriveScale;
+	motor [rearLeft] = ((joy1Btn (1) == 1) || (joy1Btn (2) == 1) || (joy1Btn (3) == 1) || (joy1Btn (4) == 1)) ? rearLeftMotorSetting * precisionDriveScale : rearLeftMotorSetting * standardDriveScale;
+	motor [rearRight] = ((joy1Btn (1) == 1) || (joy1Btn (2) == 1) || (joy1Btn (3) == 1) || (joy1Btn (4) == 1)) ? rearRightMotorSetting * precisionDriveScale : rearRightMotorSetting * standardDriveScale;
+
 #if 1
 		if (joy2Btn(7) == 1) {
 			motor [grabberArm] = 30;
