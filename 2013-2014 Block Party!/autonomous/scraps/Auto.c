@@ -35,7 +35,6 @@
 #include "Autonomous-Scraps.h"
 
 //deterimine the maximum time it should take to accomplish these function-driven tasks
-#define BEACON_ALIGNMENT_MAX 5000
 #define BLOCK_PLACEMENT_MAX 5000
 
 task main()
@@ -43,9 +42,6 @@ task main()
 	waitForStart();
 	ClearTimer(T1);
 	alignWithBeacon();
-	if (time1[T1] > BEACON_ALIGNMENT_MAX) {
-		return;
-	}
 	ClearTimer(T1);
 	placeBlock();
 	if (time1[T1] > BLOCK_PLACEMENT_MAX) {

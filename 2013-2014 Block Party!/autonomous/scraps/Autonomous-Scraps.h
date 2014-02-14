@@ -15,6 +15,8 @@
 #define WHITE 45
 #define BRIDGE_PARK_S1_MAX 5000
 #define BRIDGE_PARK_S2_MAX 5000
+#define BEACON_ALIGN_S1_MAX 5000
+#define BEACON_RETREAT_MAX 5000
 
 int armMovementTime = 2000;
 int beaconStatus, deltaAlignment, bridgeMovement;
@@ -57,15 +59,34 @@ void alignWithBeacon()
 		while (SensorValue [irSensor] != 5)
 		{
 			drive(80, 0, 0);
+			if (time1[T1] > BEACON_ALIGN_S1_MAX) {
+				return;
+			}
 		}
 		allStop();
 	}
-	else if (beaconStatus < 5)
+	else if (beaconStatus < 5) {
 		deltaAlignment = DELTA_LEFT;
-	{
 		while (SensorValue [irSensor] != 5)
 		{
 			drive(-80, 0, 0);
+			if (time1[T1] > BEACON_ALIGN_S1_MAX) {
+				return;
+			}
+		}
+		allStop();
+	}
+	if (SensorValue[sonarSensor] < blockPlacementDist) {
+		while (SensorValue[sonarSensor] < blockPlacementDist)
+		{
+			drive(0, 75, 0);
+		}
+		allStop();
+	}
+	else if (SensorValue[sonarSensor] > blockPlacementDist) {
+		while (SensorValue[sonarSensor] > blockPlacementDist)
+		{
+			drive(0, -75, 0);
 		}
 		allStop();
 	}
@@ -89,6 +110,9 @@ void placeBlock()
 	while (SensorValue [sonarSensor] < bridgeMovementInitialDist)
 	{
 		drive(0, -100, 0);
+		if (time1[T1] > BEACON_RETREAT_MAX) {
+			return;
+		}
 	}
 	allStop();
 }
