@@ -110,7 +110,7 @@ task main ()
 		//Holonomic Drive Variables
 		const int t = 8;
 		const float standardDriveScale = 0.79;
-		const float precisionDriveScale = 0.28;
+		const float precisionDriveScale = 0.15;
 
 	int	x1 = (abs(joystick.joy1_x1) > t) ? joystick.joy1_x1 : 0;
 	int	y1 = (abs(joystick.joy1_y1) > t) ? joystick.joy1_y1 : 0;

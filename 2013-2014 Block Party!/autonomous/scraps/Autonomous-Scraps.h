@@ -4,7 +4,7 @@
 //T1 - RESERVED - fail-safe timer that shuts down program if it is taking too long e.g. motors are burning out from ramming another robot unintentionally
 //T2 - RESERVED - time taken for arm to move to place block
 //T3 - RESERVED - time taken for robot to execute movements to park on the bridge
-//T4 - RESERVED - timer used to determine if IR beacon is underneath first crate and thus if performing of necessary actions is necessary
+//T4 - RESERVED - timer used to precisely set IR beacon alignment
 
 #include <JoystickDriver.c>
 
@@ -20,15 +20,16 @@
 //#define BEACON_ALIGN_S1_MAX 5000
 //#define BEACON_RETREAT_MAX 5000
 
-int armMovementTime = 2000;
+int armMovementTime = 2250;
 //int beaconStatus, deltaAlignment, bridgeMovement;
-int blockPlacementDist = 38;
+int blockPlacementDist = 45;
 int cratesPassedDist = 100;
-int bridgeMovementInitialDist = 35;
+int bridgeMovementInitialDist = 48;
 //int whiteTapeDelay = 1000;
-int bridgeAlignmentTime = 1400;
-int bridgeParkTime = 2500;
-int clearPendulumDelay = 800;
+int bridgeAlignmentTime = 1700;
+int bridgeParkTime = 2000;
+int clearPendulumDelay = 350;
+int alignmentRunCount = 0;
 
 void drive(int x1, int y1, int x2)
 {
@@ -57,42 +58,97 @@ void getBeaconStatus ()
 
 void alignWithBeacon()
 {
+	alignmentRunCount++;
 	//getBeaconStatus();
 	//ClearTimer(T4);
 	if (STARTING_SIDE == LEFT_SIDE) {
-		while (SensorValue[irSensor] != 5)
+		while (SensorValue[irSensor] != 4)
 		{
-			drive(50, 0, 0);
+			drive(35, 0, 0);
 		}
 		/*if (time1[T4] < 750) {
 		wait1Msec(250);
 		}*/
+		allStop();
+		ClearTimer(T4);
+		while (SensorValue[irSensor] != 6)
+		{
+			drive(-20, 0, 0);
+		}
+		int irTimeLeft = time1[T4];
+		allStop();
+		drive(20, 0, 0);
+		wait1Msec(irTimeLeft/2);
 		allStop();
 	}
 	else if (STARTING_SIDE == RIGHT_SIDE)
 	{
-		while (SensorValue[irSensor] != 5)
+		while (SensorValue[irSensor] != 6)
 		{
-			drive(-50, 0, 0);
+			drive(-35, 0, 0);
 		}
 		/*if (time1[T4] < 750) {
 		wait1Msec(250);
 		}*/
 		allStop();
-	}
-	if (SensorValue[sonarSensor] < blockPlacementDist) {
-		while (SensorValue[sonarSensor] < blockPlacementDist)
+		ClearTimer(T4);
+		while(SensorValue[irSensor] != 4)
 		{
-			drive(0, -40, 0);
+			drive(20, 0, 0);
 		}
+		int irTimeRight = time1[T4];
+		allStop();
+		drive(-20, 0, 0);
+		wait1Msec(irTimeRight/2);
 		allStop();
 	}
-	else if (SensorValue[sonarSensor] > blockPlacementDist) {
-		while (SensorValue[sonarSensor] > blockPlacementDist)
+	if (alignmentRunCount >= 2) {
+		return;
+		} else {
+		if (SensorValue[sonarSensor] < blockPlacementDist) {
+			while (SensorValue[sonarSensor] < blockPlacementDist)
+			{
+				drive(0, -40, 0);
+			}
+			allStop();
+		}
+		else if (SensorValue[sonarSensor] > blockPlacementDist) {
+			while (SensorValue[sonarSensor] > blockPlacementDist)
+			{
+				drive(0, 40, 0);
+			}
+			allStop();
+		}
+		//alignWithBeacon();
+		while (SensorValue[irSensor] != 4)
 		{
-			drive(0, 40, 0);
+			drive(0, 0, 20);
 		}
 		allStop();
+		ClearTimer(T4);
+		while (SensorValue[irSensor] != 6)
+		{
+			drive(0, 0, -20);
+		}
+		int irTimeRot = time1[T4];
+		allStop();
+		drive(0, 0, 20);
+		wait1Msec((irTimeRot/2) + 100);
+		allStop();
+		//if (SensorValue[sonarSensor] < blockPlacementDist) {
+		//	while (SensorValue[sonarSensor] < blockPlacementDist)
+		//	{
+		//		drive(0, -40, 0);
+		//	}
+		//	allStop();
+		//}
+		//else if (SensorValue[sonarSensor] > blockPlacementDist) {
+		//	while (SensorValue[sonarSensor] > blockPlacementDist)
+		//	{
+		//		drive(0, 40, 0);
+		//	}
+		//	allStop();
+		//}
 	}
 }
 
@@ -101,20 +157,20 @@ void placeBlock()
 	ClearTimer(T2);
 	while (time1[T2] < armMovementTime)
 	{
-		motor [grabberArm] = 100;
+		motor [grabberArm] = 75;
 	}
 	motor [grabberArm] = 0;
 	wait1Msec(500);
 	ClearTimer(T2);
-	while (time1[T2] < armMovementTime - (100))
+	while (time1[T2] < armMovementTime - (250))
 	{
-		motor [grabberArm] = -100;
+		motor [grabberArm] = -75;
 	}
 	motor [grabberArm] = 0;
 	if (SensorValue[sonarSensor] < bridgeMovementInitialDist) {
 		while (SensorValue [sonarSensor] < bridgeMovementInitialDist)
 		{
-			drive(0, -35, 0);
+			drive(0, -30, 0);
 #if 0
 			if (time1[T1] > BEACON_RETREAT_MAX) {
 				return;
@@ -126,7 +182,7 @@ void placeBlock()
 	else if (SensorValue[sonarSensor] > bridgeMovementInitialDist) {
 		while (SensorValue[sonarSensor] > bridgeMovementInitialDist)
 		{
-			drive(0, 35, 0);
+			drive(0, 30, 0);
 #if 0
 			if (time1[T1] > BEACON_RETREAT_MAX) {
 				return;
@@ -135,6 +191,22 @@ void placeBlock()
 		}
 		allStop();
 	}
+	//alignWithBeacon();
+	while (SensorValue[irSensor] != 4)
+	{
+		drive(0, 0, 20);
+	}
+	allStop();
+	ClearTimer(T4);
+	while (SensorValue[irSensor] != 6)
+	{
+		drive(0, 0, -20);
+	}
+	int irTimeRot = time1[T4];
+	allStop();
+	drive(0, 0, 20);
+	wait1Msec((irTimeRot/2) + 100);
+	allStop();
 }
 
 void parkOnBridge()
@@ -150,7 +222,7 @@ void parkOnBridge()
 		allStop();
 	}
 	else if (STARTING_SIDE == RIGHT_SIDE) {
-		drive(50, 0, 0);
+		drive(-50, 0, 0);
 		wait1Msec(100);
 		while (SensorValue[sonarSensor] < cratesPassedDist)
 		{
