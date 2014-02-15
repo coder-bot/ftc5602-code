@@ -29,23 +29,18 @@
 //T1 - RESERVED - fail-safe timer that shuts down program if it is taking too long e.g. motors are burning out from ramming another robot unintentionally
 //T2 - RESERVED - time taken for arm to move to place block AND time taken for robot to align into proper position for bridge-parking
 //T3 - RESERVED - time taken for robot to make parallel movement onto bridge
-//T4 - AVAILIBLE
+//T4 - RESERVED - timer used to determine if IR beacon is underneath first crate and thus if performing of necessary actions is necessary
 
+#define STARTING_SIDE RIGHT_SIDE
 #pragma once
 #include "Autonomous-Scraps.h"
-
-//deterimine the maximum time it should take to accomplish these function-driven tasks
-#define BLOCK_PLACEMENT_MAX 5000
 
 task main()
 {
 	waitForStart();
-	ClearTimer(T1);
+	//ClearTimer(T1);
 	alignWithBeacon();
-	ClearTimer(T1);
+	//ClearTimer(T1);
 	placeBlock();
-	if (time1[T1] > BLOCK_PLACEMENT_MAX) {
-		return;
-	}
 	parkOnBridge();
 }
