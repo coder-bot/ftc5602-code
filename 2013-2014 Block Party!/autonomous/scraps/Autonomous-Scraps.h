@@ -22,7 +22,7 @@
 
 int armMovementTime = 2250;
 //int beaconStatus, deltaAlignment, bridgeMovement;
-int blockPlacementDist = 45;
+int blockPlacementDist = 47;
 int cratesPassedDist = 100;
 int bridgeMovementInitialDist = 48;
 //int whiteTapeDelay = 1000;
@@ -192,21 +192,41 @@ void placeBlock()
 		allStop();
 	}
 	//alignWithBeacon();
-	while (SensorValue[irSensor] != 4)
-	{
+	if  (STARTING_SIDE == LEFT_SIDE) {
+		while (SensorValue[irSensor] != 4)
+		{
+			drive(0, 0, 20);
+		}
+		allStop();
+		ClearTimer(T4);
+		while (SensorValue[irSensor] != 6)
+		{
+			drive(0, 0, -20);
+		}
+		int irTimeRotLeft = time1[T4];
+		allStop();
 		drive(0, 0, 20);
+		wait1Msec((irTimeRotLeft/2) + 100);
+		allStop();
 	}
-	allStop();
-	ClearTimer(T4);
-	while (SensorValue[irSensor] != 6)
-	{
+
+	else if (STARTING_SIDE == RIGHT_SIDE) {
+		while (SensorValue[irSensor] != 6)
+		{
+			drive(0, 0, -20);
+		}
+		allStop();
+		ClearTimer(T4);
+		while (SensorValue[irSensor] != 4)
+		{
+			drive(0, 0, 20);
+		}
+		int irTimeRotRight = time1[T4];
+		allStop();
 		drive(0, 0, -20);
+		wait1Msec((irTimeRotRight/2) + 100);
+		allStop();
 	}
-	int irTimeRot = time1[T4];
-	allStop();
-	drive(0, 0, 20);
-	wait1Msec((irTimeRot/2) + 100);
-	allStop();
 }
 
 void parkOnBridge()
