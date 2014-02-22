@@ -18,7 +18,7 @@
 #pragma config(Servo,  srvo_S1_C3_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_6,    servo6,               tServoNone)
-#pragma config(Servo,  srvo_S2_C1_1,    flagLift,             tServoContinuousRotation)
+#pragma config(Servo,  srvo_S2_C1_1,    spinnerLift,          tServoContinuousRotation)
 #pragma config(Servo,  srvo_S2_C1_2,    rightLatch,           tServoStandard)
 #pragma config(Servo,  srvo_S2_C1_3,    servo9,               tServoNone)
 #pragma config(Servo,  srvo_S2_C1_4,    servo10,              tServoNone)
@@ -28,7 +28,10 @@
 #include <JoystickDriver.c>
 #define DRIVE_MODE_STD 1
 #define DRIVE_MODE_EG 2
-int driveMode;
+#define MECH_MODE_STD 1
+#define MECH_MODE_INVERTED 2
+
+int driveMode, mechMode;
 
 void switchDriveMode(int driveModeToSwitchTo)
 {
@@ -38,9 +41,18 @@ void switchDriveMode(int driveModeToSwitchTo)
 	driveMode = driveModeToSwitchTo;
 }
 
+void switchMechMode(int mechModeToSwitchTo)
+{
+	while (joy2Btn(10) == 1)
+	{
+	}
+	mechMode = mechModeToSwitchTo;
+}
+
 void initializeRobot()
 {
-	switchDriveMode(1);
+	switchDriveMode(DRIVE_MODE_STD);
+	switchMechMode(MECH_MODE_INVERTED);
 }
 
 task main ()
@@ -59,7 +71,7 @@ task main ()
 	int	x1 = (abs(joystick.joy1_x1) > t) ? joystick.joy1_x1 : 0;
 	int	y1 = (abs(joystick.joy1_y1) > t) ? joystick.joy1_y1 : 0;
 	int	x2 = (abs(joystick.joy1_x2) > t) ? joystick.joy1_x2 : 0;
-	int y2 = (abs(joystick.joy1_y2) > t) ? joystick.joy1_y2 : 0;
+		//int y2 = (abs(joystick.joy1_y2) > t) ? joystick.joy1_y2 : 0;
 
 		int stdFrontLeftMotorSetting = (- x1 - y1 + x2);
 		int stdFrontRightMotorSetting = (x1 - y1 - x2);
@@ -84,6 +96,7 @@ task main ()
 		motor [rearLeft] = ((egRearLeftMotorSetting * precisionDriveScale) - ((joy1Btn(1) == 1) ? 20 : 0) + ((joy1Btn(3) == 1) ? 20 : 0));
 		motor [rearRight] = ((egRearRightMotorSetting * precisionDriveScale) + ((joy1Btn(1) == 1) ? 20 : 0) - ((joy1Btn(3) == 1) ? 20 : 0));
 		}
+
 		if (joy1Btn(1) == 1 && joy1Btn(2) == 1 && joy1Btn(3) == 1 && joy1Btn(4) == 1) {
 			if (driveMode == DRIVE_MODE_STD) {
 				switchDriveMode(DRIVE_MODE_EG);
@@ -92,25 +105,58 @@ task main ()
 				switchDriveMode(DRIVE_MODE_STD);
 			}
 		}
-		if (joy2Btn(7) == 1) {
-			motor [grabberArm] = 100;
-		}
-		else if (joy2Btn(5) == 1) {
-			motor [grabberArm] = -100;
-			} else {
-			motor [grabberArm] = 0;
-		}
 
-		if (joy2Btn(6) == 1) {
-			motor [leftLift] = -100;
-			motor [rightLift] = -100;
+		if (joy2Btn(10) == 1) {
+			if (mechMode == MECH_MODE_STD) {
+				switchMechMode(MECH_MODE_INVERTED);
+			}
+			else if (mechMode == MECH_MODE_INVERTED) {
+				switchMechMode(MECH_MODE_STD);
+			}
 		}
-		else if (joy2Btn(8) == 1) {
-			motor [leftLift] = 100;
-			motor [rightLift] = 100;
-			} else {
-			motor [leftLift] = 0;
-			motor [rightLift] = 0;
+		if (mechMode == MECH_MODE_STD) {
+			if (joy2Btn(7) == 1) {
+				motor [grabberArm] = -100;
+			}
+			else if (joy2Btn(5) == 1) {
+				motor [grabberArm] = 100;
+				} else {
+				motor [grabberArm] = 0;
+			}
+
+			if (joy2Btn(6) == 1) {
+				motor [leftLift] = 100;
+				motor [rightLift] = 100;
+			}
+			else if (joy2Btn(8) == 1) {
+				motor [leftLift] = -100;
+				motor [rightLift] = -100;
+				} else {
+				motor [leftLift] = 0;
+				motor [rightLift] = 0;
+			}
+		}
+		else if (mechMode == MECH_MODE_INVERTED) {
+			if (joy2Btn(7) == 1) {
+				motor [grabberArm] = 100;
+			}
+			else if (joy2Btn(5) == 1) {
+				motor [grabberArm] = -100;
+				} else {
+				motor [grabberArm] = 0;
+			}
+
+			if (joy2Btn(6) == 1) {
+				motor [leftLift] = -100;
+				motor [rightLift] = -100;
+			}
+			else if (joy2Btn(8) == 1) {
+				motor [leftLift] = 100;
+				motor [rightLift] = 100;
+				} else {
+				motor [leftLift] = 0;
+				motor [rightLift] = 0;
+			}
 		}
 
 		if (joy2Btn(6) != 1 && joy2Btn(8) != 1) {
@@ -135,13 +181,14 @@ task main ()
 			} else {
 			motor [flagSpinner] = 0;
 		}
+
 		if (joy2Btn(2) == 1) {
-			servo [flagLift] = 255;
+			servo [spinnerLift] = 255;
 		}
 		else if (joy2Btn(4) == 1) {
-			servo [flagLift] = 0;
+			servo [spinnerLift] = 0;
 			} else {
-			servo [flagLift] = 127;
+			servo [spinnerLift] = 127;
 		}
 	}
 }
