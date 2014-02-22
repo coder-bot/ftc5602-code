@@ -116,10 +116,10 @@ task main ()
 	int	y1 = (abs(joystick.joy1_y1) > t) ? joystick.joy1_y1 : 0;
 	int	x2 = (abs(joystick.joy1_x2) > t) ? joystick.joy1_x2 : 0;
 
-		int frontLeftMotorSetting = (x1 + y1 + x2);
-		int frontRightMotorSetting = (- x1 + y1 - x2);
-		int rearLeftMotorSetting = (- x1 + y1 + x2);
-		int rearRightMotorSetting = (x1 + y1 - x2);
+		int frontLeftMotorSetting = (- x1 - y1 + x2);
+		int frontRightMotorSetting = (x1 - y1 - x2);
+		int rearLeftMotorSetting = (x1 - y1 + x2);
+		int rearRightMotorSetting = (- x1 - y1 - x2);
 
 		//Main holonomic
 	motor [frontLeft] = ((joy1Btn (5) == 1) || (joy1Btn (6) == 1) || (joy1Btn (7) == 1) || (joy1Btn (8) == 1)) ? frontLeftMotorSetting * precisionDriveScale : frontLeftMotorSetting * standardDriveScale;

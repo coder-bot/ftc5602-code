@@ -22,7 +22,7 @@
 
 int armMovementTime = 2250;
 //int beaconStatus, deltaAlignment, bridgeMovement;
-int blockPlacementDist = 47;
+int blockPlacementDist = 40;
 int cratesPassedDist = 100;
 int bridgeMovementInitialDist = 48;
 //int whiteTapeDelay = 1000;
