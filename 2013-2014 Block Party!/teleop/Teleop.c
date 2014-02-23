@@ -25,6 +25,8 @@
 #pragma config(Servo,  srvo_S2_C1_5,    servo11,              tServoNone)
 #pragma config(Servo,  srvo_S2_C1_6,    servo12,              tServoNone)
 
+//Main teleop program with holonomic drive and mechanism controls
+
 #include <JoystickDriver.c>
 #define DRIVE_MODE_STD 1
 #define DRIVE_MODE_EG 2
