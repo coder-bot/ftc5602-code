@@ -23,6 +23,14 @@ int bridgeParkTime = 2000;
 int clearPendulumDelay = 350;
 int alignmentRunCount = 0;
 
+const tMUXSensor sonarSensor = msensor_S3_1;
+const tMUXSensor lightSensor = msensor_S3_2;
+
+void initializeRobot()
+{
+	LSsetActive(lightSensor);
+}
+
 void drive(int x1, int y1, int x2)
 {
 	motor[frontLeft] = (- x1 - y1 + x2);

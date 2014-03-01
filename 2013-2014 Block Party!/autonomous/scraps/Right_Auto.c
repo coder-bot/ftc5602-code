@@ -37,6 +37,7 @@
 
 task main()
 {
+	initializeRobot();
 	waitForStart();
 	//ClearTimer(T1);
 	alignWithBeacon();
