@@ -21,7 +21,6 @@ int bridgeMovementInitialDist = 48;
 int bridgeAlignmentTime = 1500;
 int bridgeParkTime = 2000;
 int clearPendulumDelay = 350;
-int alignmentRunCount = 0;
 
 const tMUXSensor sonarSensor = msensor_S3_1;
 const tMUXSensor lightSensor = msensor_S3_2;
@@ -46,7 +45,6 @@ void allStop()
 
 void alignWithBeacon()
 {
-	alignmentRunCount++;
 	if (STARTING_SIDE == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
@@ -82,15 +80,15 @@ void alignWithBeacon()
 		wait1Msec(irTimeRight/2);
 		allStop();
 	}
-	if (SensorValue[sonarSensor] < blockPlacementDist) {
-		while (SensorValue[sonarSensor] < blockPlacementDist)
+	if (USreadDist(sonarSensor) < blockPlacementDist) {
+		while (USreadDist(sonarSensor) < blockPlacementDist)
 		{
 			drive(0, -40, 0);
 		}
 		allStop();
 	}
-	else if (SensorValue[sonarSensor] > blockPlacementDist) {
-		while (SensorValue[sonarSensor] > blockPlacementDist)
+	else if (USreadDist(sonarSensor) > blockPlacementDist) {
+		while (USreadDist(sonarSensor) > blockPlacementDist)
 		{
 			drive(0, 40, 0);
 		}
@@ -128,15 +126,15 @@ void placeBlock()
 		motor [grabberArm] = -75;
 	}
 	motor [grabberArm] = 0;
-	if (SensorValue[sonarSensor] < bridgeMovementInitialDist) {
-		while (SensorValue [sonarSensor] < bridgeMovementInitialDist)
+	if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+		while (USreadDist(sonarSensor) < bridgeMovementInitialDist)
 		{
 			drive(0, -30, 0);
 		}
 		allStop();
 	}
-	else if (SensorValue[sonarSensor] > bridgeMovementInitialDist) {
-		while (SensorValue[sonarSensor] > bridgeMovementInitialDist)
+	else if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+		while (USreadDist(sonarSensor) > bridgeMovementInitialDist)
 		{
 			drive(0, 30, 0);
 		}
@@ -183,7 +181,7 @@ void parkOnBridge()
 	if (STARTING_SIDE == LEFT_SIDE) {
 		drive(50, 0, 0);
 		wait1Msec(100);
-		while (SensorValue[sonarSensor] < cratesPassedDist)
+		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
 			drive(50, 0, 0);
 		}
@@ -193,7 +191,7 @@ void parkOnBridge()
 	else if (STARTING_SIDE == RIGHT_SIDE) {
 		drive(-50, 0, 0);
 		wait1Msec(100);
-		while (SensorValue[sonarSensor] < cratesPassedDist)
+		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
 			drive(-50, 0, 0);
 		}

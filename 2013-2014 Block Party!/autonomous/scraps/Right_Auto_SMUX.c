@@ -1,8 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S2, HTServo,  HTMotor,  HTMotor,  none)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S2,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S3,     sonarSensor,    sensorSONAR)
 #pragma config(Sensor, S4,     irSensor,       sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop)
@@ -25,18 +22,21 @@
 #pragma config(Servo,  srvo_S2_C1_5,    servo11,              tServoNone)
 #pragma config(Servo,  srvo_S2_C1_6,    servo12,              tServoNone)
 
+//#pragma config(Sensor, S3,     sonarSensor,    sensorSONAR)
+
 //Timer Usage (Important):
 //T1 - RESERVED - fail-safe timer that shuts down program if it is taking too long e.g. motors are burning out from ramming another robot unintentionally
 //T2 - RESERVED - time taken for arm to move to place block AND time taken for robot to align into proper position for bridge-parking
 //T3 - RESERVED - time taken for robot to make parallel movement onto bridge
 //T4 - RESERVED - timer used to determine if IR beacon is underneath first crate and thus if performing of necessary actions is necessary
 
-#define STARTING_SIDE LEFT_SIDE
+#define STARTING_SIDE RIGHT_SIDE
 #pragma once
-#include "Autonomous-Scraps.h"
+#include "Autonomous-Scraps-SMUX.h"
 
 task main()
 {
+	initializeRobot();
 	waitForStart();
 	//ClearTimer(T1);
 	alignWithBeacon();
