@@ -15,9 +15,9 @@
 #define RIGHT_SIDE 1
 
 int armMovementTime = 2250;
-int blockPlacementDist = 40;
+int blockPlacementDist = 45;
 int cratesPassedDist = 100;
-int bridgeMovementInitialDist = 48;
+int bridgeMovementInitialDist = 45;
 int bridgeAlignmentTime = 1500;
 int bridgeParkTime = 2000;
 int clearPendulumDelay = 350;
@@ -27,7 +27,7 @@ const tMUXSensor lightSensor = msensor_S3_2;
 
 void initializeRobot()
 {
-	LSsetActive(lightSensor);
+	//LSsetActive(lightSensor);
 }
 
 void drive(int x1, int y1, int x2)
@@ -94,21 +94,40 @@ void alignWithBeacon()
 		}
 		allStop();
 	}
-	while (SensorValue[irSensor] != 4)
-	{
+	if (STARTING_SIDE == LEFT_SIDE) {
+		while (SensorValue[irSensor] != 4)
+		{
+			drive(0, 0, 20);
+		}
+		allStop();
+		ClearTimer(T4);
+		while (SensorValue[irSensor] != 6)
+		{
+			drive(0, 0, -20);
+		}
+		int irTimeRot = time1[T4];
+		allStop();
 		drive(0, 0, 20);
+		wait1Msec((irTimeRot/2) + 150);
+		allStop();
 	}
-	allStop();
-	ClearTimer(T4);
-	while (SensorValue[irSensor] != 6)
-	{
+	else if (STARTING_SIDE == RIGHT_SIDE) {
+		while (SensorValue[irSensor] != 6)
+		{
+			drive(0, 0, -20);
+		}
+		allStop();
+		ClearTimer(T4);
+		while (SensorValue[irSensor] != 4)
+		{
+			drive(0, 0, 20);
+		}
+		int irTimeRot = time1[T4];
+		allStop();
 		drive(0, 0, -20);
+		wait1Msec((irTimeRot/2) + 150);
+		allStop();
 	}
-	int irTimeRot = time1[T4];
-	allStop();
-	drive(0, 0, 20);
-	wait1Msec((irTimeRot/2) + 100);
-	allStop();
 }
 
 void placeBlock()
@@ -154,7 +173,7 @@ void placeBlock()
 		int irTimeRotLeft = time1[T4];
 		allStop();
 		drive(0, 0, 20);
-		wait1Msec((irTimeRotLeft/2) + 100);
+		wait1Msec((irTimeRotLeft/2) + 50);
 		allStop();
 	}
 	else if (STARTING_SIDE == RIGHT_SIDE) {
