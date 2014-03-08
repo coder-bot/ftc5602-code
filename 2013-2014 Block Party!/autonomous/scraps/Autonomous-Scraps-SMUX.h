@@ -15,7 +15,7 @@
 #define RIGHT_SIDE 1
 
 int armMovementTime = 2250;
-int blockPlacementDist = 45;
+int blockPlacementDist = 41;
 int cratesPassedDist = 100;
 int bridgeMovementInitialDist = 45;
 int bridgeAlignmentTime = 1500;

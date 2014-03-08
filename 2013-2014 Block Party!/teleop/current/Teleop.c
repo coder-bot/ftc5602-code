@@ -56,7 +56,7 @@ void initializeRobot()
 {
 	switchDriveMode(DRIVE_MODE_STD);
 	switchMechMode(MECH_MODE_INVERTED);
-	servo [scoopCover] = 40;
+	servo [scoopCover] = 255;
 }
 
 task main ()
