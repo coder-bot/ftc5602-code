@@ -36,6 +36,18 @@
 
 int driveMode, mechMode;
 
+void switchDriveMode(int driveModeToSwitchTo);
+void switchMechMode(int mechModeToSwitchTo);
+
+void initializeRobot()
+{
+	switchDriveMode(DRIVE_MODE_STD);
+	switchMechMode(MECH_MODE_INVERTED);
+	servo [scoopCover] = 198;
+	servo [leftLatch] = 0;
+	servo [rightLatch] = 255;
+}
+
 void switchDriveMode(int driveModeToSwitchTo)
 {
 	while (joy1Btn(1) == 1 && joy1Btn(2) == 1 && joy1Btn(3) == 1 && joy1Btn(4) == 1)
@@ -50,13 +62,6 @@ void switchMechMode(int mechModeToSwitchTo)
 	{
 	}
 	mechMode = mechModeToSwitchTo;
-}
-
-void initializeRobot()
-{
-	switchDriveMode(DRIVE_MODE_STD);
-	switchMechMode(MECH_MODE_INVERTED);
-	servo [scoopCover] = 255;
 }
 
 task main ()
@@ -95,10 +100,10 @@ task main ()
 		motor [rearRight] = ((joy1Btn (5) == 1) || (joy1Btn (6) == 1) || (joy1Btn (7) == 1) || (joy1Btn (8) == 1)) ? stdRearRightMotorSetting * precisionDriveScale : stdRearRightMotorSetting * standardDriveScale;
 		}
 		else if (driveMode == DRIVE_MODE_EG) {
-		motor [frontLeft] = (egFrontLeftMotorSetting * precisionDriveScale - ((joy1Btn(1) == 1) ? 20 : (joy1Btn(3) == 1) ? -20 : 0));
-		motor [frontRight] = (egFrontRightMotorSetting * precisionDriveScale + ((joy1Btn(1) == 1) ? 20 : (joy1Btn(3) == 1) ? -20 : 0));
-		motor [rearLeft] = (egRearLeftMotorSetting * precisionDriveScale - ((joy1Btn(1) == 1) ? 20 : (joy1Btn(3) == 1) ? -20 : 0));
-		motor [rearRight] = (egRearRightMotorSetting * precisionDriveScale + ((joy1Btn(1) == 1) ? 20 : (joy1Btn(3) == 1) ? -20 : 0));
+		motor [frontLeft] = (egFrontLeftMotorSetting * precisionDriveScale - ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
+		motor [frontRight] = (egFrontRightMotorSetting * precisionDriveScale + ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
+		motor [rearLeft] = (egRearLeftMotorSetting * precisionDriveScale - ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
+		motor [rearRight] = (egRearRightMotorSetting * precisionDriveScale + ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
 		}
 
 		if (joy1Btn(1) == 1 && joy1Btn(2) == 1 && joy1Btn(3) == 1 && joy1Btn(4) == 1) {
@@ -169,7 +174,7 @@ task main ()
 		}
 
 		if (joystick.joy2_TopHat == 2) {
-			servo [scoopCover] = 255;
+			servo [scoopCover] = 198;
 		}
 		else if (joystick.joy2_TopHat == 6) {
 			servo [scoopCover] = 40;

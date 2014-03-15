@@ -7,21 +7,78 @@
 //T4 - RESERVED - timer used to precisely set IR beacon alignment
 
 #include <JoystickDriver.c>
+#include <drivers/hitechnic-sensormux.h>
+#include <drivers/lego-light.h>
+#include <drivers/lego-ultrasound.h>
 
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
 
 int armMovementTime = 2250;
-int blockPlacementDist = 40;
+int blockPlacementDist = 38;
 int cratesPassedDist = 100;
-int bridgeMovementInitialDist = 48;
+int bridgeMovementInitialDist = 45;
 int bridgeAlignmentTime = 1500;
 int bridgeParkTime = 2000;
 int clearPendulumDelay = 350;
-int alignmentRunCount = 0;
+int delayTime = 0;
+int startingSide;
+int bridgeSide;
 
-void initializeRobot()
+const tMUXSensor sonarSensor = msensor_S3_1;
+const tMUXSensor lightSensor = msensor_S3_2;
+
+void updateDelayTimeDisplay();
+
+void initializeAutonomous()
 {
+	nxtDisplayCenteredTextLine(3, "Starting Side?");
+	while (1)
+	{
+		if (nNxtButtonPressed == 1) {
+			startingSide = RIGHT_SIDE;
+			break;
+		}
+		else if (nNxtButtonPressed == 2) {
+			startingSide = LEFT_SIDE;
+			break;
+		}
+	}
+	wait1Msec(1000);
+	nxtDisplayCenteredTextLine(3, "Bridge side?");
+	while (1)
+	{
+		if (nNxtButtonPressed == 1) {
+			bridgeSide = RIGHT_SIDE;
+			break;
+		}
+		else if (nNxtButtonPressed == 2) {
+			bridgeSide = LEFT_SIDE;
+			break;
+		}
+	}
+	wait1Msec(1000);
+	updateDelayTimeDisplay();
+	while (1)
+	{
+		if (nNxtButtonPressed == 1) {
+			while (nNxtButtonPressed !=(-1))
+			{
+			}
+			delayTime ++;
+			updateDelayTimeDisplay();
+		}
+		else if (nNxtButtonPressed == 2) {
+			while (nNxtButtonPressed !=(-1))
+			{
+			}
+			delayTime --;
+			updateDelayTimeDisplay();
+		}
+		if (nNxtButtonPressed == 3) {
+			break;
+		}
+	}
 }
 
 void drive(int x1, int y1, int x2)
@@ -39,8 +96,7 @@ void allStop()
 
 void alignWithBeacon()
 {
-	alignmentRunCount++;
-	if (STARTING_SIDE == LEFT_SIDE) {
+	if (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
 			drive(35, 0, 0);
@@ -57,7 +113,7 @@ void alignWithBeacon()
 		wait1Msec(irTimeLeft/2);
 		allStop();
 	}
-	else if (STARTING_SIDE == RIGHT_SIDE)
+	else if (startingSide == RIGHT_SIDE)
 	{
 		while (SensorValue[irSensor] != 6)
 		{
@@ -75,20 +131,21 @@ void alignWithBeacon()
 		wait1Msec(irTimeRight/2);
 		allStop();
 	}
-		if (SensorValue[sonarSensor] < blockPlacementDist) {
-			while (SensorValue[sonarSensor] < blockPlacementDist)
-			{
-				drive(0, -40, 0);
-			}
-			allStop();
+	if (USreadDist(sonarSensor) < blockPlacementDist) {
+		while (USreadDist(sonarSensor) < blockPlacementDist)
+		{
+			drive(0, -40, 0);
 		}
-		else if (SensorValue[sonarSensor] > blockPlacementDist) {
-			while (SensorValue[sonarSensor] > blockPlacementDist)
-			{
-				drive(0, 40, 0);
-			}
-			allStop();
+		allStop();
+	}
+	else if (USreadDist(sonarSensor) > blockPlacementDist) {
+		while (USreadDist(sonarSensor) > blockPlacementDist)
+		{
+			drive(0, 40, 0);
 		}
+		allStop();
+	}
+	if (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
 			drive(0, 0, 20);
@@ -102,8 +159,26 @@ void alignWithBeacon()
 		int irTimeRot = time1[T4];
 		allStop();
 		drive(0, 0, 20);
-		wait1Msec((irTimeRot/2) + 100);
+		wait1Msec((irTimeRot/2) + 150);
 		allStop();
+	}
+	else if (startingSide == RIGHT_SIDE) {
+		while (SensorValue[irSensor] != 6)
+		{
+			drive(0, 0, -20);
+		}
+		allStop();
+		ClearTimer(T4);
+		while (SensorValue[irSensor] != 4)
+		{
+			drive(0, 0, 20);
+		}
+		int irTimeRot = time1[T4];
+		allStop();
+		drive(0, 0, -20);
+		wait1Msec((irTimeRot/2) + 150);
+		allStop();
+	}
 }
 
 void placeBlock()
@@ -121,21 +196,21 @@ void placeBlock()
 		motor [grabberArm] = -75;
 	}
 	motor [grabberArm] = 0;
-	if (SensorValue[sonarSensor] < bridgeMovementInitialDist) {
-		while (SensorValue [sonarSensor] < bridgeMovementInitialDist)
+	if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+		while (USreadDist(sonarSensor) < bridgeMovementInitialDist)
 		{
 			drive(0, -30, 0);
 		}
 		allStop();
 	}
-	else if (SensorValue[sonarSensor] > bridgeMovementInitialDist) {
-		while (SensorValue[sonarSensor] > bridgeMovementInitialDist)
+	else if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+		while (USreadDist(sonarSensor) > bridgeMovementInitialDist)
 		{
 			drive(0, 30, 0);
 		}
 		allStop();
 	}
-	if  (STARTING_SIDE == LEFT_SIDE) {
+	if  (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
 			drive(0, 0, 20);
@@ -149,10 +224,10 @@ void placeBlock()
 		int irTimeRotLeft = time1[T4];
 		allStop();
 		drive(0, 0, 20);
-		wait1Msec((irTimeRotLeft/2) + 100);
+		wait1Msec((irTimeRotLeft/2) + 50);
 		allStop();
 	}
-	else if (STARTING_SIDE == RIGHT_SIDE) {
+	else if (startingSide == RIGHT_SIDE) {
 		while (SensorValue[irSensor] != 6)
 		{
 			drive(0, 0, -20);
@@ -173,20 +248,20 @@ void placeBlock()
 
 void parkOnBridge()
 {
-	if (STARTING_SIDE == LEFT_SIDE) {
+	if (bridgeSide == RIGHT_SIDE) {
 		drive(50, 0, 0);
 		wait1Msec(100);
-		while (SensorValue[sonarSensor] < cratesPassedDist)
+		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
 			drive(50, 0, 0);
 		}
 		wait1Msec(clearPendulumDelay);
 		allStop();
 	}
-	else if (STARTING_SIDE == RIGHT_SIDE) {
+	else if (bridgeSide == LEFT_SIDE) {
 		drive(-50, 0, 0);
 		wait1Msec(100);
-		while (SensorValue[sonarSensor] < cratesPassedDist)
+		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
 			drive(-50, 0, 0);
 		}
@@ -200,7 +275,7 @@ void parkOnBridge()
 	}
 	allStop();
 	wait1Msec(500);
-	if (STARTING_SIDE == LEFT_SIDE) {
+	if (bridgeSide == RIGHT_SIDE) {
 		ClearTimer(T3);
 		while (time1[T3] < bridgeParkTime)
 		{
@@ -208,7 +283,7 @@ void parkOnBridge()
 		}
 		allStop();
 	}
-	else if (STARTING_SIDE == RIGHT_SIDE) {
+	else if (bridgeSide == LEFT_SIDE) {
 		ClearTimer(T3);
 		while (time1[T3] < bridgeParkTime)
 		{
