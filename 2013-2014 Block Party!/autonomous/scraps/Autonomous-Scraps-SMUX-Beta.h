@@ -30,16 +30,26 @@ int delayTime = 0;
 const tMUXSensor sonarSensor = msensor_S3_1;
 //const tMUXSensor lightSensor = msensor_S3_2;
 
+task masterTimer()
+{
+	ClearTimer(T1);
+	while (1)
+	{
+		if (time1[T1] >= 25000) {
+			StopAllTasks();
+		}
+	}
+}
+
 void initializeAutonomous();
+void updateDelayTimeDisplay();
+void generateAutonomousMap();
 
 void initializeRobot()
 {
 	initializeAutonomous();
 	servo [scoopCover] = 198;
 }
-
-void updateDelayTimeDisplay();
-void generateAutonomousMap(int initialSide, int blockAndBridge, int terminalSide, int delay);
 
 void initializeAutonomous()
 {
@@ -64,24 +74,22 @@ void initializeAutonomous()
 		}
 	}
 	eraseDisplay();
-	if (placeBlockQuery == PLACE_BLOCK_YES) {
-		nxtDisplayCenteredTextLine(3, "Starting Side?");
-		while (1)
-		{
-			if (nNxtButtonPressed == 1) {
-				startingSide = RIGHT_SIDE;
-				eraseDisplay();
-				nxtDisplayCenteredTextLine(3, "Right");
-				wait1Msec(800);
-				break;
-			}
-			else if (nNxtButtonPressed == 2) {
-				startingSide = LEFT_SIDE;
-				eraseDisplay();
-				nxtDisplayCenteredTextLine(3, "Left");
-				wait1Msec(800);
-				break;
-			}
+	nxtDisplayCenteredTextLine(3, "Starting Side?");
+	while (1)
+	{
+		if (nNxtButtonPressed == 1) {
+			startingSide = RIGHT_SIDE;
+			eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "Right");
+			wait1Msec(800);
+			break;
+		}
+		else if (nNxtButtonPressed == 2) {
+			startingSide = LEFT_SIDE;
+			eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "Left");
+			wait1Msec(800);
+			break;
 		}
 	}
 	eraseDisplay();
@@ -126,7 +134,7 @@ void initializeAutonomous()
 		}
 	}
 	eraseDisplay();
-	generateAutonomousMap(startingSide, placeBlockQuery, bridgeSide, delayTime);
+	generateAutonomousMap();
 }
 
 void updateDelayTimeDisplay()
@@ -134,92 +142,118 @@ void updateDelayTimeDisplay()
 	nxtDisplayCenteredTextLine(3, "Delay time: %d", delayTime);
 }
 
-void generateAutonomousMap(int initialSide, int blockAndBridge, int terminalSide, int delay)
+void generateAutonomousMap()
 {
 	nxtDisplayCenteredTextLine(3, "Generating map...");
-	wait1Msec(500);
+	wait1Msec(750);
 	eraseDisplay();
+	nxtDisplayCenteredTextLine(1, "Delay: %d s", delayTime);
+	wait1Msec(1000);
 	nxtDrawRect(0, 63, 99, 0);
 	wait1Msec(500);
-	if (blockAndBridge == PLACE_BLOCK_YES) {
-		if (initialSide == LEFT_SIDE) {
-			nxtDrawLine(14, 9, 35, 9);
+
+	if (startingSide == LEFT_SIDE) {
+		if (placeBlockQuery == PLACE_BLOCK_YES || bridgeSide == RIGHT_SIDE) {
+			nxtDrawLine(14, 9, 50, 9);
+		}
+		if (placeBlockQuery == PLACE_BLOCK_YES) {
 			wait1Msec(500);
-			nxtDrawLine(14, 9, 85, 9);
-			wait1Msec(500);
-			if (terminalSide == RIGHT_SIDE) {
-				nxtDrawLine(85, 9, 85, 32);
-				wait1Msec(500);
-				nxtDrawLine(85, 32, 50, 32);
-				wait1Msec(500);
-			}
-			else if (terminalSide == LEFT_SIDE) {
-				nxtDrawLine(14, 9, 14, 32);
-				wait1Msec(500);
-				nxtDrawLine(14, 32, 50, 32);
-				wait1Msec(500);
+			for (int i = 0; i < 2; i++)
+			{
+				nxtDisplayTextLine(3, "*Block is placed*");
+				wait1Msec(600);
+				nxtDisplayTextLine(3, "");
+				nxtDrawRect(0, 63, 99, 0);
+				wait1Msec(600);
 			}
 		}
-		else if (initialSide == RIGHT_SIDE) {
-			nxtDrawLine(85, 9, 35, 9);
+		wait1Msec(500);
+		if (bridgeSide == RIGHT_SIDE) {
+			nxtDrawLine(50, 9, 85, 9);
 			wait1Msec(500);
-			nxtDrawLine(85, 9, 14, 9);
+			nxtDrawLine(85, 9, 85, 32);
 			wait1Msec(500);
-			if (terminalSide == LEFT_SIDE) {
-				nxtDrawLine(14, 9, 14, 32);
-				wait1Msec(500);
-				nxtDrawLine(14, 32, 50, 32);
-				wait1Msec(500);
-			}
-			else if (terminalSide == RIGHT_SIDE) {
-				nxtDrawLine(85, 9, 85, 32);
-				wait1Msec(500);
-				nxtDrawLine(85, 32, 50, 32);
-				wait1Msec(500);
-			}
+			nxtDrawLine(85, 32, 50, 32);
+			wait1Msec(500);
+		}
+		else if (bridgeSide == LEFT_SIDE) {
+			nxtDrawLine(14, 9, 14, 32);
+			wait1Msec(500);
+			nxtDrawLine(14, 32, 50, 32);
+			wait1Msec(500);
 		}
 	}
-	else if (blockAndBridge == PLACE_BLOCK_NO) {
-		if (initialSide == LEFT_SIDE) {
-			if (terminalSide == LEFT_SIDE) {
-				nxtDrawLine(14, 9, 14, 32);
-				wait1Msec(500);
-				nxtDrawLine(14, 32, 50, 32);
-				wait1Msec(500);
-			}
-			else if (terminalSide == RIGHT_SIDE) {
-				nxtDrawLine(14, 9, 35, 9);
-				wait1Msec(500);
-				nxtDrawLine(14, 9, 85, 9);
-				wait1Msec(500);
-				nxtDrawLine(85, 9, 85, 32);
-				wait1Msec(500);
-				nxtDrawLine(85, 32, 50, 32);
-				wait1Msec(500);
+	else if (startingSide == RIGHT_SIDE) {
+		if (placeBlockQuery == PLACE_BLOCK_YES || bridgeSide == LEFT_SIDE) {
+			nxtDrawLine(85, 9, 50, 9);
+		}
+		if (placeBlockQuery == PLACE_BLOCK_YES) {
+			wait1Msec(500);
+			for (int i = 0; i < 2; i++)
+			{
+				nxtDisplayTextLine(3, "*Block is placed*");
+				wait1Msec(600);
+				nxtDisplayTextLine(3, "");
+				nxtDrawRect(0, 63, 99, 0);
+				wait1Msec(600);
 			}
 		}
-		else if (initialSide == RIGHT_SIDE) {
-			if (terminalSide == RIGHT_SIDE) {
-				nxtDrawLine(85, 9, 85, 32);
-				wait1Msec(500);
-				nxtDrawLine(85, 32, 50, 32);
-				wait1Msec(500);
-			}
-			else if (terminalSide == LEFT_SIDE) {
-				nxtDrawLine(85, 9, 35, 9);
-				wait1Msec(500);
-				nxtDrawLine(85, 9, 14, 9);
-				wait1Msec(500);
-				nxtDrawLine(14, 9, 14, 32);
-				wait1Msec(500);
-				nxtDrawLine(14, 32, 50, 32);
-				wait1Msec(500);
-			}
+		wait1Msec(500);
+		if (bridgeSide == LEFT_SIDE) {
+			nxtDrawLine(50, 9, 14, 9);
+			wait1Msec(500);
+			nxtDrawLine(14, 9, 14, 32);
+			wait1Msec(500);
+			nxtDrawLine(14, 32, 50, 32);
+			wait1Msec(500);
+		}
+		else if (bridgeSide == RIGHT_SIDE) {
+			nxtDrawLine(85, 9, 85, 32);
+			wait1Msec(500);
+			nxtDrawLine(85, 32, 50, 32);
+			wait1Msec(500);
 		}
 	}
+	/*
+	else if (placeBlockQuery == PLACE_BLOCK_NO) {
+	if (startingSide == LEFT_SIDE) {
+	nxtDrawLine(14, 9, 35, 9);
 	wait1Msec(500);
-	nxtDisplayCenteredTextLine(2, "Delay: %d s", delay);
-	nxtDrawRect(0, 63, 99, 0);
+	nxtDrawLine(14, 9, 85, 9);
+	wait1Msec(500);
+	if (bridgeSide == RIGHT_SIDE) {
+	nxtDrawLine(85, 9, 85, 32);
+	wait1Msec(500);
+	nxtDrawLine(85, 32, 50, 32);
+	wait1Msec(500);
+	}
+	else if (bridgeSide == LEFT_SIDE) {
+	nxtDrawLine(14, 9, 14, 32);
+	wait1Msec(500);
+	nxtDrawLine(14, 32, 50, 32);
+	wait1Msec(500);
+	}
+	}
+	else if (startingSide == RIGHT_SIDE) {
+	nxtDrawLine(85, 9, 35, 9);
+	wait1Msec(500);
+	nxtDrawLine(85, 9, 14, 9);
+	wait1Msec(500);
+	if (bridgeSide == LEFT_SIDE) {
+	nxtDrawLine(14, 9, 14, 32);
+	wait1Msec(500);
+	nxtDrawLine(14, 32, 50, 32);
+	wait1Msec(500);
+	}
+	else if (bridgeSide == RIGHT_SIDE) {
+	nxtDrawLine(85, 9, 85, 32);
+	wait1Msec(500);
+	nxtDrawLine(85, 32, 50, 32);
+	wait1Msec(500);
+	}
+	}
+	}
+	*/
 	wait1Msec(2000);
 	eraseDisplay();
 }
