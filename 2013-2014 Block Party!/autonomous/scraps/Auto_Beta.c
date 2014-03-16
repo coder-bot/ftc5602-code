@@ -33,7 +33,7 @@
 //T4 - RESERVED - timer used to determine if IR beacon is underneath first crate and thus if performing of necessary actions is necessary
 
 #pragma once
-#include "Autonomous-Scraps-SMUX-Custom.h"
+#include "Autonomous-Scraps-SMUX-Beta.h"
 
 task masterTimer()
 {

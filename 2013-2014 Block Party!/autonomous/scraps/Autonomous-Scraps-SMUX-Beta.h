@@ -22,8 +22,7 @@ int bridgeAlignmentTime = 1500;
 int bridgeParkTime = 2000;
 int clearPendulumDelay = 350;
 int delayTime = 0;
-int startingSide;
-int bridgeSide;
+int startingSide, bridgeSide;
 
 const tMUXSensor sonarSensor = msensor_S3_1;
 const tMUXSensor lightSensor = msensor_S3_2;
