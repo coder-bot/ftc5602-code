@@ -145,7 +145,7 @@ void updateDelayTimeDisplay()
 void generateAutonomousMap()
 {
 	nxtDisplayCenteredTextLine(3, "Generating map...");
-	wait1Msec(750);
+	wait1Msec(1000);
 	eraseDisplay();
 	nxtDisplayCenteredTextLine(1, "Delay: %d s", delayTime);
 	wait1Msec(1000);
@@ -214,46 +214,6 @@ void generateAutonomousMap()
 			wait1Msec(500);
 		}
 	}
-	/*
-	else if (placeBlockQuery == PLACE_BLOCK_NO) {
-	if (startingSide == LEFT_SIDE) {
-	nxtDrawLine(14, 9, 35, 9);
-	wait1Msec(500);
-	nxtDrawLine(14, 9, 85, 9);
-	wait1Msec(500);
-	if (bridgeSide == RIGHT_SIDE) {
-	nxtDrawLine(85, 9, 85, 32);
-	wait1Msec(500);
-	nxtDrawLine(85, 32, 50, 32);
-	wait1Msec(500);
-	}
-	else if (bridgeSide == LEFT_SIDE) {
-	nxtDrawLine(14, 9, 14, 32);
-	wait1Msec(500);
-	nxtDrawLine(14, 32, 50, 32);
-	wait1Msec(500);
-	}
-	}
-	else if (startingSide == RIGHT_SIDE) {
-	nxtDrawLine(85, 9, 35, 9);
-	wait1Msec(500);
-	nxtDrawLine(85, 9, 14, 9);
-	wait1Msec(500);
-	if (bridgeSide == LEFT_SIDE) {
-	nxtDrawLine(14, 9, 14, 32);
-	wait1Msec(500);
-	nxtDrawLine(14, 32, 50, 32);
-	wait1Msec(500);
-	}
-	else if (bridgeSide == RIGHT_SIDE) {
-	nxtDrawLine(85, 9, 85, 32);
-	wait1Msec(500);
-	nxtDrawLine(85, 32, 50, 32);
-	wait1Msec(500);
-	}
-	}
-	}
-	*/
 	wait1Msec(2000);
 	eraseDisplay();
 }
