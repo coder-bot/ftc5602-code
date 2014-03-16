@@ -13,6 +13,8 @@
 
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
+#define PLACE_BLOCK_NO 0
+#define PLACE_BLOCK_YES 1
 
 int armMovementTime = 2250;
 int blockPlacementDist = 38;
@@ -21,42 +23,87 @@ int bridgeMovementInitialDist = 45;
 int bridgeAlignmentTime = 1500;
 int bridgeParkTime = 2000;
 int clearPendulumDelay = 350;
-int delayTime = 0;
 int startingSide, bridgeSide;
+int placeBlockQuery;
+int delayTime = 0;
 
 const tMUXSensor sonarSensor = msensor_S3_1;
-const tMUXSensor lightSensor = msensor_S3_2;
+//const tMUXSensor lightSensor = msensor_S3_2;
+
+void initializeAutonomous();
+
+void initializeRobot()
+{
+	initializeAutonomous();
+	servo [scoopCover] = 198;
+}
 
 void updateDelayTimeDisplay();
+void generateAutonomousMap(int initialSide, int blockAndBridge, int terminalSide, int delay);
 
 void initializeAutonomous()
 {
-	nxtDisplayCenteredTextLine(3, "Starting Side?");
+	nxtDisplayTextLine(2, "Block & bridge?");
+	nxtDisplayTextLine(3, "Orange: both");
+	nxtDisplayTextLine(4, "Arrow: bridge");
 	while (1)
 	{
-		if (nNxtButtonPressed == 1) {
-			startingSide = RIGHT_SIDE;
+		if (nNxtButtonPressed == 3) {
+			placeBlockQuery = PLACE_BLOCK_YES;
+			eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "Both");
+			wait1Msec(800);
 			break;
 		}
-		else if (nNxtButtonPressed == 2) {
-			startingSide = LEFT_SIDE;
+		else if (nNxtButtonPressed == 1 || nNxtButtonPressed == 2) {
+			placeBlockQuery = PLACE_BLOCK_NO;
+			eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "Bridge only");
+			wait1Msec(800);
 			break;
 		}
 	}
-	wait1Msec(1000);
+	eraseDisplay();
+	if (placeBlockQuery == PLACE_BLOCK_YES) {
+		nxtDisplayCenteredTextLine(3, "Starting Side?");
+		while (1)
+		{
+			if (nNxtButtonPressed == 1) {
+				startingSide = RIGHT_SIDE;
+				eraseDisplay();
+				nxtDisplayCenteredTextLine(3, "Right");
+				wait1Msec(800);
+				break;
+			}
+			else if (nNxtButtonPressed == 2) {
+				startingSide = LEFT_SIDE;
+				eraseDisplay();
+				nxtDisplayCenteredTextLine(3, "Left");
+				wait1Msec(800);
+				break;
+			}
+		}
+	}
+	eraseDisplay();
 	nxtDisplayCenteredTextLine(3, "Bridge side?");
 	while (1)
 	{
 		if (nNxtButtonPressed == 1) {
 			bridgeSide = RIGHT_SIDE;
+			eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "Right");
+			wait1Msec(800);
 			break;
 		}
 		else if (nNxtButtonPressed == 2) {
 			bridgeSide = LEFT_SIDE;
+			eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "Left");
+			wait1Msec(800);
 			break;
 		}
 	}
-	wait1Msec(1000);
+	eraseDisplay();
 	updateDelayTimeDisplay();
 	while (1)
 	{
@@ -78,6 +125,103 @@ void initializeAutonomous()
 			break;
 		}
 	}
+	eraseDisplay();
+	generateAutonomousMap(startingSide, placeBlockQuery, bridgeSide, delayTime);
+}
+
+void updateDelayTimeDisplay()
+{
+	nxtDisplayCenteredTextLine(3, "Delay time: %d", delayTime);
+}
+
+void generateAutonomousMap(int initialSide, int blockAndBridge, int terminalSide, int delay)
+{
+	nxtDisplayCenteredTextLine(3, "Generating map...");
+	wait1Msec(500);
+	eraseDisplay();
+	nxtDrawRect(0, 63, 99, 0);
+	wait1Msec(500);
+	if (blockAndBridge == PLACE_BLOCK_YES) {
+		if (initialSide == LEFT_SIDE) {
+			nxtDrawLine(14, 9, 35, 9);
+			wait1Msec(500);
+			nxtDrawLine(14, 9, 85, 9);
+			wait1Msec(500);
+			if (terminalSide == RIGHT_SIDE) {
+				nxtDrawLine(85, 9, 85, 32);
+				wait1Msec(500);
+				nxtDrawLine(85, 32, 50, 32);
+				wait1Msec(500);
+			}
+			else if (terminalSide == LEFT_SIDE) {
+				nxtDrawLine(14, 9, 14, 32);
+				wait1Msec(500);
+				nxtDrawLine(14, 32, 50, 32);
+				wait1Msec(500);
+			}
+		}
+		else if (initialSide == RIGHT_SIDE) {
+			nxtDrawLine(85, 9, 35, 9);
+			wait1Msec(500);
+			nxtDrawLine(85, 9, 14, 9);
+			wait1Msec(500);
+			if (terminalSide == LEFT_SIDE) {
+				nxtDrawLine(14, 9, 14, 32);
+				wait1Msec(500);
+				nxtDrawLine(14, 32, 50, 32);
+				wait1Msec(500);
+			}
+			else if (terminalSide == RIGHT_SIDE) {
+				nxtDrawLine(85, 9, 85, 32);
+				wait1Msec(500);
+				nxtDrawLine(85, 32, 50, 32);
+				wait1Msec(500);
+			}
+		}
+	}
+	else if (blockAndBridge == PLACE_BLOCK_NO) {
+		if (initialSide == LEFT_SIDE) {
+			if (terminalSide == LEFT_SIDE) {
+				nxtDrawLine(14, 9, 14, 32);
+				wait1Msec(500);
+				nxtDrawLine(14, 32, 50, 32);
+				wait1Msec(500);
+			}
+			else if (terminalSide == RIGHT_SIDE) {
+				nxtDrawLine(14, 9, 35, 9);
+				wait1Msec(500);
+				nxtDrawLine(14, 9, 85, 9);
+				wait1Msec(500);
+				nxtDrawLine(85, 9, 85, 32);
+				wait1Msec(500);
+				nxtDrawLine(85, 32, 50, 32);
+				wait1Msec(500);
+			}
+		}
+		else if (initialSide == RIGHT_SIDE) {
+			if (terminalSide == RIGHT_SIDE) {
+				nxtDrawLine(85, 9, 85, 32);
+				wait1Msec(500);
+				nxtDrawLine(85, 32, 50, 32);
+				wait1Msec(500);
+			}
+			else if (terminalSide == LEFT_SIDE) {
+				nxtDrawLine(85, 9, 35, 9);
+				wait1Msec(500);
+				nxtDrawLine(85, 9, 14, 9);
+				wait1Msec(500);
+				nxtDrawLine(14, 9, 14, 32);
+				wait1Msec(500);
+				nxtDrawLine(14, 32, 50, 32);
+				wait1Msec(500);
+			}
+		}
+	}
+	wait1Msec(500);
+	nxtDisplayCenteredTextLine(2, "Delay: %d s", delay);
+	nxtDrawRect(0, 63, 99, 0);
+	wait1Msec(2000);
+	eraseDisplay();
 }
 
 void drive(int x1, int y1, int x2)
@@ -98,7 +242,15 @@ void alignWithBeacon()
 	if (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
-			drive(35, 0, 0);
+			if (USreadDist(sonarSensor) > blockPlacementDist) {
+				drive(35, 20, 0);
+			}
+			else if (USreadDist(sonarSensor) < blockPlacementDist) {
+				drive(35, -20, 0);
+			}
+			else if (USreadDist(sonarSensor) == blockPlacementDist) {
+				drive(35, 0, 0);
+			}
 		}
 		allStop();
 		ClearTimer(T4);
