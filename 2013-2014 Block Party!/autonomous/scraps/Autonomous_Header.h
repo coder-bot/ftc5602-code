@@ -55,7 +55,7 @@ void initializeAutonomous()
 	eraseDisplay();
 	delayTime = 0;
 	failSafeTime = 30;
-	nxtDisplayTextLine(2, "Block & bridge?");
+	nxtDisplayTextLine(2, "Block/bridge?");
 	nxtDisplayTextLine(4, "Orange: Both");
 	nxtDisplayTextLine(5, "Arrow: Bridge");
 	while (1)
@@ -266,6 +266,7 @@ void generateAutonomousMap()
 	nxtDisplayCenteredTextLine(3, "Generating map...");
 	wait1Msec(1000);
 	eraseDisplay();
+	wait1Msec(500);
 	nxtDisplayCenteredTextLine(1, "Delay: %ds", delayTime);
 	wait1Msec(500);
 	nxtDisplayCenteredTextLine(2, "Failsafe: %ds", failSafeTime);
@@ -275,9 +276,9 @@ void generateAutonomousMap()
 	if (startingSide == LEFT_SIDE) {
 		if (placeBlockQuery == PLACE_BLOCK_YES || bridgeSide == RIGHT_SIDE) {
 			nxtDrawLine(14, 9, 50, 9);
+			wait1Msec(500);
 		}
 		if (placeBlockQuery == PLACE_BLOCK_YES) {
-			wait1Msec(500);
 			for (int i = 0; i < 2; i++)
 			{
 				nxtDisplayTextLine(4, "*Block is placed*");
@@ -305,9 +306,9 @@ void generateAutonomousMap()
 	else if (startingSide == RIGHT_SIDE) {
 		if (placeBlockQuery == PLACE_BLOCK_YES || bridgeSide == LEFT_SIDE) {
 			nxtDrawLine(85, 9, 50, 9);
+			wait1Msec(500);
 		}
 		if (placeBlockQuery == PLACE_BLOCK_YES) {
-			wait1Msec(500);
 			for (int i = 0; i < 2; i++)
 			{
 				nxtDisplayTextLine(4, "*Block is placed*");
@@ -317,7 +318,6 @@ void generateAutonomousMap()
 				wait1Msec(600);
 			}
 		}
-		wait1Msec(500);
 		if (bridgeSide == LEFT_SIDE) {
 			nxtDrawLine(50, 9, 14, 9);
 			wait1Msec(500);
