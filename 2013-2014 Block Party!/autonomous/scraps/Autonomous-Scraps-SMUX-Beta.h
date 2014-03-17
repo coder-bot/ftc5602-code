@@ -195,7 +195,8 @@ void initializeAutonomous()
 	}
 	if (reconfigure)
 		initializeAutonomous();
-	generateAutonomousMap();
+	else if (!reconfigure)
+		generateAutonomousMap();
 }
 
 void updateDelayTimeDisplay()
