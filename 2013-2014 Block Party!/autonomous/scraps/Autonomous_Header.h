@@ -272,7 +272,6 @@ void generateAutonomousMap()
 	wait1Msec(750);
 	nxtDrawRect(0, 63, 99, 0);
 	wait1Msec(500);
-
 	if (startingSide == LEFT_SIDE) {
 		if (placeBlockQuery == PLACE_BLOCK_YES || bridgeSide == RIGHT_SIDE) {
 			nxtDrawLine(14, 9, 50, 9);
