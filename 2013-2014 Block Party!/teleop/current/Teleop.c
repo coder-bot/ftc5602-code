@@ -180,7 +180,7 @@ task main ()
 			servo [scoopCover] = 220;
 		}
 		else if (joystick.joy2_TopHat == 6) {
-			servo [scoopCover] = 40;
+			servo [scoopCover] = 0;
 		}
 
 		if (joystick.joy2_TopHat == 4) {

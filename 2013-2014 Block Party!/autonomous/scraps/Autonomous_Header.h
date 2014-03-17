@@ -47,7 +47,7 @@ void generateAutonomousMap();
 void initializeRobot()
 {
 	initializeAutonomous();
-	servo [scoopCover] = 198;
+	servo [scoopCover] = 220;
 }
 
 void initializeAutonomous()
