@@ -211,7 +211,7 @@ void generateAutonomousMap()
 	wait1Msec(1500);
 	eraseDisplay();
 	nxtDisplayCenteredTextLine(1, "Delay: %d s", delayTime);
-	wait1Msec(1000);
+	wait1Msec(750);
 	nxtDrawRect(0, 63, 99, 0);
 	wait1Msec(500);
 
