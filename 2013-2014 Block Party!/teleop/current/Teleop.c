@@ -2,7 +2,7 @@
 #pragma config(Hubs,  S2, HTServo,  HTMotor,  HTMotor,  none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S3,     sonarSensor,    sensorSONAR)
+#pragma config(Sensor, S3,     HTSMUX,         sensorI2CCustom)
 #pragma config(Sensor, S4,     irSensor,       sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop)
@@ -29,12 +29,15 @@
 //Main teleop program with holonomic drive and mechanism controls
 
 #include <JoystickDriver.c>
+#include <drivers/hitechnic-sensormux.h>
+#include <drivers/lego-ultrasound.h>
 #define DRIVE_MODE_STD 1
 #define DRIVE_MODE_EG 2
 #define MECH_MODE_STD 1
 #define MECH_MODE_INVERTED 2
 
 int driveMode, mechMode;
+//const tMUXSensor sonarSensor = msensor_S3_1;
 
 void switchDriveMode(int driveModeToSwitchTo);
 void switchMechMode(int mechModeToSwitchTo);

@@ -8,7 +8,7 @@
 
 #include <JoystickDriver.c>
 #include <drivers/hitechnic-sensormux.h>
-#include <drivers/lego-light.h>
+//#include <drivers/lego-light.h>
 #include <drivers/lego-ultrasound.h>
 
 #define LEFT_SIDE 0
@@ -17,13 +17,13 @@
 #define PLACE_BLOCK_YES 1
 
 int armMovementTime = 2250;
-int blockPlacementDist = 38;
+int blockPlacementDist = 40;
 int cratesPassedDist = 100;
 int bridgeMovementInitialDist = 45;
 int bridgeAlignmentTime = 1500;
 int bridgeParkTime = 2000;
-int clearPendulumDelay = 350;
-int startingSide, bridgeSide, placeBlockQuery, delayTime, reconfigure;
+int clearPendulumDelay = 325;
+int startingSide, bridgeSide, placeBlockQuery, delayTime, reconfigure, failSafeTime;
 
 const tMUXSensor sonarSensor = msensor_S3_1;
 //const tMUXSensor lightSensor = msensor_S3_2;
@@ -33,7 +33,7 @@ task masterTimer()
 	ClearTimer(T1);
 	while (1)
 	{
-		if (time1[T1] >= 25000) {
+		if (time1[T1] >= failSafeTime * 1000) {
 			StopAllTasks();
 		}
 	}
@@ -41,6 +41,7 @@ task masterTimer()
 
 void initializeAutonomous();
 void updateDelayTimeDisplay();
+void updateFailSafeTimeDisplay();
 void generateAutonomousMap();
 
 void initializeRobot()
@@ -53,6 +54,7 @@ void initializeAutonomous()
 {
 	eraseDisplay();
 	delayTime = 0;
+	failSafeTime = 30;
 	nxtDisplayTextLine(2, "Block & bridge?");
 	nxtDisplayTextLine(3, "Orange: both");
 	nxtDisplayTextLine(4, "Arrow: bridge");
@@ -152,30 +154,75 @@ void initializeAutonomous()
 			{
 			}
 			eraseDisplay();
-			nxtDisplayCenteredTextLine(3, "%d s", delayTime);
+			nxtDisplayCenteredTextLine(3, "%ds", delayTime);
 			wait1Msec(800);
 			break;
 		}
+		if (delayTime < 0) {
+			delayTime = 0;
+			updateDelayTimeDisplay();
+		}
+		if (delayTime > 30) {
+			delayTime = 30;
+			updateDelayTimeDisplay();
+		}
+	}
+	updateFailSafeTimeDisplay();
+	while (1)
+	{
+		if (nNxtButtonPressed == 1) {
+			while (nNxtButtonPressed !=(-1))
+			{
+			}
+			failSafeTime ++;
+			updateFailSafeTimeDisplay();
+		}
+		else if (nNxtButtonPressed == 2) {
+			while (nNxtButtonPressed !=(-1))
+			{
+			}
+			failSafeTime --;
+			updateFailSafeTimeDisplay();
+		}
+		if (nNxtButtonPressed == 3) {
+			while (nNxtButtonPressed !=(-1))
+			{
+			}
+			eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "%ds", failSafeTime);
+			wait1Msec(800);
+			break;
+		}
+		if (failSafeTime < 0) {
+			failSafeTime = 0;
+			updateFailSafeTimeDisplay();
+		}
+		if (failSafeTime > 30) {
+			failSafeTime = 30;
+			updateFailSafeTimeDisplay();
+		}
 	}
 	eraseDisplay();
-	nxtDisplayCenteredTextLine(2, "Confirm options:");
+	nxtDisplayCenteredTextLine(1, "Confirm options:");
 	wait1Msec(500);
 	if (placeBlockQuery == PLACE_BLOCK_YES)
-		nxtDisplayTextLine(4, "Block & bridge");
+		nxtDisplayTextLine(3, "Block & bridge");
 	else if (placeBlockQuery == PLACE_BLOCK_NO)
-		nxtDisplayTextLine(4, "Bridge only");
+		nxtDisplayTextLine(3, "Bridge only");
 	wait1Msec(500);
 	if (startingSide == LEFT_SIDE)
-		nxtDisplayTextLine(5, "Start: Left");
+		nxtDisplayTextLine(4, "Start: Left");
 	else if (startingSide == RIGHT_SIDE)
-		nxtDisplayTextLine(5, "Start: Right");
+		nxtDisplayTextLine(4, "Start: Right");
 	wait1Msec(500);
 	if (bridgeSide == LEFT_SIDE)
-		nxtDisplayTextLine(6, "End: Left");
+		nxtDisplayTextLine(5, "End: Left");
 	else if (bridgeSide == RIGHT_SIDE)
-		nxtDisplayTextLine(6, "End: Right");
+		nxtDisplayTextLine(5, "End: Right");
 	wait1Msec(500);
-	nxtDisplayTextLine(7, "Delay: %d s", delayTime);
+	nxtDisplayTextLine(6, "Delay: %ds", delayTime);
+	wait1Msec(500);
+	nxtDisplayTextLine(7, "Failsafe: %ds", failSafeTime);
 	while (1)
 	{
 		if (nNxtButtonPressed == 3) {
@@ -201,7 +248,12 @@ void initializeAutonomous()
 
 void updateDelayTimeDisplay()
 {
-	nxtDisplayCenteredTextLine(3, "Delay time: %d", delayTime);
+	nxtDisplayCenteredTextLine(3, "Delay time: %ds", delayTime);
+}
+
+void updateFailSafeTimeDisplay()
+{
+	nxtDisplayCenteredTextLine(3, "Failsafe: %ds", failSafeTime);
 }
 
 void generateAutonomousMap()
@@ -210,7 +262,9 @@ void generateAutonomousMap()
 	nxtDisplayCenteredTextLine(3, "Generating map...");
 	wait1Msec(1500);
 	eraseDisplay();
-	nxtDisplayCenteredTextLine(1, "Delay: %d s", delayTime);
+	nxtDisplayCenteredTextLine(1, "Delay: %ds", delayTime);
+	wait1Msec(500);
+	nxtDisplayCenteredTextLine(2, "Failsafe: %ds", failSafeTime);
 	wait1Msec(750);
 	nxtDrawRect(0, 63, 99, 0);
 	wait1Msec(500);
@@ -223,9 +277,9 @@ void generateAutonomousMap()
 			wait1Msec(500);
 			for (int i = 0; i < 2; i++)
 			{
-				nxtDisplayTextLine(3, "*Block is placed*");
+				nxtDisplayTextLine(4, "*Block is placed*");
 				wait1Msec(600);
-				nxtDisplayTextLine(3, "");
+				nxtDisplayTextLine(4, "");
 				nxtDrawRect(0, 63, 99, 0);
 				wait1Msec(600);
 			}
@@ -254,9 +308,9 @@ void generateAutonomousMap()
 			wait1Msec(500);
 			for (int i = 0; i < 2; i++)
 			{
-				nxtDisplayTextLine(3, "*Block is placed*");
+				nxtDisplayTextLine(4, "*Block is placed*");
 				wait1Msec(600);
-				nxtDisplayTextLine(3, "");
+				nxtDisplayTextLine(4, "");
 				nxtDrawRect(0, 63, 99, 0);
 				wait1Msec(600);
 			}
@@ -300,10 +354,10 @@ void alignWithBeacon()
 		while (SensorValue[irSensor] != 4)
 		{
 			if (USreadDist(sonarSensor) > blockPlacementDist) {
-				drive(35, 20, 0);
+				drive(35, 35, 0);
 			}
 			else if (USreadDist(sonarSensor) < blockPlacementDist) {
-				drive(35, -20, 0);
+				drive(35, -35, 0);
 			}
 			else if (USreadDist(sonarSensor) == blockPlacementDist) {
 				drive(35, 0, 0);
@@ -325,7 +379,15 @@ void alignWithBeacon()
 	{
 		while (SensorValue[irSensor] != 6)
 		{
-			drive(-35, 0, 0);
+			if (USreadDist(sonarSensor) > blockPlacementDist) {
+				drive(-35, 35, 0);
+			}
+			else if (USreadDist(sonarSensor) < blockPlacementDist) {
+				drive(-35, -35, 0);
+			}
+			else if (USreadDist(sonarSensor) == blockPlacementDist) {
+				drive(-35, 0, 0);
+			}
 		}
 		allStop();
 		ClearTimer(T4);
@@ -367,7 +429,7 @@ void alignWithBeacon()
 		int irTimeRot = time1[T4];
 		allStop();
 		drive(0, 0, 20);
-		wait1Msec((irTimeRot/2) + 150);
+		wait1Msec((irTimeRot/2) + 75);
 		allStop();
 	}
 	else if (startingSide == RIGHT_SIDE) {
@@ -384,7 +446,7 @@ void alignWithBeacon()
 		int irTimeRot = time1[T4];
 		allStop();
 		drive(0, 0, -20);
-		wait1Msec((irTimeRot/2) + 150);
+		wait1Msec((irTimeRot/2) + 75);
 		allStop();
 	}
 }
@@ -461,7 +523,15 @@ void parkOnBridge()
 		wait1Msec(100);
 		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
-			drive(50, 0, 0);
+			if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+				drive(50, 20, 0);
+			}
+			else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+				drive(50, -20, 0);
+			}
+			else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
+				drive(50, 0, 0);
+			}
 		}
 		wait1Msec(clearPendulumDelay);
 		allStop();
@@ -471,7 +541,15 @@ void parkOnBridge()
 		wait1Msec(100);
 		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
-			drive(-50, 0, 0);
+			if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+				drive(-50, 20, 0);
+			}
+			else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+				drive(-50, -20, 0);
+			}
+			else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
+				drive(-50, 0, 0);
+			}
 		}
 		wait1Msec(clearPendulumDelay);
 		allStop();
@@ -495,7 +573,7 @@ void parkOnBridge()
 		ClearTimer(T3);
 		while (time1[T3] < bridgeParkTime)
 		{
-			drive(75, 0, 0);
+			drive(75, 50, 0);
 		}
 		allStop();
 	}
