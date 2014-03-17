@@ -56,8 +56,8 @@ void initializeAutonomous()
 	delayTime = 0;
 	failSafeTime = 30;
 	nxtDisplayTextLine(2, "Block & bridge?");
-	nxtDisplayTextLine(3, "Orange: both");
-	nxtDisplayTextLine(4, "Arrow: bridge");
+	nxtDisplayTextLine(4, "Orange: Both");
+	nxtDisplayTextLine(5, "Arrow: Bridge");
 	while (1)
 	{
 		if (nNxtButtonPressed == 3) {
