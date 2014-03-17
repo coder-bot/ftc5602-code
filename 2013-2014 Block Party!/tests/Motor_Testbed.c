@@ -8,36 +8,38 @@
 
 task main()
 {
-	//wait1Msec(1000);
+	bDisplayDiagnostics = false;
+	eraseDisplay();
 	ClearTimer(T1);
+	nxtDisplayCenteredBigTextLine(3, "ROT +");
 	while (time1[T1] < 1000)
 	{
-		//nxtDisplayCenteredBigTextLine(3, "ROT +");
 		motor [test] = 100;
 	}
 	motor [test] = 0;
 	wait1Msec(500);
 	ClearTimer(T1);
+	nxtDisplayCenteredBigTextLine(3, "ROT -");
 	while (time1[T1] < 1000)
 	{
-		//nxtDisplayCenteredBigTextLine(3, "ROT -");
 		motor [test] = -100;
 	}
 	motor [test] = 0;
 	wait1Msec(500);
+	nxtDisplayCenteredBigTextLine(3, "PWR ++");
 	for (int i = 5; i < 100; i+=5)
 	{
-		//nxtDisplayCenteredBigTextLine(3, "PWR ++");
 		motor [test] = i;
 		wait1Msec(250);
 	}
 	motor [test] = 0;
 	wait1Msec(500);
+	nxtDisplayCenteredBigTextLine(3, "PWR --");
 	for (int i = -5; i > -100; i-=5)
 	{
-		//nxtDisplayCenteredBigTextLine(3, "PWR --");
 		motor [test] = i;
 		wait1Msec(250);
 	}
 	motor [test] = 0;
+	eraseDisplay();
 }

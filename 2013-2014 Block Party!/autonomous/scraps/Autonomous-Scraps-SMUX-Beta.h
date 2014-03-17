@@ -201,6 +201,10 @@ void initializeAutonomous()
 			failSafeTime = 30;
 			updateFailSafeTimeDisplay();
 		}
+		if (failSafeTime <= delayTime) {
+			failSafeTime = delayTime + 1;
+			updateFailSafeTimeDisplay();
+		}
 	}
 	eraseDisplay();
 	nxtDisplayCenteredTextLine(1, "Confirm options:");
@@ -260,7 +264,7 @@ void generateAutonomousMap()
 {
 	eraseDisplay();
 	nxtDisplayCenteredTextLine(3, "Generating map...");
-	wait1Msec(1500);
+	wait1Msec(1000);
 	eraseDisplay();
 	nxtDisplayCenteredTextLine(1, "Delay: %ds", delayTime);
 	wait1Msec(500);
@@ -284,7 +288,6 @@ void generateAutonomousMap()
 				wait1Msec(600);
 			}
 		}
-		wait1Msec(500);
 		if (bridgeSide == RIGHT_SIDE) {
 			nxtDrawLine(50, 9, 85, 9);
 			wait1Msec(500);

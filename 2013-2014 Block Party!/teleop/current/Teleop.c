@@ -46,7 +46,7 @@ void initializeRobot()
 {
 	switchDriveMode(DRIVE_MODE_STD);
 	switchMechMode(MECH_MODE_INVERTED);
-	servo [scoopCover] = 198;
+	servo [scoopCover] = 220;
 	servo [leftLatch] = 0;
 	servo [rightLatch] = 255;
 }
@@ -177,7 +177,7 @@ task main ()
 		}
 
 		if (joystick.joy2_TopHat == 2) {
-			servo [scoopCover] = 198;
+			servo [scoopCover] = 220;
 		}
 		else if (joystick.joy2_TopHat == 6) {
 			servo [scoopCover] = 40;
@@ -191,7 +191,6 @@ task main ()
 			servo [leftLatch] = 218;
 			servo [rightLatch] = 30;
 		}
-
 		if (joy2Btn(1) == 1) {
 			motor [flagSpinner] = -100;
 		}
