@@ -1,4 +1,4 @@
-//holonomic autonomous for block party - header file containing functions for core/mech operations as well as bridge park procedure
+//holonomic autonomous for block party - header file containing functions for core/mech operations as well as bridge park procedure and initial configuration/map generation via the NXT screen and buttons
 
 //Timer Usage (Important):
 //T1 - RESERVED - fail-safe timer that shuts down program if it is taking too long e.g. motors are burning out from ramming another robot unintentionally
@@ -26,6 +26,7 @@ int clearPendulumDelay = 350;
 int startingSide, bridgeSide;
 int placeBlockQuery;
 int delayTime = 0;
+int reconfigure;
 
 const tMUXSensor sonarSensor = msensor_S3_1;
 //const tMUXSensor lightSensor = msensor_S3_2;
@@ -59,6 +60,9 @@ void initializeAutonomous()
 	while (1)
 	{
 		if (nNxtButtonPressed == 3) {
+            while (nNxtButtonPressed !=(-1))
+			{
+			}
 			placeBlockQuery = PLACE_BLOCK_YES;
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "Both");
@@ -66,6 +70,9 @@ void initializeAutonomous()
 			break;
 		}
 		else if (nNxtButtonPressed == 1 || nNxtButtonPressed == 2) {
+            while (nNxtButtonPressed !=(-1))
+			{
+			}
 			placeBlockQuery = PLACE_BLOCK_NO;
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "Bridge only");
@@ -78,6 +85,9 @@ void initializeAutonomous()
 	while (1)
 	{
 		if (nNxtButtonPressed == 1) {
+            while (nNxtButtonPressed !=(-1))
+			{
+			}
 			startingSide = RIGHT_SIDE;
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "Right");
@@ -85,6 +95,9 @@ void initializeAutonomous()
 			break;
 		}
 		else if (nNxtButtonPressed == 2) {
+            while (nNxtButtonPressed !=(-1))
+			{
+			}
 			startingSide = LEFT_SIDE;
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "Left");
@@ -97,6 +110,9 @@ void initializeAutonomous()
 	while (1)
 	{
 		if (nNxtButtonPressed == 1) {
+            while (nNxtButtonPressed !=(-1))
+			{
+			}
 			bridgeSide = RIGHT_SIDE;
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "Right");
@@ -104,6 +120,9 @@ void initializeAutonomous()
 			break;
 		}
 		else if (nNxtButtonPressed == 2) {
+            while (nNxtButtonPressed !=(-1))
+			{
+			}
 			bridgeSide = LEFT_SIDE;
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "Left");
@@ -130,10 +149,50 @@ void initializeAutonomous()
 			updateDelayTimeDisplay();
 		}
 		if (nNxtButtonPressed == 3) {
+            eraseDisplay();
+			nxtDisplayCenteredTextLine(3, "%d", delayTime);
+			wait1Msec(800);
 			break;
 		}
 	}
 	eraseDisplay();
+    nxtDisplayCenteredTextLine(2, "Confirm options:");
+    wait1Msec(500);
+    if (placeBlockQuery == PLACE_BLOCK_YES)
+        nxtDisplayTextLine(4, "Block & bridge")
+    else if (placeBlockQuery == PLACE_BLOCK_NO)
+        nxtDisplayTextLine(4, "Bridge only");
+    wait1Msec(500);
+    if (startingSide == LEFT_SIDE)
+        nxtDisplayTextLine(5, "Start: Left");
+    else if (startingSide == RIGHT_SIDE)
+        nxtDisplayTextLine(5, "Start: Right");
+    wait1Msec(500);
+    if (bridgeSide == LEFT_SIDE)
+        nxtDisplayTextLine(6, "End: Left");
+    else if (bridgeSide == RIGHT_SIDE)
+        nxtDisplayTextLine(6, "End: Right");
+    wait1Msec(500);
+    nxtDisplayTextLine(7, "Delay: %d s", delayTime);
+    while (1)
+    {
+        if (nNxtButtonPressed == 3) {
+            while (nNxtButtonPressed != (-1))
+            {
+            }
+            reconfigure = 0;
+            break;
+        }
+        else if (nNxtButtonPressed == 1 || nNxtButtonPressed == 2) {
+            while (nNxtButtonPressed != (-1))
+            {
+            }
+            reconfigure = 1;
+            break;
+        }
+    }
+    if (reconfigure)
+        initializeAutonomous();
 	generateAutonomousMap();
 }
 
@@ -145,7 +204,7 @@ void updateDelayTimeDisplay()
 void generateAutonomousMap()
 {
 	nxtDisplayCenteredTextLine(3, "Generating map...");
-	wait1Msec(1000);
+	wait1Msec(1500);
 	eraseDisplay();
 	nxtDisplayCenteredTextLine(1, "Delay: %d s", delayTime);
 	wait1Msec(1000);
