@@ -17,10 +17,10 @@
 #define PLACE_BLOCK_YES 1
 
 int armMovementTime = 2250;
-int blockPlacementDist = 40;
+int blockPlacementDist = 39;
 int cratesPassedDist = 100;
 int bridgeMovementInitialDist = 45;
-int bridgeAlignmentTime = 1500;
+int bridgeAlignmentTime = 1650;
 int bridgeParkTime = 2000;
 int clearPendulumDelay = 325;
 int startingSide, bridgeSide, placeBlockQuery, delayTime, reconfigure, failSafeTime;
@@ -48,6 +48,8 @@ void initializeRobot()
 {
 	initializeAutonomous();
 	servo [scoopCover] = 220;
+	servo [leftLatch] = 0;
+	servo [rightLatch] = 255;
 }
 
 void initializeAutonomous()
@@ -82,7 +84,7 @@ void initializeAutonomous()
 		}
 	}
 	eraseDisplay();
-	nxtDisplayCenteredTextLine(3, "Starting Side?");
+	nxtDisplayCenteredTextLine(3, "Starting side?");
 	while (1)
 	{
 		if (nNxtButtonPressed == 1) {
@@ -252,7 +254,7 @@ void initializeAutonomous()
 
 void updateDelayTimeDisplay()
 {
-	nxtDisplayCenteredTextLine(3, "Delay time: %ds", delayTime);
+	nxtDisplayCenteredTextLine(3, "Delay: %ds", delayTime);
 }
 
 void updateFailSafeTimeDisplay()
@@ -382,10 +384,10 @@ void alignWithBeacon()
 		while (SensorValue[irSensor] != 6)
 		{
 			if (USreadDist(sonarSensor) > blockPlacementDist) {
-				drive(-35, 35, 0);
+				drive(-35, 20, 0);
 			}
 			else if (USreadDist(sonarSensor) < blockPlacementDist) {
-				drive(-35, -35, 0);
+				drive(-35, -20, 0);
 			}
 			else if (USreadDist(sonarSensor) == blockPlacementDist) {
 				drive(-35, 0, 0);
@@ -406,14 +408,28 @@ void alignWithBeacon()
 	if (USreadDist(sonarSensor) < blockPlacementDist) {
 		while (USreadDist(sonarSensor) < blockPlacementDist)
 		{
-			drive(0, -40, 0);
+			drive(0, -20, 0);
 		}
 		allStop();
 	}
 	else if (USreadDist(sonarSensor) > blockPlacementDist) {
 		while (USreadDist(sonarSensor) > blockPlacementDist)
 		{
-			drive(0, 40, 0);
+			drive(0, 20, 0);
+		}
+		allStop();
+	}
+	if (USreadDist(sonarSensor) > blockPlacementDist) {
+		while (USreadDist(sonarSensor) > blockPlacementDist)
+		{
+			drive(0, 20, 0);
+		}
+		allStop();
+	}
+	else if (USreadDist(sonarSensor) < blockPlacementDist) {
+		while (USreadDist(sonarSensor) < blockPlacementDist)
+		{
+			drive(0, -20, 0);
 		}
 		allStop();
 	}
@@ -431,7 +447,7 @@ void alignWithBeacon()
 		int irTimeRot = time1[T4];
 		allStop();
 		drive(0, 0, 20);
-		wait1Msec((irTimeRot/2) + 75);
+		wait1Msec((irTimeRot/2) + 125);
 		allStop();
 	}
 	else if (startingSide == RIGHT_SIDE) {
@@ -448,7 +464,7 @@ void alignWithBeacon()
 		int irTimeRot = time1[T4];
 		allStop();
 		drive(0, 0, -20);
-		wait1Msec((irTimeRot/2) + 75);
+		wait1Msec((irTimeRot/2) + 125);
 		allStop();
 	}
 }
@@ -496,7 +512,7 @@ void placeBlock()
 		int irTimeRotLeft = time1[T4];
 		allStop();
 		drive(0, 0, 20);
-		wait1Msec((irTimeRotLeft/2) + 50);
+		wait1Msec((irTimeRotLeft/2) + 100);
 		allStop();
 	}
 	else if (startingSide == RIGHT_SIDE) {
@@ -567,7 +583,7 @@ void parkOnBridge()
 		ClearTimer(T3);
 		while (time1[T3] < bridgeParkTime)
 		{
-			drive(-75, 0, 0);
+			drive(-100, 0, 0);
 		}
 		allStop();
 	}
@@ -575,7 +591,7 @@ void parkOnBridge()
 		ClearTimer(T3);
 		while (time1[T3] < bridgeParkTime)
 		{
-			drive(75, 50, 0);
+			drive(100, 0, 0);
 		}
 		allStop();
 	}
