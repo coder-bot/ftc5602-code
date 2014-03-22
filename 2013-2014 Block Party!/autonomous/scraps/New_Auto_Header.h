@@ -458,16 +458,16 @@ void placeBlock()
 	ClearTimer(T2);
 	while (time1[T2] < armMovementTime)
 	{
-		motor [grabberArm] = 75;
+		motor [arm] = 75;
 	}
-	motor [grabberArm] = 0;
+	motor [arm] = 0;
 	wait1Msec(500);
 	ClearTimer(T2);
 	while (time1[T2] < armMovementTime - (250))
 	{
-		motor [grabberArm] = -75;
+		motor [arm] = -75;
 	}
-	motor [grabberArm] = 0;
+	motor [arm] = 0;
 	if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
 		while (USreadDist(sonarSensor) < bridgeMovementInitialDist)
 		{
