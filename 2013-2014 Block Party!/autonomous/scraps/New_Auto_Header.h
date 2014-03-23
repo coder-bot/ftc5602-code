@@ -405,34 +405,16 @@ void alignWithBeacon()
 		wait1Msec(irTimeRight/2);
 		allStop();
 	}
-	if (USreadDist(sonarSensor) < blockPlacementDist) {
-		while (USreadDist(sonarSensor) < blockPlacementDist)
-		{
-			drive(0, -20, 0);
-		}
-		allStop();
+	while (USreadDist(sonarSensor) < blockPlacementDist)
+	{
+		drive(0, -20, 0);
 	}
-	else if (USreadDist(sonarSensor) > blockPlacementDist) {
-		while (USreadDist(sonarSensor) > blockPlacementDist)
-		{
-			drive(0, 20, 0);
-		}
-		allStop();
+	allStop();
+	while (USreadDist(sonarSensor) > blockPlacementDist)
+	{
+		drive(0, 20, 0);
 	}
-	if (USreadDist(sonarSensor) > blockPlacementDist) {
-		while (USreadDist(sonarSensor) > blockPlacementDist)
-		{
-			drive(0, 20, 0);
-		}
-		allStop();
-	}
-	else if (USreadDist(sonarSensor) < blockPlacementDist) {
-		while (USreadDist(sonarSensor) < blockPlacementDist)
-		{
-			drive(0, -20, 0);
-		}
-		allStop();
-	}
+	allStop();
 	if (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
@@ -484,20 +466,16 @@ void placeBlock()
 		motor [arm] = -75;
 	}
 	motor [arm] = 0;
-	if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
-		while (USreadDist(sonarSensor) < bridgeMovementInitialDist)
-		{
-			drive(0, -30, 0);
-		}
-		allStop();
+	while (USreadDist(sonarSensor) < bridgeMovementInitialDist)
+	{
+		drive(0, -30, 0);
 	}
-	else if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
-		while (USreadDist(sonarSensor) > bridgeMovementInitialDist)
-		{
-			drive(0, 30, 0);
-		}
-		allStop();
+	allStop();
+	while (USreadDist(sonarSensor) > bridgeMovementInitialDist)
+	{
+		drive(0, 30, 0);
 	}
+	allStop();
 	if  (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
