@@ -17,12 +17,12 @@
 #define PLACE_BLOCK_YES 1
 
 int armMovementTime = 2250;
-int blockPlacementDist = 39;
+int blockPlacementDist = 40;
 int cratesPassedDist = 100;
-int bridgeMovementInitialDist = 45;
+int bridgeMovementInitialDist = 47;
 int bridgeAlignmentTime = 1650;
 int bridgeParkTime = 2000;
-int clearPendulumDelay = 325;
+int clearPendulumDelay = 400;
 int startingSide, bridgeSide, placeBlockQuery, delayTime, reconfigure, failSafeTime;
 
 const tMUXSensor sonarSensor = msensor_S3_1;
@@ -471,10 +471,10 @@ void placeBlock()
 		drive(0, -30, 0);
 	}
 	allStop();
-	while (USreadDist(sonarSensor) > bridgeMovementInitialDist)
-	{
-		drive(0, 30, 0);
-	}
+	//while (USreadDist(sonarSensor) > bridgeMovementInitialDist)
+	//{
+	//	drive(0, 30, 0);
+	//}
 	allStop();
 	if  (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
@@ -519,15 +519,15 @@ void parkOnBridge()
 		wait1Msec(100);
 		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
-			if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
-				drive(50, 20, 0);
-			}
-			else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
-				drive(50, -20, 0);
-			}
-			else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
-				drive(50, 0, 0);
-			}
+			//if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+			//	drive(50, 20, 0);
+			//}
+			//else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+			//	drive(50, -20, 0);
+			//}
+			//else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
+			//	drive(50, 0, 0);
+			//}
 		}
 		wait1Msec(clearPendulumDelay);
 		allStop();
@@ -537,15 +537,15 @@ void parkOnBridge()
 		wait1Msec(100);
 		while (USreadDist(sonarSensor) < cratesPassedDist)
 		{
-			if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
-				drive(-50, 20, 0);
-			}
-			else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
-				drive(-50, -20, 0);
-			}
-			else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
-				drive(-50, 0, 0);
-			}
+			//if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+			//	drive(-50, 20, 0);
+			//}
+			//else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+			//	drive(-50, -20, 0);
+			//}
+			//else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
+			//	drive(-50, 0, 0);
+			//}
 		}
 		wait1Msec(clearPendulumDelay);
 		allStop();
