@@ -7,9 +7,6 @@
 //T4 - RESERVED - timer used to precisely set IR beacon alignment
 
 #include <JoystickDriver.c>
-#include <drivers/hitechnic-sensormux.h>
-//#include <drivers/lego-light.h>
-#include <drivers/lego-ultrasound.h>
 
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
@@ -24,9 +21,6 @@ int bridgeAlignmentTime = 1650;
 int bridgeParkTime = 2000;
 int clearPendulumDelay = 400;
 int startingSide, bridgeSide, placeBlockQuery, delayTime, reconfigure, failSafeTime;
-
-const tMUXSensor sonarSensor = msensor_S3_1;
-//const tMUXSensor lightSensor = msensor_S3_2;
 
 task masterTimer()
 {
@@ -47,9 +41,9 @@ void generateAutonomousMap();
 void initializeRobot()
 {
 	initializeAutonomous();
-	servo [scoopCover] = 220;
-	servo [leftLatch] = 0;
-	servo [rightLatch] = 255;
+	servo [scoopCover] = 200;
+	servo [leftLatch] = 252;
+	servo [rightLatch] = 10;
 }
 
 void initializeAutonomous()
@@ -357,13 +351,13 @@ void alignWithBeacon()
 	if (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
-			if (USreadDist(sonarSensor) > blockPlacementDist) {
+			if (SensorValue(sonarSensor) > blockPlacementDist) {
 				drive(35, 35, 0);
 			}
-			else if (USreadDist(sonarSensor) < blockPlacementDist) {
+			else if (SensorValue(sonarSensor) < blockPlacementDist) {
 				drive(35, -35, 0);
 			}
-			else if (USreadDist(sonarSensor) == blockPlacementDist) {
+			else if (SensorValue(sonarSensor) == blockPlacementDist) {
 				drive(35, 0, 0);
 			}
 		}
@@ -383,13 +377,13 @@ void alignWithBeacon()
 	{
 		while (SensorValue[irSensor] != 6)
 		{
-			if (USreadDist(sonarSensor) > blockPlacementDist) {
+			if (SensorValue(sonarSensor) > blockPlacementDist) {
 				drive(-35, 20, 0);
 			}
-			else if (USreadDist(sonarSensor) < blockPlacementDist) {
+			else if (SensorValue(sonarSensor) < blockPlacementDist) {
 				drive(-35, -20, 0);
 			}
-			else if (USreadDist(sonarSensor) == blockPlacementDist) {
+			else if (SensorValue(sonarSensor) == blockPlacementDist) {
 				drive(-35, 0, 0);
 			}
 		}
@@ -405,12 +399,12 @@ void alignWithBeacon()
 		wait1Msec(irTimeRight/2);
 		allStop();
 	}
-	while (USreadDist(sonarSensor) < blockPlacementDist)
+	while (SensorValue(sonarSensor) < blockPlacementDist)
 	{
 		drive(0, -20, 0);
 	}
 	allStop();
-	while (USreadDist(sonarSensor) > blockPlacementDist)
+	while (SensorValue(sonarSensor) > blockPlacementDist)
 	{
 		drive(0, 20, 0);
 	}
@@ -466,12 +460,12 @@ void placeBlock()
 		motor [arm] = -75;
 	}
 	motor [arm] = 0;
-	while (USreadDist(sonarSensor) < bridgeMovementInitialDist)
+	while (SensorValue(sonarSensor) < bridgeMovementInitialDist)
 	{
 		drive(0, -30, 0);
 	}
 	allStop();
-	//while (USreadDist(sonarSensor) > bridgeMovementInitialDist)
+	//while (SensorValue(sonarSensor) > bridgeMovementInitialDist)
 	//{
 	//	drive(0, 30, 0);
 	//}
@@ -517,15 +511,15 @@ void parkOnBridge()
 	if (bridgeSide == RIGHT_SIDE) {
 		drive(50, 0, 0);
 		wait1Msec(100);
-		while (USreadDist(sonarSensor) < cratesPassedDist)
+		while (SensorValue(sonarSensor) < cratesPassedDist)
 		{
-			//if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+			//if (SensorValue(sonarSensor) > bridgeMovementInitialDist) {
 			//	drive(50, 20, 0);
 			//}
-			//else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+			//else if (SensorValue(sonarSensor) < bridgeMovementInitialDist) {
 			//	drive(50, -20, 0);
 			//}
-			//else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
+			//else if (SensorValue(sonarSensor) == bridgeMovementInitialDist) {
 			//	drive(50, 0, 0);
 			//}
 		}
@@ -535,15 +529,15 @@ void parkOnBridge()
 	else if (bridgeSide == LEFT_SIDE) {
 		drive(-50, 0, 0);
 		wait1Msec(100);
-		while (USreadDist(sonarSensor) < cratesPassedDist)
+		while (SensorValue(sonarSensor) < cratesPassedDist)
 		{
-			//if (USreadDist(sonarSensor) > bridgeMovementInitialDist) {
+			//if (SensorValue(sonarSensor) > bridgeMovementInitialDist) {
 			//	drive(-50, 20, 0);
 			//}
-			//else if (USreadDist(sonarSensor) < bridgeMovementInitialDist) {
+			//else if (SensorValue(sonarSensor) < bridgeMovementInitialDist) {
 			//	drive(-50, -20, 0);
 			//}
-			//else if (USreadDist(sonarSensor) == bridgeMovementInitialDist) {
+			//else if (SensorValue(sonarSensor) == bridgeMovementInitialDist) {
 			//	drive(-50, 0, 0);
 			//}
 		}

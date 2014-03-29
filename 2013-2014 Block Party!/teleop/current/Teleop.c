@@ -1,25 +1,23 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S2, HTServo,  HTMotor,  HTMotor,  none)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S2,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S3,     HTSMUX,         sensorI2CCustom)
+#pragma config(Sensor, S3,     sonarSensor,    sensorSONAR)
 #pragma config(Sensor, S4,     irSensor,       sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_1,     leftLift,      tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C2_2,     arm,    tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C2_1,     rightLift,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C2_2,     flagSpinner,   tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S2_C3_1,     frontRight,    tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S2_C3_2,     rearRight,     tmotorTetrix, openLoop, reversed)
-#pragma config(Servo,  srvo_S1_C3_1,    leftLatch,            tServoStandard)
+#pragma config(Servo,  srvo_S1_C3_1,    rightLatch,           tServoStandard)
 #pragma config(Servo,  srvo_S1_C3_2,    scoopCover,           tServoStandard)
 #pragma config(Servo,  srvo_S1_C3_3,    servo3,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_5,    servo5,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_6,    servo6,               tServoNone)
 #pragma config(Servo,  srvo_S2_C1_1,    spinnerLift,          tServoContinuousRotation)
-#pragma config(Servo,  srvo_S2_C1_2,    rightLatch,           tServoStandard)
+#pragma config(Servo,  srvo_S2_C1_2,    leftLatch,            tServoStandard)
 #pragma config(Servo,  srvo_S2_C1_3,    servo9,               tServoNone)
 #pragma config(Servo,  srvo_S2_C1_4,    servo10,              tServoNone)
 #pragma config(Servo,  srvo_S2_C1_5,    servo11,              tServoNone)
@@ -46,9 +44,9 @@ void initializeRobot()
 {
 	switchDriveMode(DRIVE_MODE_STD);
 	switchMechMode(MECH_MODE_INVERTED);
-	servo [scoopCover] = 220;
-	servo [leftLatch] = 0;
-	servo [rightLatch] = 255;
+	servo [scoopCover] = 200;
+	servo [leftLatch] = 252;
+	servo [rightLatch] = 10;
 }
 
 void switchDriveMode(int driveModeToSwitchTo)
@@ -67,10 +65,53 @@ void switchMechMode(int mechModeToSwitchTo)
 	mechMode = mechModeToSwitchTo;
 }
 
+/*
+task autoCover()
+{
+while (1)
+{
+ClearTimer(T1);
+if (mechMode == MECH_MODE_STD) {
+if (joy2Btn(5) == 1) {
+while (joy2Btn(7) == 1)
+{
+if (time1[T1] >= 2000)
+servo [scoopCover] = 220;
+}
+}
+else if (joy2Btn(5) == 1) {
+while (joy2Btn(5) == 1)
+{
+if (time1[T1] >= 2000)
+servo [scoopCover] = 0;
+}
+}
+}
+else if (mechMode == MECH_MODE_INVERTED) {
+if (joy2Btn(7) == 1) {
+while (joy2Btn(7) == 1)
+{
+if (time1[T1] >= 2000)
+servo [scoopCover] = 0;
+}
+}
+else if (joy2Btn(5) == 1) {
+while (joy2Btn(5) == 1)
+{
+if (time1[T1] >= 2000)
+servo [scoopCover] = 220;
+}
+}
+}
+}
+}
+*/
+
 task main ()
 {
 	initializeRobot();
 	waitForStart();
+	//StartTask(autoCover);
 	while (1)
 	{
 		getJoystickSettings(joystick);
@@ -172,24 +213,24 @@ task main ()
 		}
 
 		if (joy2Btn(6) != 1 && joy2Btn(8) != 1) {
-		motor [leftLift] = abs(joystick.joy2_y1) > t ? joystick.joy2_y1 * standardDriveScale : 0;
-		motor [rightLift] = abs(joystick.joy2_y2) > t ? joystick.joy2_y2 * standardDriveScale : 0;
+		motor [rightLift] = abs(joystick.joy2_y1) > t ? joystick.joy2_y1 * standardDriveScale : 0;
+		motor [leftLift] = abs(joystick.joy2_y2) > t ? joystick.joy2_y2 * standardDriveScale : 0;
 		}
 
 		if (joystick.joy2_TopHat == 2) {
-			servo [scoopCover] = 220;
+			servo [scoopCover] = 200;
 		}
 		else if (joystick.joy2_TopHat == 6) {
 			servo [scoopCover] = 0;
 		}
 
-		if (joystick.joy2_TopHat == 4) {
-			servo [leftLatch] = 0;
-			servo [rightLatch] = 235;
+		if (joystick.joy2_TopHat == 0) {
+			servo [leftLatch] = 20;
+			servo [rightLatch] = 238;
 		}
-		else if (joystick.joy2_TopHat == 0) {
-			servo [leftLatch] = 218;
-			servo [rightLatch] = 30;
+		else if (joystick.joy2_TopHat == 4) {
+			servo [leftLatch] = 252;
+			servo [rightLatch] = 10;
 		}
 		if (joy2Btn(1) == 1) {
 			motor [flagSpinner] = -100;
