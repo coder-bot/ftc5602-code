@@ -65,53 +65,38 @@ void switchMechMode(int mechModeToSwitchTo)
 	mechMode = mechModeToSwitchTo;
 }
 
-/*
+
 task autoCover()
 {
-while (1)
-{
-ClearTimer(T1);
-if (mechMode == MECH_MODE_STD) {
-if (joy2Btn(5) == 1) {
-while (joy2Btn(7) == 1)
-{
-if (time1[T1] >= 2000)
-servo [scoopCover] = 220;
+	while (1)
+	{
+		ClearTimer(T1);
+		if (mechMode == MECH_MODE_STD) {
+			if (joy2Btn(5) == 1) {
+				while (joy2Btn(5) == 1)
+				{
+					if (time1[T1] >= 1000)
+						servo [scoopCover] = 0;
+				}
+			}
+		}
+		else if (mechMode == MECH_MODE_INVERTED) {
+			if (joy2Btn(7) == 1) {
+				while (joy2Btn(7) == 1)
+				{
+					if (time1[T1] >= 1000)
+						servo [scoopCover] = 0;
+				}
+			}
+		}
+	}
 }
-}
-else if (joy2Btn(5) == 1) {
-while (joy2Btn(5) == 1)
-{
-if (time1[T1] >= 2000)
-servo [scoopCover] = 0;
-}
-}
-}
-else if (mechMode == MECH_MODE_INVERTED) {
-if (joy2Btn(7) == 1) {
-while (joy2Btn(7) == 1)
-{
-if (time1[T1] >= 2000)
-servo [scoopCover] = 0;
-}
-}
-else if (joy2Btn(5) == 1) {
-while (joy2Btn(5) == 1)
-{
-if (time1[T1] >= 2000)
-servo [scoopCover] = 220;
-}
-}
-}
-}
-}
-*/
 
 task main ()
 {
 	initializeRobot();
 	waitForStart();
-	//StartTask(autoCover);
+	StartTask(autoCover);
 	while (1)
 	{
 		getJoystickSettings(joystick);
