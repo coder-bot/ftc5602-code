@@ -3,7 +3,7 @@
 //Timer Usage (Important):
 //T1 - RESERVED - fail-safe timer that shuts down program if it is taking too long e.g. motors are burning out from ramming another robot unintentionally
 //T2 - RESERVED - time taken for arm to move to place block
-//T3 - RESERVED - time taken for robot to execute movements to park on the bridge
+//T3 - RESERVED - time taken for robot to execute movements to park on the bridge and to set horizontal IR beacon alignment
 //T4 - RESERVED - timer used to precisely set IR beacon alignment
 
 #include <JoystickDriver.c>
@@ -14,12 +14,13 @@
 #define PLACE_BLOCK_YES 1
 
 int armMovementTime = 2250;
-int blockPlacementDist = 40;
-int cratesPassedDist = 100;
-int bridgeMovementInitialDist = 47;
+int blockPlacementDist = 47;
+int locationTimer, alignmentDelay;
+int cratesPassedDist = 150;
+int bridgeMovementInitialDist = 49;
 int bridgeAlignmentTime = 1650;
-int bridgeParkTime = 2000;
-int clearPendulumDelay = 400;
+int bridgeParkTime = 1350;
+int clearPendulumDelay = 900;
 int startingSide, bridgeSide, placeBlockQuery, delayTime, reconfigure, failSafeTime;
 
 task masterTimer()
@@ -41,7 +42,7 @@ void generateAutonomousMap();
 void initializeRobot()
 {
 	initializeAutonomous();
-	servo [scoopCover] = 200;
+	servo [scoopCover] = 230;
 	servo [leftLatch] = 252;
 	servo [rightLatch] = 10;
 }
@@ -71,6 +72,7 @@ void initializeAutonomous()
 			{
 			}
 			placeBlockQuery = PLACE_BLOCK_NO;
+			bridgeParkTime = 2500;
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "Bridge only");
 			wait1Msec(800);
@@ -348,6 +350,7 @@ void allStop()
 
 void alignWithBeacon()
 {
+	ClearTimer(T3);
 	if (startingSide == LEFT_SIDE) {
 		while (SensorValue[irSensor] != 4)
 		{
@@ -362,6 +365,11 @@ void alignWithBeacon()
 			}
 		}
 		allStop();
+		locationTimer = time1[T3];
+		if (locationTimer < 2500)
+			alignmentDelay = -100;
+		else if (locationTimer > 3250)
+			alignmentDelay = 100;
 		ClearTimer(T4);
 		while (SensorValue[irSensor] != 6)
 		{
@@ -370,7 +378,7 @@ void alignWithBeacon()
 		int irTimeLeft = time1[T4];
 		allStop();
 		drive(20, 0, 0);
-		wait1Msec(irTimeLeft/2);
+		wait1Msec(irTimeLeft/2 + alignmentDelay);
 		allStop();
 	}
 	else if (startingSide == RIGHT_SIDE)
@@ -388,6 +396,11 @@ void alignWithBeacon()
 			}
 		}
 		allStop();
+		locationTimer = time1[T3];
+		if (locationTimer < 2500)
+			alignmentDelay = -100;
+		else if (locationTimer > 3250)
+			alignmentDelay = 100;
 		ClearTimer(T4);
 		while(SensorValue[irSensor] != 4)
 		{
@@ -396,7 +409,7 @@ void alignWithBeacon()
 		int irTimeRight = time1[T4];
 		allStop();
 		drive(-20, 0, 0);
-		wait1Msec(irTimeRight/2);
+		wait1Msec(irTimeRight/2 + alignmentDelay);
 		allStop();
 	}
 	while (SensorValue(sonarSensor) < blockPlacementDist)
@@ -407,6 +420,11 @@ void alignWithBeacon()
 	while (SensorValue(sonarSensor) > blockPlacementDist)
 	{
 		drive(0, 20, 0);
+	}
+	allStop();
+	while (SensorValue(sonarSensor) < blockPlacementDist)
+	{
+		drive(0, -20, 0);
 	}
 	allStop();
 	if (startingSide == LEFT_SIDE) {
@@ -423,7 +441,7 @@ void alignWithBeacon()
 		int irTimeRot = time1[T4];
 		allStop();
 		drive(0, 0, 20);
-		wait1Msec((irTimeRot/2) + 125);
+		wait1Msec((irTimeRot/2) + 85);
 		allStop();
 	}
 	else if (startingSide == RIGHT_SIDE) {
@@ -440,7 +458,7 @@ void alignWithBeacon()
 		int irTimeRot = time1[T4];
 		allStop();
 		drive(0, 0, -20);
-		wait1Msec((irTimeRot/2) + 125);
+		wait1Msec((irTimeRot/2) + 85);
 		allStop();
 	}
 }
@@ -513,15 +531,7 @@ void parkOnBridge()
 		wait1Msec(100);
 		while (SensorValue(sonarSensor) < cratesPassedDist)
 		{
-			//if (SensorValue(sonarSensor) > bridgeMovementInitialDist) {
-			//	drive(50, 20, 0);
-			//}
-			//else if (SensorValue(sonarSensor) < bridgeMovementInitialDist) {
-			//	drive(50, -20, 0);
-			//}
-			//else if (SensorValue(sonarSensor) == bridgeMovementInitialDist) {
-			//	drive(50, 0, 0);
-			//}
+			drive(50, 0, 0);
 		}
 		wait1Msec(clearPendulumDelay);
 		allStop();
@@ -531,15 +541,7 @@ void parkOnBridge()
 		wait1Msec(100);
 		while (SensorValue(sonarSensor) < cratesPassedDist)
 		{
-			//if (SensorValue(sonarSensor) > bridgeMovementInitialDist) {
-			//	drive(-50, 20, 0);
-			//}
-			//else if (SensorValue(sonarSensor) < bridgeMovementInitialDist) {
-			//	drive(-50, -20, 0);
-			//}
-			//else if (SensorValue(sonarSensor) == bridgeMovementInitialDist) {
-			//	drive(-50, 0, 0);
-			//}
+			drive(-50, 0, 0);
 		}
 		wait1Msec(clearPendulumDelay);
 		allStop();

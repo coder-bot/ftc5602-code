@@ -44,7 +44,7 @@ void initializeRobot()
 {
 	switchDriveMode(DRIVE_MODE_STD);
 	switchMechMode(MECH_MODE_INVERTED);
-	servo [scoopCover] = 200;
+	servo [scoopCover] = 230;
 	servo [leftLatch] = 252;
 	servo [rightLatch] = 10;
 }
@@ -76,7 +76,7 @@ task autoCover()
 				while (joy2Btn(5) == 1)
 				{
 					if (time1[T1] >= 1000)
-						servo [scoopCover] = 0;
+						servo [scoopCover] = 20;
 				}
 			}
 		}
@@ -85,7 +85,7 @@ task autoCover()
 				while (joy2Btn(7) == 1)
 				{
 					if (time1[T1] >= 1000)
-						servo [scoopCover] = 0;
+						servo [scoopCover] = 20;
 				}
 			}
 		}
@@ -203,10 +203,10 @@ task main ()
 		}
 
 		if (joystick.joy2_TopHat == 2) {
-			servo [scoopCover] = 200;
+			servo [scoopCover] = 230;
 		}
 		else if (joystick.joy2_TopHat == 6) {
-			servo [scoopCover] = 0;
+			servo [scoopCover] = 20;
 		}
 
 		if (joystick.joy2_TopHat == 0) {
