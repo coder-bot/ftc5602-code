@@ -4,18 +4,20 @@
 //T1 - RESERVED - fail-safe timer that shuts down program if it is taking too long e.g. motors are burning out from ramming another robot unintentionally
 //T2 - RESERVED - time taken for arm to move to place block
 //T3 - RESERVED - time taken for robot to execute movements to park on the bridge and to set horizontal IR beacon alignment
-//T4 - RESERVED - timer used to precisely set IR beacon alignment
+//T4 - RESERVED - timer used to precisely set IR beacon rotational alignment
 
-#include <JoystickDriver.c>
 
+#include <JoystickDriver.c> //for waitforstart and diagnostic display control
+
+//constants for starting sides and whether or not to place the block
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
 #define PLACE_BLOCK_NO 0
 #define PLACE_BLOCK_YES 1
 
-int armMovementTime = 2250;
-int blockPlacementDist = 47;
-int locationTimer, alignmentDelay;
+int armMovementTime = 2250; //duration of time arm to move to place block
+int blockPlacementDist = 47; //distance robot places itself from the crates prior to block placement
+int locationTimer, alignmentDelay; //locationTimer holds a time value to attempt to judge if the robot is at the first/second or third/fourth crate. alignmentDelay is set based on this value which is then used to add to or subtract from the time it takes to align the robot with the crate. This accounts for the fact that the IR beacons are placed slightly to the outside of the center of the crates.
 int cratesPassedDist = 150;
 int bridgeMovementInitialDist = 49;
 int bridgeAlignmentTime = 1650;
