@@ -49,6 +49,7 @@ void initializeRobot()
 	servo [scoopCover] = 230;
 	servo [leftLatch] = 252;
 	servo [rightLatch] = 10;
+	servo [batonManipulator] = 135;
 }
 
 void switchDriveMode(int driveModeToSwitchTo)
