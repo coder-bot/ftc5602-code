@@ -28,45 +28,11 @@
 
 #include "FB_Auto_Header.h"
 #include <JoystickDriver.c>
-#define START_RED 1
-#define START_BLUE 2
-
-int startingSide, horizontalMovement;
 
 task main()
 {
-	bDisplayDiagnostics = false;
-	eraseDisplay();
-	nxtDisplayTextLine(3, "Right for RED");
-	nxtDisplayTextLine(4, "Left for BLUE");
-	if (nNxtButtonPressed == 1)
-	{
-		while (nNxtButtonPressed != -1)
-		{
-		}
-		startingSide = START_RED;
-	}
-	else if (nNxtButtonPressed == 2)
-	{
-		while (nNxtButtonPressed != -1)
-		{
-		}
-		startingSide = START_BLUE;
-	}
-	if (startingSide == START_RED) {
-		//thing
-	}
-	bDisplayDiagnostics = true;
-	drive(0, 100, 0);
-	wait1Msec(2500);
+	waitForStart();
+	drive(0, 85, 0);
+	wait1Msec(10000);
 	allStop();
-
-	drive(horizontalMovement, 0, 0);
-	wait1Msec(750);
-	allStop();
-
-	drive(0, 100, 0);
-	wait1Msec(750);
-	allStop();
-}
 }
