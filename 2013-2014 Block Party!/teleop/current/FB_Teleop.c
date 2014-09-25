@@ -49,7 +49,7 @@ void initializeRobot()
 	servo [scoopCover] = 230;
 	servo [leftLatch] = 252;
 	servo [rightLatch] = 10;
-	servo [batonManipulator] = 135;
+	servo [batonManipulator] = 100;
 }
 
 void switchDriveMode(int driveModeToSwitchTo)
@@ -239,14 +239,10 @@ task main ()
 
 			if (joystick.joy1_TopHat == 0)
 			{
-				servo [batonManipulator] = 255;
-			}
-			else if (joystick.joy1_TopHat == 4) {
 				servo [batonManipulator] = 0;
 			}
-			else if (joystick.joy1_TopHat == 2 || joystick.joy1_TopHat == 6)
-			{
-				servo [batonManipulator] = 135;
+			else if (joystick.joy1_TopHat == 4) {
+				servo [batonManipulator] = 100;
 			}
 		}
 	}
