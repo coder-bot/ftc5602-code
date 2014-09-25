@@ -129,10 +129,10 @@ task main ()
 		motor [rearRight] = ((joy1Btn (5) == 1) || (joy1Btn (6) == 1) || (joy1Btn (7) == 1) || (joy1Btn (8) == 1)) ? stdRearRightMotorSetting * precisionDriveScale : stdRearRightMotorSetting * standardDriveScale;
 		}
 		else if (driveMode == DRIVE_MODE_EG) {
-		motor [frontLeft] = (egFrontLeftMotorSetting * precisionDriveScale - ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
-		motor [frontRight] = (egFrontRightMotorSetting * precisionDriveScale + ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
-		motor [rearLeft] = (egRearLeftMotorSetting * precisionDriveScale - ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
-		motor [rearRight] = (egRearRightMotorSetting * precisionDriveScale + ((joy1Btn(5) == 1) ? 20 : (joy1Btn(6) == 1) ? -20 : 0));
+		motor [frontLeft] = (egFrontLeftMotorSetting * precisionDriveScale - ((joy1Btn(7) == 1) ? 20 : (joy1Btn(8) == 1) ? -20 : 0));
+		motor [frontRight] = (egFrontRightMotorSetting * precisionDriveScale + ((joy1Btn(7) == 1) ? 20 : (joy1Btn(8) == 1) ? -20 : 0));
+		motor [rearLeft] = (egRearLeftMotorSetting * precisionDriveScale - ((joy1Btn(7) == 1) ? 20 : (joy1Btn(8) == 1) ? -20 : 0));
+		motor [rearRight] = (egRearRightMotorSetting * precisionDriveScale + ((joy1Btn(7) == 1) ? 20 : (joy1Btn(8) == 1) ? -20 : 0));
 		}
 
 		if (joy1Btn(1) == 1 && joy1Btn(2) == 1 && joy1Btn(3) == 1 && joy1Btn(4) == 1) {

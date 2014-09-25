@@ -27,11 +27,12 @@
 task main()
 {
 	nxtDisplayCenteredTextLine(3, "Servos");
+	wait1Msec(750);
 	servo [scoopCover] = 230;
 	servo [leftLatch] = 252;
 	servo [rightLatch] = 10;
 	eraseDisplay();
-	wait1Msec(1000);
+	wait1Msec(750);
 	nxtDisplayCenteredTextLine(3, "Lift 1");
 	nxtDisplayCenteredTextLine(5, "Orange stops");
 	while (nNxtButtonPressed != 3)
