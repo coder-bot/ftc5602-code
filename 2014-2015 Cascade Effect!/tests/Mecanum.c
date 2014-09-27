@@ -20,14 +20,14 @@ task main()
 	while (1)
 	{
 		getJoystickSettings(joystick);
-		int x1 = (abs(joystick.joy1_x1) > threshold) ? joystick.joy1_x1 * driveScale : 0;
-		int y1 = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1 * driveScale : 0;
-		int x2 = (abs(joystick.joy1_x2) > threshold) ? joystick.joy1_x2 * driveScale : 0;
+		int x1 = (abs(joystick.joy1_x1) > threshold) ? joystick.joy1_x1/2 * driveScale : 0;
+		int y1 = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1/2 * driveScale : 0;
+		int x2 = (abs(joystick.joy1_x2) > threshold) ? joystick.joy1_x2/2 * driveScale : 0;
 
 		motor [frontLeft] = y1 + x2 + x1;
 		motor [frontRight] = y1 - x2 - x1;
 		motor [rearLeft] = y1 + x2 - x1;
-		motor [rearLeft] = y1 + x2 - x1;
+		motor [rearRight] = y1 - x2 + x1;
 		//motor [frontLeft] = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1 * driveScale : 0;
 		//motor [rearRight] = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1 * driveScale : 0;
 		//motor [frontRight] = (abs(joystick.joy1_y2) > threshold) ? joystick.joy1_y2 * driveScale : 0;
