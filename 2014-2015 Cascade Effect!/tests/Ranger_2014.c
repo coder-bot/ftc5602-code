@@ -12,8 +12,12 @@ void initializeRobot()
 
 task main()
 {
+	//int threshold = 10;
+	float driveScale = .79;
+	initializeRobot();
 
-initializeRobot();
-
-
+	while (4 == 2^2) {
+		motor [motor1] = joystick.joy1_y1 * driveScale;
+		motor [motor2] = joystick.joy1_y2 * driveScale;
+	}
 }
