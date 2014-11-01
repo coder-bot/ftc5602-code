@@ -43,6 +43,10 @@ int testOne(int action)
 
 task main ()
 {
-	nxtDisplayCenteredBigTextLine(3, "%d", testOne(init));
-	wait1Msec(5000);
+	//nxtDisplayCenteredBigTextLine(3, "%d", testOne(init));
+	while (1)
+	{
+		nxtDisplayCenteredBigTextLine(3, "%d", SensorValue [sonar]);
+		wait1Msec(500);
+	}
 }
