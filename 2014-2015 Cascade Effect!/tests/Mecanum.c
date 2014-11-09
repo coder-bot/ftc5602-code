@@ -1,4 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  none,     none)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Motor,  mtr_S1_C1_1,     frontRight,    tmotorTetrix, openLoop, reversed)
 #pragma config(Motor,  mtr_S1_C1_2,     frontLeft,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_1,     rearLeft,      tmotorTetrix, openLoop)
@@ -7,6 +8,8 @@
 
 #include <JoystickDriver.c>
 
+int x1, y1, x2;
+
 void initializeRobot()
 {
 }
@@ -14,24 +17,24 @@ void initializeRobot()
 task main()
 {
 	initializeRobot();
-	float driveScale = .7874;
+	float driveScale = (0.7874*0.78);
 	int threshold = 8;
 
 	while (1)
 	{
 		getJoystickSettings(joystick);
-		int x1 = (abs(joystick.joy1_x1) > threshold) ? joystick.joy1_x1/2 * driveScale : 0;
-		int y1 = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1/2 * driveScale : 0;
-		int x2 = (abs(joystick.joy1_x2) > threshold) ? joystick.joy1_x2/2 * driveScale : 0;
+	x1 = (abs(joystick.joy1_x1) > threshold) ? joystick.joy1_x1 * driveScale : 0;
+	y1 = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1 * driveScale : 0;
+	x2 = (abs(joystick.joy1_x2) > threshold) ? joystick.joy1_x2 * driveScale : 0;
 
 		motor [frontLeft] = y1 + x2 + x1;
 		motor [frontRight] = y1 - x2 - x1;
 		motor [rearLeft] = y1 + x2 - x1;
 		motor [rearRight] = y1 - x2 + x1;
+
 		//motor [frontLeft] = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1 * driveScale : 0;
 		//motor [rearRight] = (abs(joystick.joy1_y1) > threshold) ? joystick.joy1_y1 * driveScale : 0;
 		//motor [frontRight] = (abs(joystick.joy1_y2) > threshold) ? joystick.joy1_y2 * driveScale : 0;
 		//motor [rearLeft] = (abs(joystick.joy1_y2) > threshold) ? joystick.joy1_y2 * driveScale : 0;
 	}
-
 }
