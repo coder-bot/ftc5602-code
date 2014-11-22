@@ -2,12 +2,12 @@
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S4,     ,               sensorI2CMuxController)
-#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
-#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
+#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, PIDControl, encoder)
+#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, PIDControl, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, reversed, encoder)
-#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, PIDControl, reversed, encoder)
+#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, PIDControl, reversed, encoder)
 #pragma config(Motor,  mtr_S4_C2_1,     lift,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_2,     motorK,        tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C3_1,    guiderDrop,           tServoStandard)
@@ -21,7 +21,7 @@
 #include <JoystickDriver.c>
 
 int driveEncoderCycle = 1120;
-float manualDriveScale = (0.7874 /**0.7777*/);
+float manualDriveScale = (0.7874 * 0.7777);
 int pivotTarget = 1000;
 const int pivotIncrement = 1;
 
