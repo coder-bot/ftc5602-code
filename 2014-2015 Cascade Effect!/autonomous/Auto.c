@@ -1,7 +1,6 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S2,     ir,             sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
@@ -79,6 +78,7 @@ task main ()
 {
 	initializeRobot();
 	waitForStart();
+#if 0
 	ClearTimer(T1);
 	while (time1[T1] < 800)
 	{
@@ -94,8 +94,62 @@ task main ()
 	wait1Msec(500);
 	drive(0, 0, -50);
 	wait1Msec(175);
+	while (nMotorEncoder [frontRight] < driveEncoderCycle * 3.75)
+	{
+		drive(0, 60, 0);
+	}
+	allStop();
+#endif
+	//IR testing
+	//red ramp mode:
+
+	ClearTimer(T1);
+	while (time1[T1] < 800)
+	{
+		motor [arm] = -100;
+	}
+	motor [arm] = 0;
+	wait1Msec(1000);
+	while (nMotorEncoder [frontRight] < driveEncoderCycle * 2)
+	{
+		drive(0, 35, 0);
+	}
+	allStop();
+	wait1Msec(500);
+	drive(0, 0, 35);
+	wait1Msec(175);
 	while (nMotorEncoder [frontRight] < driveEncoderCycle * 5.25)
 	{
 		drive(0, 60, 0);
+	}
+	while(nMotorEncoder [frontRight] < driveEncoderCycle * 4.75)
+	{
+		drive(0, 0, 35);
+	}
+	allStop();
+	//if (SensorValue [ir] == 0)
+	//{
+	//	while (1)
+	//	{
+	//		nxtDisplayCenteredBigTextLine(3, "1");
+	//	}
+	//}
+	//else if (SensorValue[ir] == 6)
+	//{
+	//	while(1)
+	//	{
+	//		nxtDisplayCenteredBigTextLine(3, "2");
+	//	}
+	//}
+	//else if (SensorValue [ir] == 8)
+	//{
+	//	while (1)
+	//	{
+	//		nxtDisplayCenteredBigTextLine(3, "3");
+	//	}
+	//}
+	while (1)
+	{
+		nxtDisplayCenteredBigTextLine(3, "%d", SensorValue[ir]);
 	}
 }
