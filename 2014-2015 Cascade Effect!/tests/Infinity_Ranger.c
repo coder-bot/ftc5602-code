@@ -12,12 +12,17 @@ void initializeRobot()
 
 task main()
 {
+	int y1, x2;
 	int threshold = 10;
 	float driveScale = .79;
+
 	initializeRobot();
 
 	while (1) {
-	motor [leftDrive] = (abs(joystick.joy1_y1) >= threshold) ? (joystick.joy1_y1 * driveScale) : 0;
-	motor [rightDrive] = (abs(joystick.joy1_y2) >= threshold) ? (joystick.joy1_y2 * driveScale) : 0;
+		getJoystickSettings(joystick);
+	y1 = (abs(joystick.joy1_y1) >= threshold) ? (joystick.joy1_y1 * driveScale) : 0;
+	x2 = (abs(joystick.joy1_x2) >= threshold) ? (joystick.joy1_x2 * driveScale) : 0;
+		motor [leftDrive] = y1 + x2;
+		motor [rightDrive] = y1 - x2;
 	}
 }

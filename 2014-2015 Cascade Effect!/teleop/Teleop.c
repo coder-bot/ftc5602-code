@@ -21,7 +21,11 @@
 #include <JoystickDriver.c>
 
 int driveEncoderCycle = 1120;
+<<<<<<< HEAD
 float manualDriveScale = (0.7874 /** 0.7777*/);
+=======
+float manualDriveScale = (0.7874 /**0.7777*/);
+>>>>>>> 25114c496de0bdf06754f91c51a845adfe307415
 int pivotTarget = 1000;
 const int pivotIncrement = 1;
 
