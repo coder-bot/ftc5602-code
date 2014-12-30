@@ -1,6 +1,5 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
-<<<<<<< HEAD
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S4,     ,               sensorI2CMuxController)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, PIDControl, encoder)
@@ -9,7 +8,6 @@
 #pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, PIDControl, reversed, encoder)
 #pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, PIDControl, reversed, encoder)
-=======
 #pragma config(Sensor, S2,     ir,             sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
@@ -17,7 +15,6 @@
 #pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, reversed, encoder)
->>>>>>> 25114c496de0bdf06754f91c51a845adfe307415
 #pragma config(Motor,  mtr_S4_C2_1,     lift,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_2,     motorK,        tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C3_1,    guiderDrop,           tServoStandard)
@@ -40,8 +37,6 @@ float autoDriveScale = 0.7777;
 //	servo [pivot] = 255 * pivotSetting;
 //}
 
-<<<<<<< HEAD
-=======
 void drive(int x1, int y1, int x2)
 {
 	motor [frontLeft] = (y1 + x2 + x1);
@@ -55,7 +50,6 @@ void allStop()
 	drive(0, 0, 0);
 }
 
->>>>>>> 25114c496de0bdf06754f91c51a845adfe307415
 int resetDriveEncoders()
 {
 	nMotorEncoder [frontLeft] = 0;
@@ -92,9 +86,7 @@ task main ()
 {
 	initializeRobot();
 	waitForStart();
-<<<<<<< HEAD
 
-=======
 #if 0
 	ClearTimer(T1);
 	while (time1[T1] < 800)
@@ -169,5 +161,4 @@ task main ()
 	{
 		nxtDisplayCenteredBigTextLine(3, "%d", SensorValue[ir]);
 	}
->>>>>>> 25114c496de0bdf06754f91c51a845adfe307415
 }
