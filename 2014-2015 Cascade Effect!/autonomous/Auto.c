@@ -29,6 +29,7 @@
 
 int driveEncoderCycle = 1120;
 float autoDriveScale = 0.7777;
+int driveCycles;
 //int pivotTarget = 1000;
 //const int pivotIncrement = 1;
 
@@ -59,6 +60,11 @@ int resetDriveEncoders()
 	return 1;
 }
 
+void updateDriveCyclesDisplay()
+{
+	nxtDisplayTextLine(3, "Rotations: %d", driveCycles);
+}
+
 void initializeRobot()
 {
 	bDisplayDiagnostics = false;
@@ -79,6 +85,27 @@ void initializeRobot()
 		wait1Msec(1000);
 	}
 	eraseDisplay();
+	while (1)
+	{
+	nxtDisplayTextLine(3, "Rotations: %d", driveCycles);
+	if (nNxtButtonPressed == 1)
+	{
+		while (nNxtButtonPressed != -1)
+		{
+		}
+		driveCycles ++;
+		updateDriveCyclesDisplay();
+	}
+		if (nNxtButtonPressed == 2)
+	{
+		while (nNxtButtonPressed != -1)
+		{
+		}
+		driveCycles --;
+		updateDriveCyclesDisplay();
+	}
+	if (nNxtButtonPressed == 3)
+}
 	bDisplayDiagnostics = true;
 }
 

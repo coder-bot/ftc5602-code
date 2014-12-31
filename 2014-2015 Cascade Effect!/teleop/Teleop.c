@@ -47,8 +47,8 @@ void initializeRobot()
 	servo [pivot] = 0;
 	servo [spinner] = 128;
 	servo [guiderDrop] = 255;
-	servo [leftHook] = 22;
-	servo [rightHook] = 209;
+	servo [leftHook] = 0;
+	servo [rightHook] = 180;
 	wait1Msec(1000);
 	eraseDisplay();
 	if (resetDriveEncoders() == 1)
@@ -156,13 +156,13 @@ task main()
 		}
 		if (joystick.joy2_TopHat == 6)
 		{
-			servo [leftHook] = 22;
-			servo [rightHook] = 209;
+			servo [leftHook] = 0;
+			servo [rightHook] = 180;
 		}
 		else if (joystick.joy2_TopHat == 2)
 		{
-			servo [leftHook] = 255;
-			servo [rightHook] = 0;
+			servo [leftHook] = 168;
+			servo [rightHook] = 16;
 		}
 		if (joystick.joy2_TopHat == 4)
 		{
