@@ -1,20 +1,15 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
-#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, PIDControl, encoder)
-#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, PIDControl, encoder)
-#pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, PIDControl, reversed, encoder)
-#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, PIDControl, reversed, encoder)
 #pragma config(Sensor, S2,     ir,             sensorHiTechnicIRSeeker1200)
-#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
-#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
+#pragma config(Sensor, S3,     sonar,          sensorSONAR)
+#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
+#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, reversed, encoder)
-#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, encoder)
+#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S4_C2_1,     lift,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_2,     motorK,        tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C3_1,    guiderDrop,           tServoStandard)
@@ -29,7 +24,6 @@
 
 int driveEncoderCycle = 1120;
 float autoDriveScale = 0.7777;
-int driveCycles;
 //int pivotTarget = 1000;
 //const int pivotIncrement = 1;
 
@@ -60,13 +54,9 @@ int resetDriveEncoders()
 	return 1;
 }
 
-void updateDriveCyclesDisplay()
-{
-	nxtDisplayTextLine(3, "Rotations: %d", driveCycles);
-}
-
 void initializeRobot()
 {
+	bDisplayDiagnostics = false;
 	nxtDisplayCenteredTextLine(3, "Initializaing");
 	nxtDisplayCenteredTextLine(4, "servos...");
 	servo [pivot] = 0;
@@ -84,50 +74,32 @@ void initializeRobot()
 		wait1Msec(1000);
 	}
 	eraseDisplay();
-	while (1)
-	{
-		nxtDisplayCenteredTextLine(3, "Rotations: %d", driveCycles);
-		if (nNxtButtonPressed == 1)
-		{
-			while (nNxtButtonPressed != -1)
-			{
-			}
-			driveCycles ++;
-			updateDriveCyclesDisplay();
-		}
-		else if (nNxtButtonPressed == 2)
-		{
-			while (nNxtButtonPressed != -1)
-			{
-			}
-			driveCycles --;
-			updateDriveCyclesDisplay();
-		}
-		if (nNxtButtonPressed == 3)
-		{
-			while (nNxtButtonPressed != -1)
-			{
-			}
-			eraseDisplay();
-			if (driveCycles > 1)
-				nxtDisplayCenteredTextLine(3, "%d rotations", driveCycles);
-			else if (driveCycles == 1)
-				nxtDisplayCenteredTextLine(3, "%d rotation", driveCycles);
-			wait1Msec(800);
-			break;
-		}
-		if (driveCycles < 0)
-		{
-			driveCycles = 0;
-			updateDriveCyclesDisplay();
-		}
-	}
+	bDisplayDiagnostics = true;
 }
 
 task main ()
 {
-	bDisplayDiagnostics = false;
 	initializeRobot();
-	bDisplayDiagnostics = true;
 	waitForStart();
+#if 1
+	ClearTimer(T1);
+	while (time1[T1] < 800)
+	{
+		motor [arm] = -100;
+	}
+	motor [arm] = 0;
+	wait1Msec(1000);
+	while (nMotorEncoder [frontLeft] < driveEncoderCycle * 5.75)
+	{
+		drive(0, 60, 0);
+	}
+	allStop();
+	wait1Msec (1000);
+	while(nMotorEncoder [frontLeft] < driveEncoderCycle * 2.75)
+	{
+		drive(35, 0, 0);
+	}
+	allStop();
+	#endif
+
 }
