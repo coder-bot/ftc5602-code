@@ -1,14 +1,7 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
-#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, PIDControl, encoder)
-#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, PIDControl, encoder)
-#pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, PIDControl, reversed, encoder)
-#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, PIDControl, reversed, encoder)
 #pragma config(Sensor, S2,     ir,             sensorHiTechnicIRSeeker1200)
+#pragma config(Sensor, S3,     sonar,          sensorSONAR)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
@@ -29,7 +22,9 @@
 
 int driveEncoderCycle = 1120;
 float autoDriveScale = 0.7777;
-int driveCycles;
+int driveCycles, status;
+#define GOAL_CONTINUE_SEARCH 0
+#define GOAL_FOUND 1
 //int pivotTarget = 1000;
 //const int pivotIncrement = 1;
 
@@ -73,7 +68,7 @@ void initializeRobot()
 	servo [spinner] = 128;
 	servo [guiderDrop] = 255;
 	servo [leftHook] = 22;
-	servo [rightHook] = 209;
+	servo [rightHook] = 165;
 	wait1Msec(1000);
 	eraseDisplay();
 	if (resetDriveEncoders() == 1)
@@ -130,4 +125,72 @@ task main ()
 	initializeRobot();
 	bDisplayDiagnostics = true;
 	waitForStart();
+	while (nMotorEncoder [frontRight] > -(driveCycles * driveEncoderCycle))
+	{
+		drive(0, -25, 0);
+	}
+	while (SensorValue [sonar] > 52)
+	{
+		drive(0, 0, 25);
+	}
+	allStop();
+	while (SensorValue [sonar] > 15)
+	{
+		drive(0, -20, 0);
+	}
+	wait1Msec(500);
+	allStop();
+	servo [leftHook] = 168;
+	servo [rightHook] = 16;
+	wait1Msec(250);
+	drive(0, 75, 0);
+	wait1Msec(1000);
+	allStop();
+	wait1Msec(250);
+	drive(0, 0, 35);
+	wait1Msec(500);
+	drive(100, 0, 0);
+	wait1Msec(1000);
+	allStop();
+	drive(0, 0, 25);
+	wait1Msec(1000);
+	drive(0, 100, 0);
+	wait1Msec(1000);
+	allStop();
+	//while (status == GOAL_CONTINUE_SEARCH)
+	//{
+	//	while (1)
+	//	{
+	//		ClearTimer(T1);
+	//		drive(0, 0, 50);
+	//		if (time1 [T1] > 1000)
+	//		{
+	//			allStop();
+	//			break;
+	//		}
+	//		if (SensorValue [sonar] < 30)
+	//		{
+	//			allStop();
+	//			break;
+	//			status = GOAL_FOUND;
+	//		}
+	//	}
+	//	while (1)
+	//	{
+	//		ClearTimer(T1);
+	//		drive(0, 0, -50);
+	//		if (time1 [T1] > 1000)
+	//		{
+	//			allStop();
+	//			break;
+	//		}
+	//		if (SensorValue [sonar] < 30)
+	//		{
+	//			allStop();
+	//			break;
+	//			status = GOAL_FOUND;
+	//		}
+	//	}
+	//	allStop();
+	//}
 }
