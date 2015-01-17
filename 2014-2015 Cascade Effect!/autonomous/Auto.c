@@ -67,7 +67,6 @@ void updateDriveCyclesDisplay()
 
 void initializeRobot()
 {
-	bDisplayDiagnostics = false;
 	nxtDisplayCenteredTextLine(3, "Initializaing");
 	nxtDisplayCenteredTextLine(4, "servos...");
 	servo [pivot] = 0;
@@ -87,105 +86,48 @@ void initializeRobot()
 	eraseDisplay();
 	while (1)
 	{
-	nxtDisplayTextLine(3, "Rotations: %d", driveCycles);
-	if (nNxtButtonPressed == 1)
-	{
-		while (nNxtButtonPressed != -1)
+		nxtDisplayCenteredTextLine(3, "Rotations: %d", driveCycles);
+		if (nNxtButtonPressed == 1)
 		{
+			while (nNxtButtonPressed != -1)
+			{
+			}
+			driveCycles ++;
+			updateDriveCyclesDisplay();
 		}
-		driveCycles ++;
-		updateDriveCyclesDisplay();
-	}
-		if (nNxtButtonPressed == 2)
-	{
-		while (nNxtButtonPressed != -1)
+		else if (nNxtButtonPressed == 2)
 		{
+			while (nNxtButtonPressed != -1)
+			{
+			}
+			driveCycles --;
+			updateDriveCyclesDisplay();
 		}
-		driveCycles --;
-		updateDriveCyclesDisplay();
+		if (nNxtButtonPressed == 3)
+		{
+			while (nNxtButtonPressed != -1)
+			{
+			}
+			eraseDisplay();
+			if (driveCycles > 1)
+				nxtDisplayCenteredTextLine(3, "%d rotations", driveCycles);
+			else if (driveCycles == 1)
+				nxtDisplayCenteredTextLine(3, "%d rotation", driveCycles);
+			wait1Msec(800);
+			break;
+		}
+		if (driveCycles < 0)
+		{
+			driveCycles = 0;
+			updateDriveCyclesDisplay();
+		}
 	}
-	if (nNxtButtonPressed == 3)
-}
-	bDisplayDiagnostics = true;
 }
 
 task main ()
 {
+	bDisplayDiagnostics = false;
 	initializeRobot();
+	bDisplayDiagnostics = true;
 	waitForStart();
-
-#if 0
-	ClearTimer(T1);
-	while (time1[T1] < 800)
-	{
-		motor [arm] = -100;
-	}
-	motor [arm] = 0;
-	wait1Msec(1000);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 2)
-	{
-		drive(0, 60, 0);
-	}
-	allStop();
-	wait1Msec(500);
-	drive(0, 0, -50);
-	wait1Msec(175);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 3.75)
-	{
-		drive(0, 60, 0);
-	}
-	allStop();
-#endif
-	//IR testing
-	//red ramp mode:
-
-	ClearTimer(T1);
-	while (time1[T1] < 800)
-	{
-		motor [arm] = -100;
-	}
-	motor [arm] = 0;
-	wait1Msec(1000);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 2)
-	{
-		drive(0, 35, 0);
-	}
-	allStop();
-	wait1Msec(500);
-	drive(0, 0, 35);
-	wait1Msec(175);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 5.25)
-	{
-		drive(0, 60, 0);
-	}
-	while(nMotorEncoder [frontRight] < driveEncoderCycle * 4.75)
-	{
-		drive(0, 0, 35);
-	}
-	allStop();
-	//if (SensorValue [ir] == 0)
-	//{
-	//	while (1)
-	//	{
-	//		nxtDisplayCenteredBigTextLine(3, "1");
-	//	}
-	//}
-	//else if (SensorValue[ir] == 6)
-	//{
-	//	while(1)
-	//	{
-	//		nxtDisplayCenteredBigTextLine(3, "2");
-	//	}
-	//}
-	//else if (SensorValue [ir] == 8)
-	//{
-	//	while (1)
-	//	{
-	//		nxtDisplayCenteredBigTextLine(3, "3");
-	//	}
-	//}
-	while (1)
-	{
-		nxtDisplayCenteredBigTextLine(3, "%d", SensorValue[ir]);
-	}
 }
