@@ -1,12 +1,15 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     ir,             sensorHiTechnicIRSeeker1200)
-#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
-#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
+#pragma config(Sensor, S3,     sonar,          sensorSONAR)
+#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
+#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
-#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, reversed, encoder)
-#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, reversed, encoder)
+#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, encoder)
+#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S4_C2_1,     lift,          tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C2_2,     motorK,        tmotorTetrix, openLoop)
 #pragma config(Servo,  srvo_S1_C3_1,    guiderDrop,           tServoStandard)
@@ -86,75 +89,17 @@ task main ()
 	}
 	motor [arm] = 0;
 	wait1Msec(1000);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 2)
+	while (nMotorEncoder [frontLeft] < driveEncoderCycle * 5.75)
 	{
 		drive(0, 60, 0);
 	}
 	allStop();
-	wait1Msec(500);
-	drive(0, 0, -50);
-	wait1Msec(175);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 3.75)
+	wait1Msec (1000);
+	while(nMotorEncoder [frontLeft] < driveEncoderCycle * 2.75)
 	{
-		drive(0, 60, 0);
+		drive(35, 0, 0);
 	}
 	allStop();
-#endif
-#if 0
+	#endif
 
-
-
-	//IR testing
-	//red ramp mode:
-
-	ClearTimer(T1);
-	while (time1[T1] < 800)
-	{
-		motor [arm] = -100;
-	}
-	motor [arm] = 0;
-	wait1Msec(1000);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 2)
-	{
-		drive(0, 35, 0);
-	}
-	allStop();
-	wait1Msec(500);
-	drive(0, 0, 35);
-	wait1Msec(175);
-	while (nMotorEncoder [frontRight] < driveEncoderCycle * 5.25)
-	{
-		drive(0, 60, 0);
-	}
-	while(nMotorEncoder [frontRight] < driveEncoderCycle * 4.75)
-	{
-		drive(0, 0, 35);
-	}
-	allStop();
-	//if (SensorValue [ir] == 0)
-	//{
-	//	while (1)
-	//	{
-	//		nxtDisplayCenteredBigTextLine(3, "1");
-	//	}
-	//}
-	//else if (SensorValue[ir] == 6)
-	//{
-	//	while(1)
-	//	{
-	//		nxtDisplayCenteredBigTextLine(3, "2");
-	//	}
-	//}
-	//else if (SensorValue [ir] == 8)
-	//{
-	//	while (1)
-	//	{
-	//		nxtDisplayCenteredBigTextLine(3, "3");
-	//	}
-	//}
-	while (1)
-	{
-		nxtDisplayCenteredBigTextLine(3, "%d", SensorValue[ir]);
-	}
-#endif
 }
