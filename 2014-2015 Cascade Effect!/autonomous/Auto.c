@@ -1,5 +1,13 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
+#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
+#pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, PIDControl, encoder)
+#pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, PIDControl, encoder)
+#pragma config(Motor,  mtr_S1_C2_1,     motorF,        tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, PIDControl, reversed, encoder)
+#pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, PIDControl, reversed, encoder)
 #pragma config(Sensor, S2,     ir,             sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
@@ -21,6 +29,7 @@
 
 int driveEncoderCycle = 1120;
 float autoDriveScale = 0.7777;
+int driveCycles;
 //int pivotTarget = 1000;
 //const int pivotIncrement = 1;
 
@@ -51,6 +60,11 @@ int resetDriveEncoders()
 	return 1;
 }
 
+void updateDriveCyclesDisplay()
+{
+	nxtDisplayTextLine(3, "Rotations: %d", driveCycles);
+}
+
 void initializeRobot()
 {
 	bDisplayDiagnostics = false;
@@ -71,6 +85,27 @@ void initializeRobot()
 		wait1Msec(1000);
 	}
 	eraseDisplay();
+	while (1)
+	{
+	nxtDisplayTextLine(3, "Rotations: %d", driveCycles);
+	if (nNxtButtonPressed == 1)
+	{
+		while (nNxtButtonPressed != -1)
+		{
+		}
+		driveCycles ++;
+		updateDriveCyclesDisplay();
+	}
+		if (nNxtButtonPressed == 2)
+	{
+		while (nNxtButtonPressed != -1)
+		{
+		}
+		driveCycles --;
+		updateDriveCyclesDisplay();
+	}
+	if (nNxtButtonPressed == 3)
+}
 	bDisplayDiagnostics = true;
 }
 
@@ -78,7 +113,8 @@ task main ()
 {
 	initializeRobot();
 	waitForStart();
-#if 1
+
+#if 0
 	ClearTimer(T1);
 	while (time1[T1] < 800)
 	{
