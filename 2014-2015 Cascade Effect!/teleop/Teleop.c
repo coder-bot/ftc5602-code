@@ -61,7 +61,21 @@ void initializeRobot()
 	eraseDisplay();
 	bDisplayDiagnostics = true;
 }
-
+#if 0
+task autoCover()
+{
+	if (/*arm down command*/)
+	{
+		ClearTimer(T1);
+		while (/*arm down command*/)
+		{
+			if (time1[T1] > 2000)
+			{
+				//open cover
+		}
+	}
+}
+#endif
 task main()
 {
 	initializeRobot();
