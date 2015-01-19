@@ -43,7 +43,7 @@ int resetDriveEncoders()
 	nMotorEncoder [frontRight] = 0;
 	nMotorEncoder [rearLeft] = 0;
 	nMotorEncoder [rearRight] = 0;
-	return 1;
+	return 0;
 }
 
 void updateDriveCyclesDisplay()
@@ -61,12 +61,11 @@ void initializeRobot()
 	nxtDisplayCenteredTextLine(3, "Initializaing");
 	nxtDisplayCenteredTextLine(4, "servos...");
 	servo [cover] = 248;
-	servo [guiderDrop] = 255;
 	servo [leftHook] = 35;
 	servo [rightHook] = 140;
 	wait1Msec(1000);
 	eraseDisplay();
-	if (resetDriveEncoders() == 1)
+	if (resetDriveEncoders() == 0)
 	{
 		nxtDisplayCenteredTextLine(3, "Encoders");
 		nxtDisplayCenteredTextLine(4, "successfully");
