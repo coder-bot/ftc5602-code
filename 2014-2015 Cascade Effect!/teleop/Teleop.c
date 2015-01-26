@@ -22,13 +22,13 @@
 
 //int driveEncoderCycle = 1120;
 float manualDriveScale = (0.7874 /** 0.7777*/);
-int coverTarget = 1000;
-const int coverIncrement = 1;
+//int coverTarget = 1000;
+//const int coverIncrement = 1;
 
-void setCover(float coverSetting)
-{
-	servo [cover] = 255 * coverSetting;
-}
+//void setCover(float coverSetting)
+//{
+//	servo [cover] = 255 * coverSetting;
+//}
 
 int resetDriveEncoders()
 {
@@ -44,7 +44,7 @@ void initializeRobot()
 	bDisplayDiagnostics = false;
 	nxtDisplayCenteredTextLine(3, "Initializaing");
 	nxtDisplayCenteredTextLine(4, "servos...");
-	servo [cover] = 248;
+	servo [cover] = 160;
 	servo [leftHook] = 35;
 	servo [rightHook] = 140;
 	wait1Msec(1000);
@@ -62,13 +62,16 @@ void initializeRobot()
 
 task autoCover()
 {
-	if (joy2Btn(8) == 1)
+	while (1)
 	{
-		ClearTimer(T1);
-		while (joy2Btn(8) == 1)
+		if (joy2Btn(8) == 1)
 		{
-			if (time1[T1] > 1000)
-				servo [cover] = 110;
+			ClearTimer(T1);
+			while (joy2Btn(8) == 1)
+			{
+				if (time1[T1] > 1000)
+					servo [cover] = 12;
+			}
 		}
 	}
 }
@@ -132,17 +135,25 @@ task main()
 		motor [rearLeft] = y1 + x2 - x1;
 		motor [rearRight] = y1 - x2 + x1;
 		//pivot control
+		//if (joystick.joy2_y1 > 110 || joystick.joy2_y2 > 110)
+		//	if (coverTarget < 1000)
+		//{
+		//	coverTarget += coverIncrement;
+		//	setCover(coverTarget/1000.0);
+		//}
+		//if (joystick.joy2_y1 < -110 || joystick.joy2_y2 < -110)
+		//	if (coverTarget > 0)
+		//{
+		//	coverTarget -= coverIncrement;
+		//	setCover(coverTarget/1000.0);
+		//}
 		if (joystick.joy2_y1 > 110 || joystick.joy2_y2 > 110)
-			if (coverTarget < 1000)
 		{
-			coverTarget -= coverIncrement;
-			setCover(coverTarget/1000.0);
+			servo [cover] = 160;
 		}
 		if (joystick.joy2_y1 < -110 || joystick.joy2_y2 < -110)
-			if (coverTarget > 0)
 		{
-			coverTarget += coverIncrement;
-			setCover(coverTarget/1000.0);
+			servo [cover] = 12;
 		}
 		//arm control
 		if (joy2Btn(5) == 1) {

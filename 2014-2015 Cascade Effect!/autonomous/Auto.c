@@ -60,7 +60,7 @@ void initializeRobot()
 {
 	nxtDisplayCenteredTextLine(3, "Initializaing");
 	nxtDisplayCenteredTextLine(4, "servos...");
-	servo [cover] = 248;
+	servo [cover] = 160;
 	servo [leftHook] = 35;
 	servo [rightHook] = 140;
 	wait1Msec(1000);
@@ -200,9 +200,9 @@ task main ()
 	wait1Msec(2250);
 	motor [arm] = 0;
 	wait1Msec(500);
-	servo [cover] = 110;
+	servo [cover] = 12;
 	wait1Msec(750);
-	servo [cover] = 248;
+	servo [cover] = 160;
 	wait1Msec(250);
 	motor [arm] = 100;
 	wait1Msec(2000);
