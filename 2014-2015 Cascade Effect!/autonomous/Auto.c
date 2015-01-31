@@ -171,6 +171,10 @@ task main ()
 	initializeRobot();
 	bDisplayDiagnostics = true;
 	waitForStart();
+	motor [lift] = 100;
+	wait1Msec(750);
+	motor [lift] = 0;
+	wait1Msec(250);
 	while (nMotorEncoder [frontRight] > -(driveCycles * driveEncoderCycle))
 	{
 		drive(0, -25, 0);
@@ -193,7 +197,7 @@ task main ()
 	servo [rightHook] = 16;
 	wait1Msec(250);
 	motor [lift] = 100;
-	wait1Msec(1500);
+	wait1Msec(950);
 	motor [lift] = 0;
 	wait1Msec(500);
 	motor [arm] = -100;
@@ -212,24 +216,14 @@ task main ()
 	wait1Msec(800);
 	motor [lift] = 0;
 	wait1Msec(500);
-	drive(0, 0, -25);
-	wait1Msec(725);
-	allStop();
-	wait1Msec(250);
-	drive(100, 0, 0);
-	wait1Msec(1700);
-	drive(0, 100, 0);
-	wait1Msec(3400);
-	allStop();
-	wait1Msec(250);
-	drive(0, 0, 50);
-	wait1Msec(800);
-	allStop();
-	drive(0, 75, 0);
-	wait1Msec(750);
-	allStop();
-	wait1Msec(250);
-	drive(-75, 0, 0);
+	drive(0, 0, -100);
 	wait1Msec(1500);
 	allStop();
+	wait1Msec(250);
+	drive(-100, 0, 0);
+	wait1Msec(1700);
+	drive(0, -100, 0);
+	wait1Msec(4500);
+	allStop();
+	wait1Msec(250);
 }

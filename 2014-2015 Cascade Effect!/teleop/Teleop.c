@@ -36,7 +36,7 @@ int resetDriveEncoders()
 	nMotorEncoder [frontRight] = 0;
 	nMotorEncoder [rearLeft] = 0;
 	nMotorEncoder [rearRight] = 0;
-	return 1;
+	return 0;
 }
 
 void initializeRobot()
@@ -49,7 +49,7 @@ void initializeRobot()
 	servo [rightHook] = 140;
 	wait1Msec(1000);
 	eraseDisplay();
-	if (resetDriveEncoders() == 1)
+	if (resetDriveEncoders() == 0)
 	{
 		nxtDisplayCenteredTextLine(3, "Encoders");
 		nxtDisplayCenteredTextLine(4, "successfully");
