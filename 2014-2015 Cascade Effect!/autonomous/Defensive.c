@@ -21,82 +21,53 @@
 #include <JoystickDriver.c>
 #include "Cascade_Functions.h"
 
-task failSafe()
-{
-	ClearTimer(T1);
-	while(1)
-	{
-		if (time1 [T1] > 3500)
-		{
-			StopAllTasks();
-		}
-	}
-}
-
 task main()
 {
-	driveCycles = 5;
-	humor = 80;
+	int goal = 1;
+	driveCycles = 4;
+	humor = 100;
 	bDisplayDiagnostics = false;
 	initializeAutonomous();
 	bDisplayDiagnostics = true;
 	waitForStart();
-	motor [lift] = 100;
-	wait1Msec(750);
-	motor [lift] = 0;
-	wait1Msec(250);
+	//motor [lift] = 100;
+	//drive(0, -100, 0);
+	//wait1Msec(750);
+	//motor [lift] = 0;
 	while (nMotorEncoder [frontRight] > -(driveCycles * driveEncoderCycle))
 	{
-		drive(0, -25, 0);
+		drive(0, -100, 0);
 	}
-	while (SensorValue [sonar] > 50)
+	allStop();
+	ClearTimer(T1);
+	while (SensorValue [sonar] > 20)
 	{
-		drive(0, 0, 25);
+		drive(0, 0, -50);
+		if (time1[T1] > 1750)
+		{
+			break;
+			goal = 0;
+		}
+	}
+	if (!goal)
+	{
+		while (SensorValue [sonar] > 30)
+		{
+			drive(0, 0, -50);
+		}
 	}
 	wait1Msec(350);
 	allStop();
-	StartTask(failSafe);
-	while (SensorValue [sonar] > 20)
-	{
-		drive(0, -20, 0);
-	}
-	StopTask(failSafe);
-	wait1Msec(500);
+	drive(0, -100, 0);
+	wait1Msec(300);
 	allStop();
+	wait1Msec(250);
 	servo [leftHook] = 168;
 	servo [rightHook] = 16;
 	wait1Msec(250);
-	motor [lift] = 100;
-	wait1Msec(950);
-	motor [lift] = 0;
-	wait1Msec(500);
-	motor [arm] = -100;
-	wait1Msec(2250);
-	motor [arm] = 0;
-	wait1Msec(500);
-	servo [cover] = 12;
-	wait1Msec(750);
-	servo [cover] = 160;
-	wait1Msec(250);
-	motor [arm] = 100;
-	wait1Msec(2000);
-	motor [arm] = 0;
-	wait1Msec(250);
-	motor [lift] = -100;
-	wait1Msec(800);
-	motor [lift] = 0;
-	wait1Msec(500);
 	drive(0, 0, -100);
-	wait1Msec(1500);
-	allStop();
-	wait1Msec(250);
-	drive(-100, 0, 0);
-	wait1Msec(1700);
-	drive(0, -100, 0);
-	wait1Msec(4500);
-	allStop();
-	wait1Msec(250);
+	wait1Msec(650);
 	drive(100, 0, 0);
-	wait1Msec(2500);
+	wait1Msec(1500);
 	allStop();
 }
