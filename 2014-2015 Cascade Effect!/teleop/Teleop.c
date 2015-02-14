@@ -42,7 +42,9 @@ task autoCover()
 
 task main()
 {
+	bDisplayDiagnostics = false;
 	initializeRobot();
+	bDisplayDiagnostics = true;
 
 	int x1, y1, x2;
 	int threshold = 8;

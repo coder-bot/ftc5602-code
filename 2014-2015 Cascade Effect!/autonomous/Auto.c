@@ -37,7 +37,7 @@ task failSafe()
 
 task main()
 {
-	driveCycles = 5;
+	driveCycles = 6;
 	humor = 80;
 	bDisplayDiagnostics = false;
 	initializeAutonomous();
@@ -97,8 +97,8 @@ task main()
 	drive(0, -100, 0);
 	wait1Msec(4500);
 	allStop();
-	wait1Msec(250);
-	drive(100, 0, 0);
-	wait1Msec(2500);
-	allStop();
+	//wait1Msec(250);
+	//drive(100, 0, 0);
+	//wait1Msec(2500);
+	//allStop();
 }
