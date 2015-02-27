@@ -23,18 +23,6 @@
 #include <JoystickDriver.c>
 #include "Cascade_Functions.h"
 
-task failSafe()
-{
-	ClearTimer(T1);
-	while(1)
-	{
-		if (time1 [T1] > 3500)
-		{
-			StopAllTasks();
-		}
-	}
-}
-
 task main()
 {
 	driveCycles = 6;

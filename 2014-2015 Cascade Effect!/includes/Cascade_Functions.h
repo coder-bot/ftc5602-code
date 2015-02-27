@@ -1,6 +1,7 @@
 int driveEncoderCycle = 1120;
 int driveCycles;
 int humor;
+//int goalHeight;
 
 task humorWarning()
 {
@@ -15,6 +16,132 @@ task humorWarning()
 			nxtDisplayCenteredTextLine(6, "");
 			wait1Msec(825);
 		}
+	}
+}
+
+task failSafe()
+{
+	ClearTimer(T1);
+	while(1)
+	{
+		if (time1 [T1] > 3500)
+		{
+			StopAllTasks();
+		}
+	}
+}
+
+//task score ()
+//{
+//	//if (goalHeight == 120)
+//	//{
+//	//	ClearTimer(T3);
+//	//	motor [lift] = 100;
+//	//	wait1Msec(1500);
+//	//	motor [arm] = -100;
+//	//	servo [pivot] = 66;
+//	//	while (time1[T3] < 3500)
+//	//	{
+//	//	}
+//	//	motor [arm] = 0;
+//	//	while (time1[T3] < 3600)
+//	//	{
+//	//	}
+//	//	motor [lift] = 0;
+//	//}
+//	//else if (goalHeight == 90)
+//	//{
+//	//	ClearTimer(T3);
+//	//	motor [lift] = 100;
+//	//	wait1Msec(1500);
+//	//	motor [arm] = -100;
+//	//	servo [pivot] = 125;
+//	//	while (time1[T3] < 3000)
+//	//	{
+//	//	}
+//	//	motor [lift] = 0;
+//	//	while (time1[T3] < 4250)
+//	//	{
+//	//	}
+//	//	motor [arm] = 0;
+//	//}
+//	//else if (goalHeight == 60)
+//	//{
+//		ClearTimer(T3);
+//		motor [lift] = 100;
+//		wait1Msec(1500);
+//		motor [arm] = -100;
+//		servo [pivot] = 125;
+//		while (time1[T3] < 3000)
+//		{
+//		}
+//		motor [lift] = 0;
+//		//while (time1[T3] < 4250)
+//		//{
+//		//}
+//		motor [arm] = 0;
+//	//}
+//}
+
+void score(int height)
+{
+	if (height == 60)
+	{
+		ClearTimer(T3);
+		motor [lift] = 100;
+		wait1Msec(750);
+		motor [arm] = -100;
+		servo [pivot] = 138;
+		while (time1[T3] < 1750)
+		{
+		}
+		motor [lift] = 0;
+		while (time1[T3] < 3300)
+		{
+		}
+		motor [arm] = 0;
+		wait1Msec(300);
+		servo [doors] = 122;
+		wait1Msec(250);
+		servo [doors] = 130;
+		wait1Msec(250);
+		servo [doors] = 140;
+		wait1Msec(250);
+		servo [doors] = 160;
+		wait1Msec(250);
+		servo [doors] = 122;
+		wait1Msec(50);
+	}
+	else if (height == 30)
+	{
+		servo [doors] = 122;
+		wait1Msec(200);
+		servo [doors] = 90;
+		wait1Msec(200);
+		servo [doors] = 60;
+		wait1Msec(200);
+		servo [doors] = 30;
+		wait1Msec(200);
+		servo [doors] = 0;
+		wait1Msec(250);
+		servo [doors] = 122;
+		wait1Msec(50);
+	}
+	else if (height == 120)
+	{
+		ClearTimer(T3);
+		motor [lift] = 100;
+		wait1Msec(1500);
+		motor [arm] = -100;
+		servo [pivot] = 66;
+		while (time1[T3] < 3500)
+		{
+		}
+		motor [arm] = 0;
+		while (time1[T3] < 3600)
+		{
+		}
+		motor [lift] = 0;
 	}
 }
 
@@ -54,7 +181,8 @@ void initializeRobot()
 {
 	nxtDisplayCenteredTextLine(3, "Initializaing");
 	nxtDisplayCenteredTextLine(4, "servos...");
-	servo [cover] = 140;
+	servo [pivot] = 245;
+	servo [doors] = 122;
 	servo [leftHook] = 35;
 	servo [rightHook] = 140;
 	wait1Msec(1000);
@@ -138,6 +266,11 @@ void autonomousGUI()
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "%d%% humor", humor);
 			wait1Msec(800);
+			if (humor >= 120)
+			{
+				nxtDisplayCenteredTextLine(3, "POP THIS!");
+				wait1Msec(1000);
+			}
 			break;
 		}
 		if (humor < 0)
