@@ -4,7 +4,7 @@
 #pragma config(Sensor, S4,     ,               sensorI2CMuxController)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
-#pragma config(Motor,  mtr_S1_C2_1,     harvester,     tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_1,     sweeper,     tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, reversed, encoder)
@@ -174,15 +174,15 @@ task main()
 
 		if (joystick.joy2_TopHat == 4)
 		{
-			motor [harvester] = -40;
+			motor [sweeper] = -40;
 		}
 		else if (joystick.joy2_TopHat == 0)
 		{
-			motor [harvester] = 40;
+			motor [sweeper] = 60;
 		}
 		else
 		{
-			motor [harvester] = 0;
+			motor [sweeper] = 0;
 		}
 		if (joy2Btn(9) == 1)
 		{
@@ -192,17 +192,17 @@ task main()
 		{
 			servo [doors] = 0;
 		}
-		//if (joy2Btn(2) == 1)
-		//{
-		//	servo [pivot] = 255;
-		//}
-		//if (joy2Btn(1) == 1 || joy2Btn(3) == 1)
-		//{
-		//	servo [pivot] = 125;
-		//}
-		//if (joy2Btn(4) == 1)
-		//{
-		//	servo [pivot] = 66;
-		//}
+		if (joy2Btn(2) == 1)
+		{
+			servo [pivot] = 255;
+		}
+		if (joy2Btn(1) == 1 || joy2Btn(3) == 1)
+		{
+			servo [pivot] = 125;
+		}
+		if (joy2Btn(4) == 1)
+		{
+			servo [pivot] = 66;
+		}
 	}
 }
