@@ -43,7 +43,7 @@ task main()
 	{
 		drive(0, 0, 25);
 	}
-	wait1Msec(550);
+	wait1Msec(655);
 	allStop();
 	StartTask(failSafe);
 	while (SensorValue [sonar] > 20)
@@ -57,6 +57,18 @@ task main()
 	servo [rightHook] = 16;
 	wait1Msec(250);
 	score(60);
+
+	servo [doors] = 122;
+	wait1Msec(250);
+	servo [doors] = 140;
+	wait1Msec(250);
+	servo [doors] = 150;
+	wait1Msec(250);
+	servo [doors] = 160;
+	wait1Msec(250);
+	servo [doors] = 122;
+	wait1Msec(50);
+
 	drive(0, 0, -90);
 	wait1Msec(1300);
 	allStop();

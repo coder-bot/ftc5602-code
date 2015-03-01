@@ -157,12 +157,12 @@ task main()
 			servo [rightHook] = 16;
 		}
 
-		if (joy2Btn(1) == 1 || joy2Btn(3) == 1)
+		if (joy2Btn(1) == 1)
 		{
-			while (joy2Btn(1) == 1 || joy2Btn(3) == 1)
+			while (joy2Btn(1) == 1)
 			{
 			}
-			score(90);
+			score(60);
 		}
 		if (joy2Btn(4) == 1)
 		{
@@ -190,19 +190,7 @@ task main()
 		}
 		else if (joy2Btn(10) == 1)
 		{
-			servo [doors] = 0;
-		}
-		if (joy2Btn(2) == 1)
-		{
-			servo [pivot] = 255;
-		}
-		if (joy2Btn(1) == 1 || joy2Btn(3) == 1)
-		{
-			servo [pivot] = 125;
-		}
-		if (joy2Btn(4) == 1)
-		{
-			servo [pivot] = 66;
+			servo [doors] = 255;
 		}
 	}
 }

@@ -101,16 +101,6 @@ void score(int height)
 		}
 		motor [arm] = 0;
 		wait1Msec(300);
-		servo [doors] = 122;
-		wait1Msec(250);
-		servo [doors] = 130;
-		wait1Msec(250);
-		servo [doors] = 140;
-		wait1Msec(250);
-		servo [doors] = 160;
-		wait1Msec(250);
-		servo [doors] = 122;
-		wait1Msec(50);
 	}
 	else if (height == 30)
 	{
@@ -118,7 +108,7 @@ void score(int height)
 		wait1Msec(200);
 		servo [doors] = 90;
 		wait1Msec(200);
-		servo [doors] = 60;
+		servo [doors] = 69;
 		wait1Msec(200);
 		servo [doors] = 30;
 		wait1Msec(200);

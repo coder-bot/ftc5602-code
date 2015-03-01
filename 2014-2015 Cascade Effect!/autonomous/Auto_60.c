@@ -67,7 +67,6 @@ task main()
 {
 	driveCycles = 6;
 	humor = 80;
-	goalHeight = 60;
 	bDisplayDiagnostics = false;
 	initializeAutonomous();
 	bDisplayDiagnostics = true;
@@ -97,5 +96,5 @@ task main()
 	servo [leftHook] = 168;
 	servo [rightHook] = 16;
 	wait1Msec(250);
-	score();
+	score(60);
 }
