@@ -1,6 +1,7 @@
 int driveEncoderCycle = 1120;
 int driveCycles;
 int humor;
+int xDrive, yDrive, rotation;
 //int goalHeight;
 
 task humorWarning()
@@ -91,12 +92,12 @@ void score(int height)
 		motor [lift] = 100;
 		wait1Msec(750);
 		motor [arm] = -100;
-		servo [pivot] = 138;
+		servo [pivot] = 128;
 		while (time1[T3] < 1750)
 		{
 		}
 		motor [lift] = 0;
-		while (time1[T3] < 3300)
+		while (time1[T3] < 3500)
 		{
 		}
 		motor [arm] = 0;
@@ -137,6 +138,9 @@ void score(int height)
 
 void drive(int x1, int y1, int x2)
 {
+	xDrive = x1;
+	yDrive = y1;
+	rotation = x2;
 	motor [frontLeft] = (y1 + x2 + x1);
 	motor [frontRight] = (y1 - x2 - x1);
 	motor [rearLeft] = (y1 + x2 - x1);
@@ -145,7 +149,60 @@ void drive(int x1, int y1, int x2)
 
 void allStop()
 {
-	drive(0, 0, 0);
+	while (abs(xDrive) > 0 || abs(yDrive) > 0 || abs(rotation) > 0)
+	{
+		if (abs(xDrive) > 20)
+		{
+			if (xDrive > 0)
+			{
+				xDrive -= 20;
+			}
+			else if (xDrive < 0)
+			{
+				xDrive += 20;
+			}
+		}
+		else
+		{
+			xDrive = 0;
+		}
+
+		if (abs(yDrive) > 20)
+		{
+			if (yDrive > 0)
+			{
+				yDrive -= 20;
+			}
+			else if (yDrive < 0)
+			{
+				yDrive += 20;
+			}
+		}
+		else
+		{
+			yDrive = 0;
+		}
+
+		if (abs(rotation) > 20)
+		{
+			if (rotation > 0)
+			{
+				rotation -= 20;
+			}
+			else if (rotation < 0)
+			{
+				rotation += 20;
+			}
+		}
+		else
+		{
+			rotation = 0;
+		}
+
+		drive(xDrive, yDrive, rotation);
+		wait1Msec(100);
+	}
+	//drive(0, 0, 0);
 }
 
 int resetDriveEncoders()
@@ -256,11 +313,11 @@ void autonomousGUI()
 			eraseDisplay();
 			nxtDisplayCenteredTextLine(3, "%d%% humor", humor);
 			wait1Msec(800);
-			if (humor >= 120)
-			{
-				nxtDisplayCenteredTextLine(3, "POP THIS!");
-				wait1Msec(1000);
-			}
+			//if (humor >= 120)
+			//{
+			//	nxtDisplayCenteredTextLine(3, "POP THIS!");
+			//	wait1Msec(1000);
+			//}
 			break;
 		}
 		if (humor < 0)

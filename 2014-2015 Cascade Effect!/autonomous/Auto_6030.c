@@ -35,7 +35,8 @@ task main()
 	wait1Msec(750);
 	motor [lift] = 0;
 	wait1Msec(250);
-	while (nMotorEncoder [frontRight] > -(driveCycles * driveEncoderCycle))
+	//#if 0
+	while (nMotorEncoder [frontLeft] > -(driveCycles * driveEncoderCycle))
 	{
 		drive(0, -25, 0);
 	}
@@ -51,11 +52,12 @@ task main()
 		drive(0, -20, 0);
 	}
 	StopTask(failSafe);
+	//#endif
 	wait1Msec(500);
 	allStop();
 	servo [leftHook] = 168;
 	servo [rightHook] = 16;
-	wait1Msec(250);
+	wait1Msec(100);
 	score(60);
 
 	servo [doors] = 122;
@@ -68,18 +70,16 @@ task main()
 	wait1Msec(250);
 	servo [doors] = 122;
 	wait1Msec(50);
-
+	//#if 0
 	drive(0, 0, -90);
 	wait1Msec(1300);
 	allStop();
-	wait1Msec(500);
 	nMotorEncoder [frontLeft] = 0;
 	while (nMotorEncoder [frontLeft] > -0.8 * driveEncoderCycle)
 	{
 		drive(0, -100, 0);
 	}
 	allStop();
-	wait1Msec(500);
 	servo [leftHook] = 35;
 	servo [rightHook] = 140;
 	wait1Msec(250);
@@ -92,7 +92,6 @@ task main()
 		drive(0, 50, 0);
 	}
 	allStop();
-	wait1Msec(250);
 	drive(0, 0, 50);
 	wait1Msec(700);
 	drive(0, -50, 0);
@@ -103,7 +102,6 @@ task main()
 	}
 	wait1Msec(550);
 	allStop();
-	wait1Msec(150);
 	//ClearTimer(T3);
 	//motor [lift] = 100;
 	//while (time1[T3] < 1500)
@@ -118,7 +116,6 @@ task main()
 	StopTask(failSafe);
 	wait1Msec(250);
 	allStop();
-	wait1Msec(250);
 	servo [leftHook] = 168;
 	servo [rightHook] = 16;
 	score(30);
@@ -128,5 +125,5 @@ task main()
 		drive(0, 100, 0);
 	}
 	allStop();
-	wait1Msec(150);
+	//#endif
 }
