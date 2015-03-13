@@ -90,14 +90,14 @@ void score(int height)
 	{
 		ClearTimer(T3);
 		motor [lift] = 100;
-		wait1Msec(750);
+		//wait1Msec(750);
 		motor [arm] = -100;
 		servo [pivot] = 128;
 		while (time1[T3] < 1750)
 		{
 		}
 		motor [lift] = 0;
-		while (time1[T3] < 3500)
+		while (time1[T3] < 2750)
 		{
 		}
 		motor [arm] = 0;

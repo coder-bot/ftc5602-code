@@ -35,7 +35,6 @@ task main()
 	wait1Msec(750);
 	motor [lift] = 0;
 	wait1Msec(250);
-	//#if 0
 	while (nMotorEncoder [frontLeft] > -(driveCycles * driveEncoderCycle))
 	{
 		drive(0, -25, 0);
@@ -52,7 +51,6 @@ task main()
 		drive(0, -20, 0);
 	}
 	StopTask(failSafe);
-	//#endif
 	wait1Msec(500);
 	allStop();
 	servo [leftHook] = 168;
@@ -70,9 +68,9 @@ task main()
 	wait1Msec(250);
 	servo [doors] = 122;
 	wait1Msec(50);
-	//#if 0
+
 	drive(0, 0, -90);
-	wait1Msec(1300);
+	wait1Msec(1000);
 	allStop();
 	nMotorEncoder [frontLeft] = 0;
 	while (nMotorEncoder [frontLeft] > -0.8 * driveEncoderCycle)
@@ -83,19 +81,15 @@ task main()
 	servo [leftHook] = 35;
 	servo [rightHook] = 140;
 	wait1Msec(250);
-	while (nMotorEncoder [frontLeft] < -0.55 * driveEncoderCycle)
+	while (nMotorEncoder [frontLeft] < -0.65 * driveEncoderCycle)
 	{
 		drive(0, 100, 0);
 	}
-	while (nMotorEncoder [frontLeft] < -0.1 * driveEncoderCycle)
-	{
-		drive(0, 50, 0);
-	}
 	allStop();
-	drive(0, 0, 50);
-	wait1Msec(700);
+	drive(0, 0, 90);
+	wait1Msec(1500);
 	drive(0, -50, 0);
-	wait1Msec(700);
+	wait1Msec(450);
 	while (SensorValue [sonar] > 45)
 	{
 		drive(0, 0, -25);
@@ -120,10 +114,9 @@ task main()
 	servo [rightHook] = 16;
 	score(30);
 	ClearTimer(T3);
-	while (time1[T3] < 2000)
+	while (time1[T3] < 1500)
 	{
 		drive(0, 100, 0);
 	}
 	allStop();
-	//#endif
 }
