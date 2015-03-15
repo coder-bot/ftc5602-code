@@ -3,8 +3,11 @@ int driveCycles;
 int humor;
 int xDrive, yDrive, rotation;
 int phase;
+int driveMode;
 #define AUTO 0
 #define TELEOP 1
+#define DRIVE_MODE_STD 1
+#define DRIVE_MODE_EG 2
 //int goalHeight;
 
 task humorWarning()
@@ -121,49 +124,83 @@ void score(int height)
 		{
 		}
 		motor [lift] = 0;
-		while (time1[T3] < 4050)
+		if (phase == TELEOP)
 		{
+			while (time1[T3] < 3875)
+			{
+			}
+			motor [arm] = 0;
 		}
-		motor [arm] = 0;
-		wait1Msec(100);
+		else if (phase == AUTO)
+		{
+			while (time1[T3] < 4050 - 1600)
+			{
+			}
+			motor [arm] = 0;
+			wait1Msec(250);
+		}
 	}
 
 	else if (height == 90)
 	{
 		allStop();
-		ClearTimer(T3);
-		motor [lift] = 100;
 		if (phase == TELEOP)
 		{
-			wait1Msec(1500);
+			ClearTimer(T3);
+			motor [lift] = 100;
+			if (phase == TELEOP)
+			{
+				wait1Msec(1500);
+			}
+			motor [arm] = -100;
+			servo [pivot] = 128;
+			while (time1[T3] < 3500)
+			{
+			}
+			motor [lift] = 0;
+			if (phase == TELEOP)
+			{
+				while (time1[T3] < 3875)
+				{
+				}
+				motor [arm] = 0;
+			}
+			else if (phase == AUTO)
+			{
+				while (time1[T3] < 4050 - 1500)
+				{
+				}
+				motor [arm] = 0;
+				wait1Msec(250);
+			}
 		}
-		motor [arm] = -100;
-		servo [pivot] = 128;
-		while (time1[T3] < 3500)
+		else if (phase == AUTO)
 		{
+			motor [lift] = 100;
+			wait1Msec(2100);
+			motor [lift] = 0;
+			wait1Msec(50);
 		}
-		motor [lift] = 0;
-		while (time1[T3] < 4050)
-		{
-		}
-		motor [arm] = 0;
-		wait1Msec(100);
 	}
 
 	else if (height == 30)
 	{
-		servo [doors] = 122;
-		wait1Msec(200);
-		servo [doors] = 90;
-		wait1Msec(200);
-		servo [doors] = 69;
-		wait1Msec(200);
-		servo [doors] = 30;
-		wait1Msec(200);
-		servo [doors] = 0;
-		wait1Msec(250);
-		servo [doors] = 122;
-		wait1Msec(50);
+		allStop();
+		if (phase == AUTO)
+		{
+			servo [doors] = 122;
+			wait1Msec(200);
+			servo [doors] = 90;
+			wait1Msec(200);
+			servo [doors] = 69;
+			wait1Msec(200);
+			servo [doors] = 30;
+			wait1Msec(200);
+			servo [doors] = 0;
+			wait1Msec(250);
+			servo [doors] = 122;
+			wait1Msec(50);
+		}
 	}
 	else if (height == 120)
 	{
@@ -202,6 +239,14 @@ void updateHumorDisplay()
 	nxtDisplayCenteredTextLine(3, "Set humor: %d%%", humor);
 }
 
+void switchDriveMode(int driveModeToSwitchTo)
+{
+	while (joy1Btn(9) == 1 && joy1Btn(10) == 1)
+	{
+	}
+	driveMode = driveModeToSwitchTo;
+}
+
 void initializeRobot()
 {
 	nxtDisplayCenteredTextLine(3, "Initializaing");
@@ -217,6 +262,14 @@ void initializeRobot()
 		nxtDisplayCenteredTextLine(3, "Encoders");
 		nxtDisplayCenteredTextLine(4, "successfully");
 		nxtDisplayCenteredTextLine(5, "reset.");
+		wait1Msec(1000);
+		eraseDisplay();
+	}
+	if (phase == TELEOP)
+	{
+		switchDriveMode(DRIVE_MODE_STD);
+		nxtDisplayCenteredTextLine(3, "Drive mode:");
+		nxtDisplayCenteredTextLine(4, "standard.");
 		wait1Msec(1000);
 	}
 	eraseDisplay();

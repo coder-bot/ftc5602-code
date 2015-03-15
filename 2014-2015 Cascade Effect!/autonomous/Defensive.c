@@ -26,7 +26,7 @@
 task main()
 {
 	phase = AUTO;
-	int goal = 1;
+	//int goal = 1;
 	driveCycles = 4;
 	humor = 100;
 	bDisplayDiagnostics = false;

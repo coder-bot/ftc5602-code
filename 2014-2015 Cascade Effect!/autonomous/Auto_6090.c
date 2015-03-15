@@ -36,6 +36,7 @@ task main()
 	wait1Msec(750);
 	motor [lift] = 0;
 	wait1Msec(250);
+	//#if 0
 	while (nMotorEncoder [frontLeft] > -(driveCycles * driveEncoderCycle))
 	{
 		drive(0, -25, 0);
@@ -44,14 +45,27 @@ task main()
 	{
 		drive(0, 0, 25);
 	}
-	wait1Msec(655);
+	wait1Msec(450);
 	allStop();
-	StartTask(failSafe);
+	//StartTask(failSafe);
+	ClearTimer(T4);
 	while (SensorValue [sonar] > 20)
 	{
 		drive(0, -20, 0);
+		if (time1[T4] >= 2000)
+		{
+			allStop();
+			while (SensorValue [sonar] > 28)
+			{
+				drive(0, 0, -40);
+			}
+			drive(0, -20, 0);
+			wait1Msec(1000);
+			break;
+		}
 	}
-	StopTask(failSafe);
+	//StopTask(failSafe);
+	//#endif
 	wait1Msec(500);
 	allStop();
 	servo [leftHook] = 168;
@@ -69,14 +83,14 @@ task main()
 	wait1Msec(250);
 	servo [doors] = 122;
 	wait1Msec(50);
-
+	//#if 0
 	drive(0, 0, -90);
 	wait1Msec(1000);
 	allStop();
 	nMotorEncoder [frontLeft] = 0;
 	while (nMotorEncoder [frontLeft] > -0.8 * driveEncoderCycle)
 	{
-		drive(0, -100, 0);
+		drive(0, -75, 0);
 	}
 	allStop();
 	servo [leftHook] = 35;
@@ -84,16 +98,16 @@ task main()
 	wait1Msec(250);
 	while (nMotorEncoder [frontLeft] < -0.4 * driveEncoderCycle)
 	{
-		drive(0, 100, 0);
+		drive(0, 75, 0);
 	}
 	allStop();
-	drive(0, 0, 90);
-	wait1Msec(1500);
-	drive(0, -50, 0);
-	wait1Msec(450);
-	while (SensorValue [sonar] > 45)
+	//drive(0, 0, 50);
+	//wait1Msec(1500);
+	//drive(0, -50, 0);
+	//wait1Msec(450);
+	while (SensorValue [sonar] > 58)
 	{
-		drive(0, 0, -25);
+		drive(0, 0, 25);
 	}
 	wait1Msec(550);
 	allStop();
@@ -104,20 +118,42 @@ task main()
 	//}
 	//motor [lift] = 0;
 	StartTask(failSafe);
-	while (SensorValue [sonar] > 20)
+	while (SensorValue [sonar] > 38)
 	{
 		drive(0, -20, 0);
 	}
 	StopTask(failSafe);
-	wait1Msec(250);
-	allStop();
-	servo [leftHook] = 168;
-	servo [rightHook] = 16;
-	score(30);
-	ClearTimer(T3);
-	while (time1[T3] < 1500)
+	score(90);
+	StartTask(failSafe);
+	while (SensorValue [sonar] > 20)
 	{
-		drive(0, 100, 0);
+		drive(0, -20, 0);
 	}
 	allStop();
+	StopTask(failSafe);
+	wait1Msec(250);
+	servo [leftHook] = 168;
+	servo [rightHook] = 16;
+
+	servo [doors] = 122;
+	wait1Msec(200);
+	servo [doors] = 90;
+	wait1Msec(200);
+	servo [doors] = 69;
+	wait1Msec(200);
+	servo [doors] = 30;
+	wait1Msec(200);
+	servo [doors] = 0;
+	wait1Msec(250);
+	servo [doors] = 122;
+	wait1Msec(50);
+	wait1Msec(200);
+	drive(0, 100, 0);
+	motor [arm] = 100;
+	servo [pivot] = 245;
+	wait1Msec(750);
+	allStop();
+	wait1Msec(250);
+	motor [arm] = 0;
+	//#endif
 }

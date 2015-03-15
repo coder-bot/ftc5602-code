@@ -21,7 +21,7 @@
 #include <JoystickDriver.c>
 #include "Cascade_Functions.h"
 
-float manualDriveScale = (0.7874);
+const float manualDriveScale = 0.7874;
 
 task autoCover()
 {
@@ -33,7 +33,10 @@ task autoCover()
 			while (joy2Btn(8) == 1)
 			{
 				if (time1[T1] > 1000)
+				{
 					servo [pivot] = 255;
+					servo [doors] = 122;
+				}
 			}
 		}
 	}
@@ -67,38 +70,38 @@ task main()
 	{
 		//joystick refresh
 		getJoystickSettings(joystick);
-#if 0
-		//lift precision factor - manual control of value
-		if (joy2Btn(1) == 1) {
-			liftPrecisionFactor += 5;
-			while (joy2Btn(1) != 0)
-			{
-			}
-		}
-		else if (joy2Btn(3) == 1) {
-			liftPrecisionFactor -= 5;
-			while (joy2Btn(3) != 0)
-			{
-			}
-		}
-
-		//lift precision factor - automatic control of bounds
-		if (liftPrecisionFactor <= 0) {
-			liftPrecisionFactor = 0;
-		}
-		else if (liftPrecisionFactor >= 100) {
-			liftPrecisionFactor = 95;
-		}
-#endif
 		//drive code
-	x1 = (abs(joystick.joy1_x1) > threshold) ? ((joystick.joy1_x1 * manualDriveScale) * 0.75) : 0;
-	y1 = (abs(joystick.joy1_y1) > threshold) ? ((joystick.joy1_y1 * manualDriveScale) * 0.75) : 0;
-	x2 = (abs(joystick.joy1_x2) > threshold) ? ((joystick.joy1_x2 * manualDriveScale) * 0.75) : 0;
 
-		motor [frontLeft] = y1 + x2 + x1;
-		motor [frontRight] = y1 - x2 - x1;
-		motor [rearLeft] = y1 + x2 - x1;
-		motor [rearRight] = y1 - x2 + x1;
+		if (driveMode == DRIVE_MODE_STD)
+		{
+		x1 = (abs(joystick.joy1_x1) > threshold) ? ((joystick.joy1_x1 * manualDriveScale) * 1.00) : 0;
+		y1 = (abs(joystick.joy1_y1) > threshold) ? ((joystick.joy1_y1 * manualDriveScale) * 1.00) : 0;
+		x2 = (abs(joystick.joy1_x2) > threshold) ? ((joystick.joy1_x2 * manualDriveScale) * 1.00) : 0;
+
+			motor [frontLeft] = y1 + x2 + x1;
+			motor [frontRight] = y1 - x2 - x1;
+			motor [rearLeft] = y1 + x2 - x1;
+			motor [rearRight] = y1 - x2 + x1;
+		}
+
+		else if (driveMode == DRIVE_MODE_EG)
+		{
+		x1 = (abs(joystick.joy1_x2) > threshold) ? (joystick.joy1_x2 * 0.48) : 0;
+		y1 = (abs(joystick.joy1_y1) > threshold) ? (joystick.joy1_y1 * 0.125) : 0;
+
+			if (joy1Btn(5) == 1)
+				x2 = 25;
+			else if (joy1Btn(7) == 1)
+				x2 = -25;
+			else
+				x2 = 0;
+
+			motor [frontLeft] = y1 + x2 + x1;
+			motor [frontRight] = y1 - x2 - x1;
+			motor [rearLeft] = y1 + x2 - x1;
+			motor [rearRight] = y1 - x2 + x1;
+		}
+
 		//pivot control
 		//if (joystick.joy2_y1 > 110 || joystick.joy2_y2 > 110)
 		//	if (coverTarget < 1000)
@@ -188,11 +191,11 @@ task main()
 
 		if (joy1Btn(6) == 1)
 		{
-			motor [sweeper] = -60;
+			motor [sweeper] = -100;
 		}
 		else if (joy1Btn(8) == 1)
 		{
-			motor [sweeper] = 60;
+			motor [sweeper] = 100;
 		}
 		else
 		{
@@ -205,6 +208,14 @@ task main()
 		else if (joy2Btn(10) == 1)
 		{
 			servo [doors] = 255;
+		}
+		if (joy1Btn(9) == 1 && joy1Btn(10) == 1) {
+			if (driveMode == DRIVE_MODE_STD) {
+				switchDriveMode(DRIVE_MODE_EG);
+			}
+			else if (driveMode == DRIVE_MODE_EG) {
+				switchDriveMode(DRIVE_MODE_STD);
+			}
 		}
 	}
 }
