@@ -25,6 +25,7 @@
 
 task main()
 {
+	phase = AUTO;
 	driveCycles = 6;
 	humor = 120;
 	bDisplayDiagnostics = false;
@@ -81,7 +82,7 @@ task main()
 	servo [leftHook] = 35;
 	servo [rightHook] = 140;
 	wait1Msec(250);
-	while (nMotorEncoder [frontLeft] < -0.65 * driveEncoderCycle)
+	while (nMotorEncoder [frontLeft] < -0.4 * driveEncoderCycle)
 	{
 		drive(0, 100, 0);
 	}

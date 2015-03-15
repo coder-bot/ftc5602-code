@@ -2,6 +2,9 @@ int driveEncoderCycle = 1120;
 int driveCycles;
 int humor;
 int xDrive, yDrive, rotation;
+int phase;
+#define AUTO 0
+#define TELEOP 1
 //int goalHeight;
 
 task humorWarning()
@@ -29,110 +32,6 @@ task failSafe()
 		{
 			StopAllTasks();
 		}
-	}
-}
-
-//task score ()
-//{
-//	//if (goalHeight == 120)
-//	//{
-//	//	ClearTimer(T3);
-//	//	motor [lift] = 100;
-//	//	wait1Msec(1500);
-//	//	motor [arm] = -100;
-//	//	servo [pivot] = 66;
-//	//	while (time1[T3] < 3500)
-//	//	{
-//	//	}
-//	//	motor [arm] = 0;
-//	//	while (time1[T3] < 3600)
-//	//	{
-//	//	}
-//	//	motor [lift] = 0;
-//	//}
-//	//else if (goalHeight == 90)
-//	//{
-//	//	ClearTimer(T3);
-//	//	motor [lift] = 100;
-//	//	wait1Msec(1500);
-//	//	motor [arm] = -100;
-//	//	servo [pivot] = 125;
-//	//	while (time1[T3] < 3000)
-//	//	{
-//	//	}
-//	//	motor [lift] = 0;
-//	//	while (time1[T3] < 4250)
-//	//	{
-//	//	}
-//	//	motor [arm] = 0;
-//	//}
-//	//else if (goalHeight == 60)
-//	//{
-//		ClearTimer(T3);
-//		motor [lift] = 100;
-//		wait1Msec(1500);
-//		motor [arm] = -100;
-//		servo [pivot] = 125;
-//		while (time1[T3] < 3000)
-//		{
-//		}
-//		motor [lift] = 0;
-//		//while (time1[T3] < 4250)
-//		//{
-//		//}
-//		motor [arm] = 0;
-//	//}
-//}
-
-void score(int height)
-{
-	if (height == 60)
-	{
-		ClearTimer(T3);
-		motor [lift] = 100;
-		//wait1Msec(750);
-		motor [arm] = -100;
-		servo [pivot] = 128;
-		while (time1[T3] < 1750)
-		{
-		}
-		motor [lift] = 0;
-		while (time1[T3] < 2750)
-		{
-		}
-		motor [arm] = 0;
-		wait1Msec(300);
-	}
-	else if (height == 30)
-	{
-		servo [doors] = 122;
-		wait1Msec(200);
-		servo [doors] = 90;
-		wait1Msec(200);
-		servo [doors] = 69;
-		wait1Msec(200);
-		servo [doors] = 30;
-		wait1Msec(200);
-		servo [doors] = 0;
-		wait1Msec(250);
-		servo [doors] = 122;
-		wait1Msec(50);
-	}
-	else if (height == 120)
-	{
-		ClearTimer(T3);
-		motor [lift] = 100;
-		wait1Msec(1500);
-		motor [arm] = -100;
-		servo [pivot] = 66;
-		while (time1[T3] < 3500)
-		{
-		}
-		motor [arm] = 0;
-		while (time1[T3] < 3600)
-		{
-		}
-		motor [lift] = 0;
 	}
 }
 
@@ -202,7 +101,86 @@ void allStop()
 		drive(xDrive, yDrive, rotation);
 		wait1Msec(100);
 	}
-	//drive(0, 0, 0);
+	drive(0, 0, 0);
+}
+
+void score(int height)
+{
+	if (height == 60)
+	{
+		allStop();
+		ClearTimer(T3);
+		motor [lift] = 100;
+		if (phase == TELEOP)
+		{
+			wait1Msec(1500);
+		}
+		motor [arm] = -100;
+		servo [pivot] = 128;
+		while (time1[T3] < 1750)
+		{
+		}
+		motor [lift] = 0;
+		while (time1[T3] < 4050)
+		{
+		}
+		motor [arm] = 0;
+		wait1Msec(100);
+	}
+
+	else if (height == 90)
+	{
+		allStop();
+		ClearTimer(T3);
+		motor [lift] = 100;
+		if (phase == TELEOP)
+		{
+			wait1Msec(1500);
+		}
+		motor [arm] = -100;
+		servo [pivot] = 128;
+		while (time1[T3] < 3500)
+		{
+		}
+		motor [lift] = 0;
+		while (time1[T3] < 4050)
+		{
+		}
+		motor [arm] = 0;
+		wait1Msec(100);
+	}
+
+	else if (height == 30)
+	{
+		servo [doors] = 122;
+		wait1Msec(200);
+		servo [doors] = 90;
+		wait1Msec(200);
+		servo [doors] = 69;
+		wait1Msec(200);
+		servo [doors] = 30;
+		wait1Msec(200);
+		servo [doors] = 0;
+		wait1Msec(250);
+		servo [doors] = 122;
+		wait1Msec(50);
+	}
+	else if (height == 120)
+	{
+		ClearTimer(T3);
+		motor [lift] = 100;
+		wait1Msec(1500);
+		motor [arm] = -100;
+		servo [pivot] = 66;
+		while (time1[T3] < 3500)
+		{
+		}
+		motor [arm] = 0;
+		while (time1[T3] < 3600)
+		{
+		}
+		motor [lift] = 0;
+	}
 }
 
 int resetDriveEncoders()

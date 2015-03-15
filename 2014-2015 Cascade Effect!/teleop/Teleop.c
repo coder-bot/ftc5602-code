@@ -41,10 +41,10 @@ task autoCover()
 
 task main()
 {
+	phase = TELEOP;
 	bDisplayDiagnostics = false;
 	initializeRobot();
 	bDisplayDiagnostics = true;
-
 	int x1, y1, x2;
 	int threshold = 8;
 	//int liftPrecisionFactor = 0;
@@ -157,26 +157,40 @@ task main()
 			servo [rightHook] = 16;
 		}
 
-		if (joy2Btn(1) == 1)
+		if (joy1Btn(2) == 1)
 		{
-			while (joy2Btn(1) == 1)
+			while (joy1Btn(2) == 1)
+			{
+			}
+			//score (30);
+		}
+		else if (joy1Btn(1) == 1)
+		{
+			while (joy1Btn(1) == 1)
 			{
 			}
 			score(60);
 		}
-		if (joy2Btn(4) == 1)
+		else if (joy1Btn(3) == 1)
 		{
-			while (joy2Btn(4) == 1)
+			while (joy1Btn(3) == 1)
+			{
+			}
+			score(90);
+		}
+		else if (joy1Btn(4) == 1)
+		{
+			while (joy1Btn(4) == 1)
 			{
 			}
 			score(120);
 		}
 
-		if (joystick.joy2_TopHat == 4)
+		if (joy1Btn(6) == 1)
 		{
-			motor [sweeper] = -40;
+			motor [sweeper] = -60;
 		}
-		else if (joystick.joy2_TopHat == 0)
+		else if (joy1Btn(8) == 1)
 		{
 			motor [sweeper] = 60;
 		}

@@ -65,6 +65,7 @@ void score()
 
 task main()
 {
+	phase = AUTO;
 	driveCycles = 6;
 	humor = 80;
 	bDisplayDiagnostics = false;
