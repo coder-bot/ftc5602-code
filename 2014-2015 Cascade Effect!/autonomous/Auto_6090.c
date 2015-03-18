@@ -146,8 +146,7 @@ task main()
 	servo [doors] = 0;
 	wait1Msec(250);
 	servo [doors] = 122;
-	wait1Msec(50);
-	wait1Msec(200);
+	wait1Msec(75);
 	drive(0, 100, 0);
 	motor [arm] = 100;
 	servo [pivot] = 245;

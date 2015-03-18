@@ -109,7 +109,27 @@ void allStop()
 
 void score(int height)
 {
-	if (height == 60)
+	if (height == 30)
+	{
+		allStop();
+		if (phase == AUTO)
+		{
+			servo [doors] = 122;
+			wait1Msec(200);
+			servo [doors] = 90;
+			wait1Msec(200);
+			servo [doors] = 69;
+			wait1Msec(200);
+			servo [doors] = 30;
+			wait1Msec(200);
+			servo [doors] = 0;
+			wait1Msec(250);
+			servo [doors] = 122;
+			wait1Msec(50);
+		}
+	}
+
+	else if (height == 60)
 	{
 		allStop();
 		ClearTimer(T3);
@@ -137,7 +157,7 @@ void score(int height)
 			{
 			}
 			motor [arm] = 0;
-			wait1Msec(250);
+			wait1Msec(50);
 		}
 	}
 
@@ -148,31 +168,17 @@ void score(int height)
 		{
 			ClearTimer(T3);
 			motor [lift] = 100;
-			if (phase == TELEOP)
-			{
-				wait1Msec(1500);
-			}
+			wait1Msec(1500);
 			motor [arm] = -100;
 			servo [pivot] = 128;
 			while (time1[T3] < 3500)
 			{
 			}
 			motor [lift] = 0;
-			if (phase == TELEOP)
+			while (time1[T3] < 3875)
 			{
-				while (time1[T3] < 3875)
-				{
-				}
-				motor [arm] = 0;
 			}
-			else if (phase == AUTO)
-			{
-				while (time1[T3] < 4050 - 1500)
-				{
-				}
-				motor [arm] = 0;
-				wait1Msec(250);
-			}
+			motor [arm] = 0;
 		}
 		else if (phase == AUTO)
 		{
@@ -183,27 +189,9 @@ void score(int height)
 		}
 	}
 
-	else if (height == 30)
-	{
-		allStop();
-		if (phase == AUTO)
-		{
-			servo [doors] = 122;
-			wait1Msec(200);
-			servo [doors] = 90;
-			wait1Msec(200);
-			servo [doors] = 69;
-			wait1Msec(200);
-			servo [doors] = 30;
-			wait1Msec(200);
-			servo [doors] = 0;
-			wait1Msec(250);
-			servo [doors] = 122;
-			wait1Msec(50);
-		}
-	}
 	else if (height == 120)
 	{
+		allStop();
 		ClearTimer(T3);
 		motor [lift] = 100;
 		wait1Msec(1500);
@@ -217,6 +205,7 @@ void score(int height)
 		{
 		}
 		motor [lift] = 0;
+		wait1Msec(50);
 	}
 }
 

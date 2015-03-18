@@ -23,46 +23,6 @@
 #include <JoystickDriver.c>
 #include "Cascade_Functions.h"
 
-void score()
-{
-	ClearTimer(T3);
-	motor [lift] = 100;
-	wait1Msec(1500);
-	motor [arm] = -100;
-	servo [pivot] = 138;
-	while (time1[T3] < 1750)
-	{
-	}
-	motor [lift] = 0;
-	while (time1[T3] < 4050)
-	{
-	}
-	motor [arm] = 0;
-	wait1Msec(650);
-	//for (int i = 122; i >= 0; i+=20)
-	//{
-	//	if (i >= 180)
-	//	{
-	//		servo [doors] = i;
-	//		wait1Msec(400);
-	//	}
-	//	else
-	//	{
-	//		break;
-	//	}
-	//}
-	servo [doors] = 122;
-	wait1Msec(400);
-	servo [doors] = 130;
-	wait1Msec(400);
-	servo [doors] = 140;
-	wait1Msec(400);
-	servo [doors] = 160;
-	wait1Msec(1000);
-	servo [doors] = 122;
-	wait1Msec(1000);
-}
-
 task main()
 {
 	phase = AUTO;
@@ -96,6 +56,21 @@ task main()
 	allStop();
 	servo [leftHook] = 168;
 	servo [rightHook] = 16;
-	wait1Msec(250);
+	wait1Msec(50);
 	score(60);
+	wait1Msec(200);
+
+	drive(0, 0, -100);
+	motor [arm] = 100;
+	servo [pivot] = 245;
+	wait1Msec(1000);
+	motor [arm] = 0;
+	wait1Msec(500);
+	allStop();
+	wait1Msec(50);
+	drive(-100, 0, 0);
+	wait1Msec(1700);
+	drive(0, -100, 0);
+	wait1Msec(4500);
+	allStop();
 }
