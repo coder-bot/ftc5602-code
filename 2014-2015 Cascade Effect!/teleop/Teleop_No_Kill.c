@@ -172,21 +172,21 @@ task main()
 			while (joy1Btn(1) == 1)
 			{
 			}
-			scoreWithKill(60);
+			score(60);
 		}
 		else if (joy1Btn(3) == 1)
 		{
 			while (joy1Btn(3) == 1)
 			{
 			}
-			scoreWithKill(90);
+			score(90);
 		}
 		else if (joy1Btn(4) == 1)
 		{
 			while (joy1Btn(4) == 1)
 			{
 			}
-			scoreWithKill(120);
+			score(120);
 		}
 
 		if (joy1Btn(6) == 1)

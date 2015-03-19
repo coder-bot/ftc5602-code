@@ -100,7 +100,6 @@ void allStop()
 		{
 			rotation = 0;
 		}
-
 		drive(xDrive, yDrive, rotation);
 		wait1Msec(100);
 	}
@@ -203,6 +202,147 @@ void score(int height)
 		motor [arm] = 0;
 		while (time1[T3] < 3600)
 		{
+		}
+		motor [lift] = 0;
+		wait1Msec(50);
+	}
+}
+
+int killSwitch()
+{
+	getJoystickSettings(joystick);
+	if (joy1Btn(10) == 1)
+		return 1;
+	else
+		return 0;
+}
+
+void scoreWithKill(int height)
+{
+	if (height == 30)
+	{
+		allStop();
+		if (phase == AUTO)
+		{
+			servo [doors] = 122;
+			wait1Msec(200);
+			servo [doors] = 90;
+			wait1Msec(200);
+			servo [doors] = 69;
+			wait1Msec(200);
+			servo [doors] = 30;
+			wait1Msec(200);
+			servo [doors] = 0;
+			wait1Msec(250);
+			servo [doors] = 122;
+			wait1Msec(50);
+		}
+	}
+
+	else if (height == 60)
+	{
+		allStop();
+		ClearTimer(T3);
+		motor [lift] = 100;
+		if (phase == TELEOP)
+		{
+			wait1Msec(1500);
+		}
+		motor [arm] = -100;
+		servo [pivot] = 128;
+		while (time1[T3] < 1750)
+		{
+			if (killSwitch())
+			{
+				servo [pivot] = 245;
+				return;
+			}
+		}
+		motor [lift] = 0;
+		if (phase == TELEOP)
+		{
+			while (time1[T3] < 3875)
+			{
+				if (killSwitch())
+				{
+					servo [pivot] = 245;
+					return;
+				}
+			}
+			motor [arm] = 0;
+		}
+		else if (phase == AUTO)
+		{
+			while (time1[T3] < 4050 - 1600)
+			{
+			}
+			motor [arm] = 0;
+			wait1Msec(50);
+		}
+	}
+
+	else if (height == 90)
+	{
+		allStop();
+		if (phase == TELEOP)
+		{
+			ClearTimer(T3);
+			motor [lift] = 100;
+			wait1Msec(1500);
+			motor [arm] = -100;
+			servo [pivot] = 128;
+			while (time1[T3] < 3500)
+			{
+				if (killSwitch())
+				{
+					servo [pivot] = 245;
+					return;
+				}
+			}
+			motor [lift] = 0;
+			while (time1[T3] < 3875)
+			{
+				if (killSwitch())
+				{
+					servo [pivot] = 245;
+					return;
+				}
+			}
+			motor [arm] = 0;
+		}
+		else if (phase == AUTO)
+		{
+			motor [lift] = 100;
+			wait1Msec(2100);
+			motor [lift] = 0;
+			wait1Msec(50);
+		}
+	}
+
+	else if (height == 120)
+	{
+		allStop();
+		ClearTimer(T3);
+		motor [lift] = 100;
+		wait1Msec(1500);
+		motor [arm] = -100;
+		servo [pivot] = 66;
+		while (time1[T3] < 3500)
+		{
+			if (killSwitch())
+			{
+				servo [pivot] = 245;
+				return;
+			}
+		}
+		motor [arm] = 0;
+		while (time1[T3] < 3600)
+		{
+			if (killSwitch())
+			{
+				servo [pivot] = 245;
+				return;
+			}
 		}
 		motor [lift] = 0;
 		wait1Msec(50);

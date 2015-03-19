@@ -23,66 +23,63 @@
 #include <JoystickDriver.c>
 #include "Cascade_Functions.h"
 
+int goalHeight = 60;
+
+void updateGoalHeightDisplay()
+{
+	nxtDisplayCenteredTextLine(3, "Goal height: %d", goalHeight);
+}
+
 task main()
 {
+	phase = TELEOP; //defined as teleop since lift is not raised prior to scoring as assumed for autonomous
+	bDisplayDiagnostics = false;
 	initializeRobot();
-	nxtDisplayCenteredTextLine(3, "Left: Lift");
-	nxtDisplayCenteredTextLine(4, "Right: Arm");
+	updateGoalHeightDisplay();
 	while (1)
 	{
-		if (nNxtButtonPressed == 2)
+		if (nNxtButtonPressed == 1)
 		{
 			while (nNxtButtonPressed != -1)
 			{
 			}
-			eraseDisplay();
-			nxtDisplayCenteredBigTextLine(3, "Lift");
-			while (1)
-			{
-				if (nNxtButtonPressed == 1)
-					motor [lift] = 100;
-				else if (nNxtButtonPressed == 2)
-					motor [lift] = -25;
-				else
-					motor [lift] = 0;
-				if (nNxtButtonPressed == 3)
-				{
-					while (nNxtButtonPressed != -1)
-					{
-					}
-					eraseDisplay();
-					nxtDisplayCenteredTextLine(3, "Left: Lift");
-					nxtDisplayCenteredTextLine(4, "Right: Arm");
-					break;
-				}
-			}
+			goalHeight += 30;
+			updateGoalHeightDisplay();
 		}
-		else if (nNxtButtonPressed == 1)
+		else if (nNxtButtonPressed == 2)
+		{
+			while (nNxtButtonPressed != -1)
+			{
+			}
+			goalHeight -= 30;
+			updateGoalHeightDisplay();
+		}
+		if (nNxtButtonPressed == 3)
 		{
 			while (nNxtButtonPressed != -1)
 			{
 			}
 			eraseDisplay();
-			nxtDisplayCenteredBigTextLine(3, "Arm");
-			while (1)
-			{
-				if (nNxtButtonPressed == 1)
-					motor [arm] = -50;
-				else if (nNxtButtonPressed == 2)
-					motor [arm] = 50;
-				else
-					motor [arm] = 0;
-				if (nNxtButtonPressed == 3)
-				{
-					while (nNxtButtonPressed != -1)
-					{
-					}
-					eraseDisplay();
-					nxtDisplayCenteredTextLine(3, "Left: Lift");
-					nxtDisplayCenteredTextLine(4, "Right: Arm");
-					break;
-				}
-			}
+			break;
+		}
+		if (goalHeight < 60)
+		{
+			goalHeight = 60;
+			updateGoalHeightDisplay();
+		}
+		if (goalHeight > 120)
+		{
+			goalHeight = 120;
+			updateGoalHeightDisplay();
 		}
 	}
+	bDisplayDiagnostics = true;
+	if (goalHeight != 120)
+	{
+		servo [leftHook] = 168;
+		servo [rightHook] = 16;
+		wait1Msec(500);
+	}
+	score(goalHeight);
+	wait1Msec(5000);
 }
