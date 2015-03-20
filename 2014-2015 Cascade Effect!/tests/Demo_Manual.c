@@ -25,6 +25,7 @@
 
 task main()
 {
+	bDisplayDiagnostics = false;
 	initializeRobot();
 	nxtDisplayCenteredTextLine(3, "Left: Lift");
 	nxtDisplayCenteredTextLine(4, "Right: Arm");
