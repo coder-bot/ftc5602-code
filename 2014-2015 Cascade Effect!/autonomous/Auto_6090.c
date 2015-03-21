@@ -1,12 +1,9 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  none)
 #pragma config(Hubs,  S4, HTMotor,  HTMotor,  none,     none)
-#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
-#pragma config(Sensor, S2,     ir,             sensorHiTechnicIRSeeker1200)
 #pragma config(Sensor, S3,     sonar,          sensorSONAR)
-#pragma config(Sensor, S4,     ,               sensorI2CMuxController)
 #pragma config(Motor,  mtr_S1_C1_1,     frontLeft,     tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     rearLeft,      tmotorTetrix, openLoop, encoder)
-#pragma config(Motor,  mtr_S1_C2_1,     harvester,     tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_1,     sweeper,       tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S1_C2_2,     arm,           tmotorTetrix, openLoop)
 #pragma config(Motor,  mtr_S4_C1_1,     rearRight,     tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S4_C1_2,     frontRight,    tmotorTetrix, openLoop, reversed, encoder)
@@ -41,7 +38,7 @@ task main()
 	{
 		drive(0, -25, 0);
 	}
-	while (SensorValue [sonar] > 50)
+	while (SensorValue [sonar] > 35)
 	{
 		drive(0, 0, 25);
 	}
