@@ -25,6 +25,7 @@
 
 task main()
 {
+	phase = TELEOP;
 	bDisplayDiagnostics = false;
 	initializeRobot();
 	nxtDisplayCenteredTextLine(3, "Left: Lift");

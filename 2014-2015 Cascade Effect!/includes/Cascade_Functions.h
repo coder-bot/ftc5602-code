@@ -139,8 +139,12 @@ void score(int height)
 		}
 		motor [arm] = -100;
 		servo [pivot] = 128;
-		while (time1[T3] < 1750)
+		while (time1[T3] < 1250)
 		{
+		}
+		if (phase == TELEOP)
+		{
+			wait1Msec(500);
 		}
 		motor [lift] = 0;
 		if (phase == TELEOP)

@@ -38,11 +38,11 @@ task main()
 	{
 		drive(0, -25, 0);
 	}
-	while (SensorValue [sonar] > 35)
+	while (SensorValue [sonar] > 42)
 	{
 		drive(0, 0, 25);
 	}
-	wait1Msec(450);
+	wait1Msec(350);
 	allStop();
 	//StartTask(failSafe);
 	ClearTimer(T4);
